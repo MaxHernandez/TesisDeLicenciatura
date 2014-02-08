@@ -1,5 +1,16 @@
 <resources>
 
     <string name="app_name">EcoAR</string>
-
+    <string name="username">Max</string>
+    <string name="skip_login">Saltar login</string>
+    
+    <string name="email">Correo</string>
+    <string name="email_hint">example@example.com</string>
+    <string name="singup_link"><a href="https://www.google.pl/">Registrarse</a></string>
+    <string name="recoverpass_link"><a href="https://www.google.pl/">¿Has olvidado tu contraseña?</a></string>
+    
+    <string name="home_wellcome">Bienvenido Max</string>
+    <string name="home_introtext">Este es un sistema de bla para bla, para empezar a usarlo haz bla</string>
+    <string name="home_someproducts">Productos recientes</string>
+    
 </resources>
