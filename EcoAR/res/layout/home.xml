@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+    <!-- Bienvenida y texto explicativo -->
     <LinearLayout
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
@@ -22,11 +22,12 @@
 	    	android:layout_width="200dp"
     		android:layout_height="wrap_content"
     		android:layout_marginTop="15dp"
-    		android:textSize="20sp"
+    		android:textSize="15sp"
     		android:text="@string/home_introtext"    	    
         	/>
     </LinearLayout>
     
+    <!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
     <LinearLayout
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
@@ -47,23 +48,40 @@
     	    android:layout_width="fill_parent"
     		android:layout_height="fill_parent"
     	    android:layout_marginTop="10dp"
+    	    android:layout_marginLeft="10dp"
+    	    android:layout_marginRight="10dp"
+    	    android:layout_marginBottom="10dp"
+    	    android:background="@drawable/someproducts_mainlist"  	    
     	    >
     	    
-	    	<LinearLayout
-	    	    android:id="+id/someproducts_list"
-	    	    android:layout_width="fill_parent"
-    			android:layout_height="wrap_content"
-    			android:orientation="vertical" 
-    			android:gravity="left"
-    			>
-    			
-	    	    
-	    	    
-    		</LinearLayout> 
-    		
+    	    <!-- Aqui va el layout list donde se muestran los ultimos productos -->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				>
+				<TextView
+				    android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginRight="15dp"
+					android:layout_marginTop="15dp"
+					android:text="@string/example_product"
+					android:background="@drawable/someproducts_itemlist"
+        			/>
+				
+				<TextView
+				    android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginRight="15dp"
+					android:layout_marginTop="15dp"
+					android:text="@string/example_product"
+					android:background="@drawable/someproducts_itemlist"
+        			/>
+				<!-- Ejemplo de agregar un producto
+        		-->
+			</LinearLayout>
     	</ScrollView>
-    	
-    </LinearLayout>
-    
-
+	</LinearLayout>
 </LinearLayout>

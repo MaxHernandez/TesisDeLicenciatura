@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<LinearLayout
+    	android:layout_width="match_parent"
+    	android:layout_height="48dp"
+    	android:layout_marginTop="15dp"
+    	android:layout_marginRight="15dp"
+    	android:layout_marginLeft="15dp"
+    	android:gravity="center_horizontal"
+    	android:orientation="horizontal" >    
+	    
+	    <EditText
+		    android:layout_width="0dp"
+    		android:layout_height="48dp"
+    		android:textSize="14sp"
+    		android:hint="@string/email_hint"
+    		android:inputType="textEmailAddress"
+    		android:layout_weight=".75" 
+    		/>
+	    
+	    <Button
+	        android:layout_width="0dp"
+	        android:layout_height="48dp"
+	        android:textSize="12sp"
+	        android:text="Search"
+	        android:layout_weight=".25" 
+	        />
+	    	    
+	</LinearLayout>
+	
+	<LinearLayout
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:layout_marginRight="15dp"
+    	android:layout_marginLeft="15dp"
+    	
+    	android:gravity="center_horizontal"
+    	android:orientation="vertical"
+    	>
+	    
+	    <ScrollView
+    		android:layout_width="match_parent"
+    		android:layout_height="0dp"
+    		android:layout_weight=".65"
+    		android:gravity="center_horizontal"
+    		android:orientation="vertical"
+    		android:background="@drawable/searchproduct_foundlist"
+    		>	        	
+	    </ScrollView>
+	    
+	    <LinearLayout
+    		android:layout_width="match_parent"
+    		android:layout_height="0dp"
+    		android:layout_weight=".35"
+    		android:gravity="center"
+    		android:orientation="horizontal"
+    		>
+    		
+	       	<ImageView
+	            android:layout_width="100dp"
+    			android:layout_height="100dp"
+	            android:src="@drawable/image_not_found"    
+	            />
+	       	<RelativeLayout
+	        	android:layout_width="wrap_content"
+    			android:layout_height="100dp"
+    			android:layout_marginLeft="15dp"
+	        	>
+	       		<RelativeLayout
+	        		android:layout_width="wrap_content"
+    				android:layout_height="wrap_content"
+    				android:layout_centerInTop="true"
+    				android:background="@drawable/circle_scale"
+	        		>
+	       			<TextView
+	    				android:layout_width="wrap_content"
+    					android:layout_height="wrap_content"
+    					android:textSize="20sp"
+    					android:layout_centerInParent="true"
+    					android:text="10"    	    
+        				/>
+	      		</RelativeLayout>
+	      	</RelativeLayout>
+	    </LinearLayout>	    
+	    
+    </LinearLayout>
+
+</LinearLayout>

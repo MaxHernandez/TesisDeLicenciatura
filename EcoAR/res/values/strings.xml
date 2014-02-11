@@ -3,6 +3,7 @@
     <string name="app_name">EcoAR</string>
     <string name="username">Max</string>
     <string name="skip_login">Saltar login</string>
+    <string name="example_product">1 lt Leche</string>
     
     <string name="email">Correo</string>
     <string name="email_hint">example@example.com</string>
