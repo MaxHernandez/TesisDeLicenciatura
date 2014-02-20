@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+		android:layout_width="100dp"
+    	android:layout_height="48dp"
+        android:text= "Volver"
+        android:marginLeft="25dp"
+    	android:marginTop="15dp"
+    	android:marginBottom="15dp"
+    	android:paddingLeft="30dp"
+    	android:gravity="left|center_vertical"
+        />
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:orientation="vertical"
+    	android:layout_alignParentCenter="true"
+    	android:gravity="top|center_horizontal"
+    	android:layout_marginTop="15dp"
+        >
+        
+        <TextView
+	    	android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:textSize="24sp"
+    		android:textStyle="bold"
+    		android:text="Litro de leche"    	    
+        	/>
+        
+        <!-- LinearLayout de la imagen y la puntuacion del proudcto-->
+        <LinearLayout
+    		android:layout_width="match_parent"
+    		android:layout_height="wrap_content"
+    		android:gravity="center"
+    		android:orientation="horizontal"
+    		android:layout_marginTop="15dp"
+    		>
+    		
+	       	<ImageView
+	            android:layout_width="100dp"
+    			android:layout_height="100dp"
+	            android:src="@drawable/image_not_found"    
+	            />
+	       	<RelativeLayout
+	        	android:layout_width="wrap_content"
+    			android:layout_height="100dp"
+    			android:layout_marginLeft="15dp"
+	        	>
+	       		<RelativeLayout
+	        		android:layout_width="wrap_content"
+    				android:layout_height="wrap_content"
+    				android:layout_centerInTop="true"
+    				android:background="@drawable/circle_scale"
+	        		>
+	       			<TextView
+	    				android:layout_width="wrap_content"
+    					android:layout_height="wrap_content"
+    					android:textSize="20sp"
+    					android:layout_centerInParent="true"
+    					android:text="10"    	    
+        				/>
+	      		</RelativeLayout>
+	      	</RelativeLayout>
+	    </LinearLayout>
+	    <!-- FIN del LinearLayout de la imagen y la puntuacion del proudcto-->
+        
+        
+        
+                
+        <TextView
+	    	android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:textSize="18sp"
+    		android:textStyle="bold"
+    		android:text="Comentarios"
+    		android:layout_marginTop="30dp"	    
+        	/>
+        
+            	<ScrollView
+    	    android:layout_width="fill_parent"
+    		android:layout_height="fill_parent"
+    	    android:layout_marginTop="10dp"
+    	    android:layout_marginLeft="10dp"
+    	    android:layout_marginRight="10dp"
+    	    android:layout_marginBottom="10dp"
+    	    android:background="@drawable/someproducts_mainlist"  	    
+    	    >
+    	    
+    	    <!-- Aqui va el layout list donde se muestran los ultimos productos -->
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical"
+				>
+				<TextView
+				    android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginRight="15dp"
+					android:layout_marginTop="15dp"
+					android:text="@string/example_product"
+					android:background="@drawable/commentlist_item"
+        			/>
+				<!-- Ejemplo de agregar un producto
+        		-->
+			</LinearLayout>
+    	</ScrollView>
+        
+        
+        
+        
+    </LinearLayout>
+</LinearLayout>
