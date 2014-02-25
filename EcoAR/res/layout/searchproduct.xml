@@ -73,7 +73,8 @@
 	       		<RelativeLayout
 	        		android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
-    				android:layout_centerInTop="true"
+    				android:layout_centerInParent="true"
+    				android:layout_alignParentTop = "true"
     				android:background="@drawable/circle_scale"
 	        		>
 	       			<TextView
