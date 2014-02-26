@@ -2,27 +2,48 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
+    android:clickable="true"
+    android:focusable="true"
     android:background="@drawable/someproducts_item"
     >
     
     <LinearLayout
+        android:id="@+id/someproducts_item_socket"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:layout_width="match_parent"
-    	android:layout_height="match_parent"
+    	android:layout_height="wrap_content"
     	android:orientation="horizontal"
+    	android:gravity="center_vertical"
         >
 	    <TextView
 	        android:layout_width="wrap_content"
-    		android:layout_height="match_parent"
+    		android:layout_height="wrap_content"
 	        android:textSize="20sp"
+	        android:layout_marginLeft="10dp"
+	        android:textStyle="bold"
 	        android:id="@+id/someproducts_item_name"
+	        android:text = "Detergente"
+	        />
+	    <TextView
+	        android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+	        android:textSize="12sp"
+	        android:textColor="#AAA"
+	        android:layout_marginLeft="10dp"
+	        android:id="@+id/someproducts_item_description"
+	        android:text="Agregado hace 5 min."
     		/>
     </LinearLayout>
     
-    <Button
+    <TextView
         android:layout_width="wrap_content"
     	android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:text="+"/>
+        android:layout_centerVertical="true"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:textColor="#777"
+        android:text=">"/>
 
 </RelativeLayout>

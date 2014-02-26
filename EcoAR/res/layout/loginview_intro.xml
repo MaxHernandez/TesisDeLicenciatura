@@ -12,6 +12,7 @@
         />
 
 	<Button
+	    android:id="@+id/skip_login_button"
 		android:layout_width="match_parent"
     	android:layout_height="48dp"
     	android:layout_marginLeft="10dp"
