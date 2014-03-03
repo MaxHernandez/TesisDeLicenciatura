@@ -1,63 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- View de inicio, muestra un texto de bienvenida y despues un texto explicando algo hacerla de la app.
+	En la parte inferior muestra una lista de los ultimos productos buscados o escaneados
+ -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <!-- Bienvenida y texto explicativo -->
-    <LinearLayout
-    	android:layout_width="match_parent"
-    	android:layout_height="0dp"
-    	android:layout_weight=".55"
-    	android:orientation="vertical" 
-    	android:gravity="center_horizontal"
-    	android:layout_marginTop="15dp"
-    	>
-    	<TextView
-	    	android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-    		android:textSize="30sp"
-    		android:textStyle="bold"
-    		android:text="@string/home_wellcome"    	    
-        	/>
-    	<TextView
-	    	android:layout_width="200dp"
-    		android:layout_height="wrap_content"
-    		android:layout_marginTop="15dp"
-    		android:textSize="15sp"
-    		android:text="@string/home_introtext"
-        	/>
-    </LinearLayout>
-    
-    <!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
-    <LinearLayout
+    >
+
+    <include layout="@layout/slidemenu_topbar"
     	android:layout_width="fill_parent"
-    	android:layout_height="0dp"
-    	android:layout_weight=".45"
-    	android:orientation="vertical" 
-    	android:gravity="left"
-    	android:layout_marginTop="35dp"
-    	>
-    	<TextView
-	    	android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-    		android:layout_marginLeft="25dp"
-    		android:textSize="20sp"
-    		android:textStyle="bold"
-    		android:text="@string/home_someproducts"    	    
+    	android:layout_height="48dp"
+        />
+    
+	<LinearLayout 
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:orientation="vertical" >
+ 
+    	<!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
+		<include layout="@layout/home_wellcomeuser"
+    		android:layout_width="fill_parent"
+	    	android:layout_height="0dp"
+    		android:layout_weight=".55"
+    		android:gravity="center"
         	/>
-    	
-    	<ScrollView
-    	    android:id="@+id/home_someproducts_scrollview"
-    	    android:layout_width="fill_parent"
-    		android:layout_height="fill_parent"
-    	    android:layout_marginTop="10dp"
-    	    android:layout_marginLeft="10dp"
-    	    android:layout_marginRight="10dp"
-    	    android:layout_marginBottom="10dp"
-    	    android:background="@drawable/someproducts_list"
-    	    >
-    	</ScrollView>
-    	
-    	
+    
+	    <!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
+	    <include layout="@layout/home_someproducts"
+    		android:layout_width="fill_parent"
+	    	android:layout_height="0dp"
+    		android:layout_weight=".45"
+        	/>
 	</LinearLayout>
+
 </LinearLayout>
+
+

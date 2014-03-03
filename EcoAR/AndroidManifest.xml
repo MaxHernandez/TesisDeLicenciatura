@@ -18,14 +18,16 @@
             android:label="@string/app_name" >
             >
             <!-- Este intent-filter sirve para decir que este activity sera el primero en ser ejecutado -->
+			<!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+             -->
         </activity>
         
         <activity
-            android:name="com.maxkalavera.ecoar.LoginView"
+            android:name="com.maxkalavera.ecoar.Login"
             android:label="@string/app_name" >
             >
             <!--<intent-filter>
@@ -35,14 +37,13 @@
         </activity>
         
         <activity
-            android:name="com.maxkalavera.ecoar.WellcomeView"
+            android:name="com.maxkalavera.ecoar.Wellcome"
             android:label="@string/app_name" >
             >
-            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
 
         <activity

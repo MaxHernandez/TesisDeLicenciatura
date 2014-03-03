@@ -2,6 +2,7 @@ package com.maxkalavera.ecoar;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.view.View;
@@ -9,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View.OnTouchListener;
+import android.view.View.OnClickListener;
 
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -24,7 +27,8 @@ import android.graphics.drawable.shapes.Shape;
 import android.graphics.Color;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.maxkalavera.utils.CircleScore;
+import com.maxkalavera.utils.LastProductsList;
+import com.maxkalavera.utils.SlideMenuBarHandler;
 
 public class Home extends Activity{
 
@@ -39,18 +43,15 @@ public class Home extends Activity{
 		
 		ScrollView someProductsWidget = (ScrollView)this.findViewById(R.id.home_someproducts_scrollview);
 		someProductsWidget.addView(lastProducts);
-
-		// Slide Menu
-        SlidingMenu menu = new SlidingMenu(this);
-        menu.setMode(SlidingMenu.LEFT);
-        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        menu.setShadowWidthRes(R.dimen.shadow_width);
-        menu.setShadowDrawable(R.drawable.shadow);
-        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-        menu.setFadeDegree(0.35f);
-        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-        menu.setMenu(R.layout.menu);
 		
+		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");
+		
+	}
+	
+	public void produceIntent(String className) throws ClassNotFoundException {
+		Intent intent = new Intent();
+		intent.setClassName("com.maxkalavera", "com.maxkalavera.Login");
+        startActivity(intent);
 	}
 
 }

@@ -2,45 +2,43 @@
 
 <!-- Este view sirve como pattern de cada item que se agregue a la lista de someproducts en el home -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/someproducts_item"
     >
     
     <LinearLayout
-        android:id="@+id/someproducts_item_socket"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:orientation="horizontal"
     	android:gravity="center_vertical"
         >
-	    <TextView
-	        android:layout_width="wrap_content"
+    	<ImageView
+        	android:id="@+id/slidemenu_item_image"
+    		android:layout_width="35dp"
+        	android:layout_height="35dp"
+        	android:scaleType="fitEnd"
+        	android:src="@drawable/ic_launcher" 
+        	android:layout_marginLeft="30dp"
+        	/>
+		<TextView
+	   		android:id="@+id/slidemenu_item_name"
+    		android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
-	        android:textSize="20sp"
-	        android:layout_marginLeft="10dp"
-	        android:textStyle="bold"
-	        android:id="@+id/someproducts_item_name"
-	        android:text = "Detergente"
-	        />
-	    <TextView
-	        android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-	        android:textSize="12sp"
-	        android:textColor="#AAA"
-	        android:layout_marginLeft="10dp"
-	        android:id="@+id/someproducts_item_description"
-	        android:text="Agregado hace 5 min."
-    		/>
+    		android:text="Home"
+    		android:textSize="18sp"
+    		android:textStyle="bold"
+    		android:layout_marginLeft="10dp"
+        	/>
     </LinearLayout>
     
     <TextView
         android:layout_width="wrap_content"
-    	android:layout_height="match_parent"
+    	android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textSize="25sp"
