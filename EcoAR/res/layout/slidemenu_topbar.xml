@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal" 
-    android:background="#EEE"
+    android:background="#CCC"
     >
 
     <Button
@@ -25,18 +25,20 @@
         android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:layout_alignParentRight="true"
+    	android:layout_centerVertical="true"
+    	android:layout_gravity="center"
         >
         <Button
     		android:layout_width="30dp"
-    		android:layout_height="match_parent"
+    		android:layout_height="30dp"
+    		android:layout_marginLeft ="5dp"
+    		android:background="@drawable/search"
         	/>
         <Button
     		android:layout_width="30dp"
-    		android:layout_height="match_parent"
-        	/>
-        <Button
-    		android:layout_width="30dp"
-    		android:layout_height="match_parent"
+    		android:layout_height="30dp"
+    		android:layout_marginLeft ="5dp"
+    		android:background="@drawable/searchcamera"
         	/>
     </LinearLayout>
     

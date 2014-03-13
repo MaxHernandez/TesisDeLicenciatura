@@ -47,11 +47,5 @@ public class Home extends Activity{
 		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");
 		
 	}
-	
-	public void produceIntent(String className) throws ClassNotFoundException {
-		Intent intent = new Intent();
-		intent.setClassName("com.maxkalavera", "com.maxkalavera.Login");
-        startActivity(intent);
-	}
 
 }

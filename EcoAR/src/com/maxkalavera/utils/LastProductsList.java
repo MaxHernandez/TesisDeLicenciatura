@@ -1,9 +1,12 @@
 package com.maxkalavera.utils;
+import com.maxkalavera.ecoar.Home;
 import com.maxkalavera.ecoar.R;
+import com.maxkalavera.ecoar.Wellcome;
 
 import com.maxkalavera.utils.CircleScore;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -87,6 +90,9 @@ public class LastProductsList extends LinearLayout implements OnTouchListener{
         	return true;
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
         	item.setBackgroundResource(R.drawable.someproducts_item);
+    		Intent intent = new Intent();
+    		intent.setClassName("com.maxkalavera.ecoar", "com.maxkalavera.ecoar.ShowProductInfo");
+    		this.context.startActivity(intent);
         	return false;
         }	
 		return false;

@@ -76,9 +76,11 @@ public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{
 		
 		item = this.addElement("Buscar");
 		item.setOnTouchListener(this);
+		this.dict.put(item, "SearchProduct");
 		
 		item = this.addElement("Buscar por cámara");
 		item.setOnTouchListener(this);
+		
 		item = this.addElement("Lista del super");
 		item.setOnTouchListener(this);
 	}

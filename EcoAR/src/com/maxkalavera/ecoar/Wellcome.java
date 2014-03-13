@@ -12,7 +12,7 @@ public class Wellcome extends Activity implements OnClickListener{
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.loginview_intro);
+		this.setContentView(R.layout.login_wellcome);
 		
 		
 		Button button= (Button) findViewById(R.id.skip_login_button);
