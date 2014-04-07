@@ -11,15 +11,20 @@ def processing(frame, wframe):
     print len(points_list)
 
     if len(points_list[0]) >= 4 and len(points_list[1]) >= 4: 
-        (h, m) = cv2.findHomography( numpy.array(points_list[0]), numpy.array(points_list[1]), cv2.RANSAC, ransacReprojThreshold=1.0)
-        print "H:", h
-        print "M:", m
+        #(h, m) = cv2.findHomography( numpy.array(points_list[0]), numpy.array(points_list[1]), cv2.RANSAC, ransacReprojThreshold=1.0)
+        #print "H:", h
+        #print "M:", m
         
-        dst = cv2.perspectiveTransform(numpy.array(points_list[1]), h)
-        
+        #dst = cv2.perspectiveTransform(numpy.array(points_list[1]), h)
+
+        datas = numpy.array(points_list[1])
+        #cv2.approxPolyDP(datas, 0.1*cv2.arcLength( datas, True), True)
+        print datas
+        cv2.convexHull(datas)
+
         print "DST:", 
          
-        
+    
     #logo = features.verify_descriptor(temp_descriptor)
 
     #if logo != None:
