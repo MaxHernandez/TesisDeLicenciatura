@@ -30,10 +30,6 @@ def get_descriptor(img, features):
 
 
 list_reference_images = (
-    '/home/max/Pictures/opencv/carnes_finas_san_juan_res.jpg',
-    '/home/max/Pictures/opencv/carnes_finas_san_juan.jpg',
-    '/home/max/Pictures/opencv/chocokrispis.png',
-    '/home/max/Pictures/opencv/maxkalavera.jpg'
     )
 #global_list_reference_descriptor = None
 
@@ -63,7 +59,7 @@ def verify(descriptor, features, img_path):
             #print dir(n), n.queryIdx, n.trainIdx
             point_list[0].append(features[ n.queryIdx ].pt)
             point_list[1].append(temp_features[ m.trainIdx ].pt)
-    return point_list
+    return point_list, image.shape
 
 def get_reference_descriptors():
     #global global_list_reference_descriptor, list_reference_images
