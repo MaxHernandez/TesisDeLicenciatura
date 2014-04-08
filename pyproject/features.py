@@ -53,7 +53,7 @@ def verify(descriptor, features, img_path):
 
     point_list = [list(), list()]
     for m,n in matches:
-        if m.distance < 0.7*n.distance:
+        if m.distance < 0.80*n.distance:
             #print m, n
             #print dir(m), m.queryIdx, m.trainIdx
             #print dir(n), n.queryIdx, n.trainIdx
