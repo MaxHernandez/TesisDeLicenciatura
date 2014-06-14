@@ -8,8 +8,8 @@ def processing(frame, wframe):
     
     points_list, patternimage_size = features.verify(temp_descriptor, temp_feature,
                                                      #'/home/max/Pictures/logotipos/QR_Maxkalavera.png'
-                                                     #'/home/max/Pictures/logotipos/fime.jpg'
-                                                     '/home/max/Pictures/logotipos/logo006.jpg'
+                                                     '/home/max/Pictures/logotipos/fime.jpg'
+                                                     #'/home/max/Pictures/logotipos/logo006.jpg'
                                                      )
 
     wframe_size = wframe.shape 
@@ -18,7 +18,8 @@ def processing(frame, wframe):
 
     print "Number of points:", len(points_list[0])
     if len(points_list[0]) >= 10: 
-        (h, m) = cv2.findHomography( numpy.array(points_list[1]), numpy.array(points_list[0]), cv2.RANSAC, ransacReprojThreshold=1.0)
+
+        (h, m) = cv2.findHomography( numpy.array(points_list[1]), numpy.array(points_list[0]), cv2.RANSAC,  ransacReprojThreshold = 3.0)
         matches = m.ravel().tolist()
 
         if True:
@@ -26,9 +27,9 @@ def processing(frame, wframe):
                 pt = points_list[0][i]
 
                 if matches[i] > 0:
-                    cv2.circle(frame, (int(pt[0]*ratio[0]), int(pt[1]*ratio[1])), 5, (255,0,255), -1)
+                    cv2.circle(frame, (int(pt[0]*ratio[0]), int(pt[1]*ratio[1])), 3, (255,0,255), -1)
                 else:
-                    cv2.circle(frame, (int(pt[0]*ratio[0]), int(pt[1]*ratio[1])), 5, (0, 255,255), -1)
+                    cv2.circle(frame, (int(pt[0]*ratio[0]), int(pt[1]*ratio[1])), 3, (0, 255,255), -1)
 
         patternimage_rectsize = numpy.float32(
             [
@@ -38,6 +39,7 @@ def processing(frame, wframe):
                 [patternimage_size[1] - 1, 0]
                 ]
             ).reshape(-1,1,2)
+
         wframe_rounding_box = cv2.perspectiveTransform(patternimage_rectsize, h)
 
         frame_rounding_box = list()
@@ -89,15 +91,16 @@ def processing(frame, wframe):
             all_contour = numpy.concatenate(contours)
 
             hull = cv2.convexHull(all_contour)
-            cv2.drawContours(frame_roi, hull, -1,(0,0,255), 4)
+            if False:
+                cv2.drawContours(frame_roi, hull, -1,(0,0,255), 4)
 
             if False:
                 approx = cv2.approxPolyDP(numpy.concatenate(all_contour), 0.1*cv2.arcLength(all_contour, True),True)
                 cv2.drawContours(frame_roi, approx, -1,(255,0,0), 4)
 
-            #for cnt in contours: 
-            #    hull = cv2.convexHull(cnt)
-            #    cv2.drawContours(frame_roi, hull, -1,(0,0,255), 2)
+            for cnt in contours: 
+                hull = cv2.convexHull(cnt)
+                cv2.drawContours(frame_roi, hull, -1,(0,0,255), 2)
 
             cv2.imshow("ROI", frame_roi)
         except Exception,e: print str(e)

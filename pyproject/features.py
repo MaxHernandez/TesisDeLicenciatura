@@ -8,15 +8,20 @@ from camera import calculate_resize
 #
 #descriptor_algorithm = 'HARRIS'
 #feature_algorithm = 'BRIEF'
-descriptor_algorithm = 'SURF'
-feature_algorithm = 'SURF'
-matcher_algorithm = 'FlannBased'
+descriptor_algorithm = 'ORB'
+feature_algorithm = 'ORB'
+#matcher_algorithm = 'FlannBased'
+matcher_algorithm = 'BruteForce-Hamming'
 
 if matcher_algorithm == 'FlannBased':
     index_params = dict(algorithm = 0, trees = 5)
     search_params = dict(checks = 50) 
-    flann = cv2.FlannBasedMatcher(index_params,search_params)
     descriptor_matcher = cv2.FlannBasedMatcher(index_params,search_params)
+
+if matcher_algorithm == 'BruteForce-Hamming':
+    descriptor_matcher = cv2.DescriptorMatcher_create('BruteForce-Hamming')
+    #descriptor_matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+
 #
 feature_detector = cv2.FeatureDetector_create (feature_algorithm)
 feature_descriptor = cv2.DescriptorExtractor_create (descriptor_algorithm)
@@ -49,11 +54,16 @@ def verify(descriptor, features, img_path):
     print "imagen:", img_path, "N:", len(temp_features)
     temp_descriptor = get_descriptor(image, temp_features)
 
-    matches = flann.knnMatch(descriptor, temp_descriptor, k=2)
+    if matcher_algorithm == 'FlannBased':
+        #matches = flann.knnMatch(descriptor, temp_descriptor, k=2)
+        matches = descriptor_matcher.knnMatch(descriptor, temp_descriptor, k=2)
+        
+    if matcher_algorithm == 'BruteForce-Hamming':
+        matches = descriptor_matcher.knnMatch(descriptor, temp_descriptor, k=2)
 
     point_list = [list(), list()]
     for m,n in matches:
-        if m.distance < 0.80*n.distance:
+        if m.distance < 0.75*n.distance:
             #print m, n
             #print dir(m), m.queryIdx, m.trainIdx
             #print dir(n), n.queryIdx, n.trainIdx
