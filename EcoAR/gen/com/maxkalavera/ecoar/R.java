@@ -145,13 +145,16 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int left=0x7f040000;
         public static final int margin=0x7f040002;
         public static final int right=0x7f040001;
+        public static final int seachproduct_results_scrollView=0x7f04000d;
+        public static final int searchproduct_searchButton=0x7f04000c;
+        public static final int searchproduct_searchTextBar=0x7f04000b;
         public static final int selected_view=0x7f040004;
         public static final int skip_login_button=0x7f04000a;
-        public static final int slidemenu_item_image=0x7f04000c;
-        public static final int slidemenu_item_name=0x7f04000d;
-        public static final int slidemenu_linearlayout=0x7f04000b;
-        public static final int slidemenu_topbar_displaybutton=0x7f04000e;
-        public static final int slidingmenumain=0x7f04000f;
+        public static final int slidemenu_item_image=0x7f04000f;
+        public static final int slidemenu_item_name=0x7f040010;
+        public static final int slidemenu_linearlayout=0x7f04000e;
+        public static final int slidemenu_topbar_displaybutton=0x7f040011;
+        public static final int slidingmenumain=0x7f040012;
         public static final int someproducts_item_description=0x7f040009;
         public static final int someproducts_item_name=0x7f040008;
         public static final int someproducts_item_socket=0x7f040007;
@@ -167,11 +170,14 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int login_wellcome=0x7f030007;
         public static final int loginview=0x7f030008;
         public static final int searchproduct=0x7f030009;
-        public static final int showproductinfo=0x7f03000a;
-        public static final int slidemenu=0x7f03000b;
-        public static final int slidemenu_item=0x7f03000c;
-        public static final int slidemenu_topbar=0x7f03000d;
-        public static final int slidingmenumain=0x7f03000e;
+        public static final int searchproduct_results_item=0x7f03000a;
+        public static final int searchproduct_results_iteminfo=0x7f03000b;
+        public static final int searchproduct_results_list=0x7f03000c;
+        public static final int showproductinfo=0x7f03000d;
+        public static final int slidemenu=0x7f03000e;
+        public static final int slidemenu_item=0x7f03000f;
+        public static final int slidemenu_topbar=0x7f030010;
+        public static final int slidingmenumain=0x7f030011;
     }
     public static final class string {
         public static final int app_name=0x7f060000;

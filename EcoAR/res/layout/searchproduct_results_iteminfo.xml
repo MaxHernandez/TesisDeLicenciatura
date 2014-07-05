@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="128dp"
+        	android:background="@drawable/someproducts_item"
+    >
+	<LinearLayout 
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="horizontal"
+    	android:gravity="center_vertical"
+    	
+    	android:clickable="true"
+    	android:focusable="true"
+    	>
+        
+    	<ImageView
+        	android:layout_width="86dp"
+        	android:layout_height="86dp"
+        	android:layout_margin="4dp"
+        	android:scaleType="fitEnd"
+        	android:src="@drawable/ic_launcher" />
+        
+	    <LinearLayout
+    		android:layout_width="match_parent"
+    		android:layout_height="match_parent"
+    		android:orientation="vertical"
+    		android:clickable="true"
+    		android:focusable="true"
+    		android:layout_marginRight="5dp"
+    		android:layout_marginLeft="5dp"
+    		>
+    		<TextView
+	        	android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+	        	android:textSize="20sp"
+	        	android:textStyle="bold"
+	        	android:text = "Detergente"
+	        	/>
+    		<TextView
+	        	android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+	        	android:textSize="12sp"
+	        	android:textStyle="bold"
+	        	android:text = "Provedores patito de hule SA de CV"
+	        	/>
+	        
+    		<TextView
+	        	android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+	        	android:textSize="12sp"
+	        	android:layout_marginTop="5dp"
+	        	android:text = "Es un producto de bla bla bla, que sirve para bla bla la (Reseña)."
+	        	/>
+    		
+    		<TextView
+	        	android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+	        	android:textSize="12sp"
+	        	android:layout_marginTop="10dp"
+	        	android:gravity="center_vertical"
+	        	android:textColor="#00A"
+	        	android:text = "Ver mas..."
+	        	/>
+	        
+	    </LinearLayout>
+	</LinearLayout>
+</ScrollView>
