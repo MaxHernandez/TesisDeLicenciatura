@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{titulo}}
+{% endblock %}
+
+
+{% block content %}
+
+<form method="post" action=".">
+  <input type="text" name="searchInnput" size="40" maxlength="100">
+  <input type="submit" value="Buscar">
+</form>
+
+<table>
+  {% for found_item in found_list %}
+    <tr><td>
+
+      cosa
+
+    </td></tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

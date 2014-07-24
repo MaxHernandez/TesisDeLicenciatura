@@ -1,0 +1,12 @@
+from django.db import models
+
+# Create your models here.
+
+
+class Producto (models.Model):
+    nombre = models.CharField(maxlength=50)
+    descipcion = models.TextField()
+    marca = models.CharField(maxlength=50)
+    fabricante =  models.CharField(maxlength=50)
+    codigo_barras = models.CharField(maxlength=20)
+    imagen = models.ImageField(upload_to='/products/')
