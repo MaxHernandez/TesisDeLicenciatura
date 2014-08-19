@@ -5,7 +5,8 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'searchProduct.views.search', name='searchProduct')
+    url(r'^$', 'searchProduct.views.search', name='searchProduct'),                       
+    url(r'^search/$', 'searchProduct.views.search', name='searchProduct'),
     # Examples:
     # url(r'^$', 'EcoAR.views.home', name='home'),
     # url(r'^EcoAR/', include('EcoAR.foo.urls')),

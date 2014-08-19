@@ -1,0 +1,7 @@
+
+from searchProduct.models import Producto
+
+def main():
+    print len(Producto.objects.all())
+
+main()
