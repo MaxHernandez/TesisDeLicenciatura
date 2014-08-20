@@ -10,3 +10,4 @@ class Producto (models.Model):
     fabricante =  models.CharField(max_length=50)
     codigo_barras = models.CharField(max_length=20)
     imagen = models.ImageField(upload_to='/products/', null=True)
+
