@@ -6,9 +6,11 @@ from rest_framework.urlpatterns import format_suffix_patterns
 # from django.contrib import admin
 # admin.autodiscover()
 
+from searchProduct.views import SearchBarView
+
 urlpatterns = patterns('',
-    url(r'^$', 'searchProduct.views.search', name='searchProduct'),                       
-    url(r'^search/$', 'searchProduct.views.search', name='searchProduct'),
+    url(r'^$', SearchBarView.as_view(), name='searchProduct'),                       
+    url(r'^search/$', SearchBarView.as_view(), name='searchProduct'),
     # Examples:
     # url(r'^$', 'EcoAR.views.home', name='home'),
     # url(r'^EcoAR/', include('EcoAR.foo.urls')),
