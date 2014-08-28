@@ -12,6 +12,19 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': '/home/max/ecoar.db',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
+}
+
+"""
+# Se ha decido utilizar uan base de datos en sqlite para el desarollo debido a su facilidad de modificacion
+DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', #'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'ecoar',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
@@ -21,6 +34,7 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default.
     }
 }
+"""
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -124,6 +138,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # My apps
     'searchProduct',
+    'general',
     # Third party apps
     'rest_framework',
     # Uncomment the next line to enable the admin:

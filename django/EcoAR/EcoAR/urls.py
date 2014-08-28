@@ -7,10 +7,12 @@ from rest_framework.urlpatterns import format_suffix_patterns
 # admin.autodiscover()
 
 from searchProduct.views import SearchBarView
+from general.views import SignUp 
 
 urlpatterns = patterns('',
     url(r'^$', SearchBarView.as_view(), name='searchProduct'),                       
-    url(r'^search/$', SearchBarView.as_view(), name='searchProduct'),
+    url(r'^search/?$', SearchBarView.as_view(), name='searchProduct'),
+    url(r'^signup/?$', SignUp.as_view(), name='signUp'),
     # Examples:
     # url(r'^$', 'EcoAR.views.home', name='home'),
     # url(r'^EcoAR/', include('EcoAR.foo.urls')),
