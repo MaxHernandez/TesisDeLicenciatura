@@ -141,6 +141,7 @@ INSTALLED_APPS = (
     'general',
     # Third party apps
     'rest_framework',
+    'rest_framework.authtoken',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -175,3 +176,11 @@ LOGGING = {
         },
     }
 }
+
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       #'rest_framework.authentication.TokenAuthentication',
+       'rest_framework.authentication.SessionAuthentication',       
+   ),
+}
+

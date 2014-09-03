@@ -12,17 +12,15 @@ class UserSignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
         model    = User
-        fields   = ('id','username', 'password', 'email', 'first_name', 'last_name')
+        fields   = ('id', 'username', 'password', 'email', 'first_name', 'last_name')
 
-    def validate_username(self, attrs, source):
-        value = attrs[source]
-        try:
-            user = User.objects.get(username=value)
-        except User.DoesNotExist:
-            return attrs
-        user.delete()
-        print "ELIMINANDO USUARIO"
-        raise serializers.ValidationError("Ya existe el nombre de usuario")
+    #def validate_username(self, attrs, source):
+    #    value = attrs[source]
+    #    try:
+    #        user = User.objects.get(username=value)
+    #    except User.DoesNotExist:
+    #        return attrs
+    #    raise serializers.ValidationError("Ya existe el nombre de usuario")
 
     def validate_password(self, attrs, source):
         if not self.init_data.has_key("password_confirmation"):
@@ -32,7 +30,13 @@ class UserSignUpSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Las contrasenas no coinciden")
             
         return attrs 
-
+    
+    def save(self):
+        user = User.objects.create_user(self.data['username'], self.data['email'], self.data['password'])
+        user.first_name = self.data['first_name']
+        user.last_name = self.data['last_name']
+        user.save()
+        self.data['id'] = user.id 
 
 class UserDataSignUpCheckerSerializer(serializers.ModelSerializer):
     """Esta clase solo sirve para verificar que los campos sean correctos"""
@@ -66,6 +70,7 @@ class UserDataAdmin:
     def save(self):
         self.user_serializer = UserSignUpSerializer(data=self.data)
         self.userData_serializer = UserDataSignUpCheckerSerializer(data=self.data)
+
         if self.user_serializer.is_valid() and self.userData_serializer.is_valid():
             self.user_serializer.save()
             self.data['user'] = self.user_serializer.data['id']
@@ -75,16 +80,17 @@ class UserDataAdmin:
                 return True
         return False
 
-class UserSerializer(serializers.ModelSerializer):    
+
+class UserSerializer(serializers.ModelSerializer):
+    """ Esta clase solo sirve para mostrar la informacion de todos los usuarios registrados """
     userData  = UserDataSignUpSerializer()
 
     def __init__ (self, *args, **kwargs):
          super(serializers.ModelSerializer, self).__init__(*args, **kwargs)
-         try:
-             temp = self.data.pop('userData')
-             self.data.update(temp[0]) 
-         except:
-             pass
+         if type(self.data) == type(list()):
+             for i in range(len(self.data)):
+                 temp = self.data[i].pop('userData')
+                 self.data[i].update(temp[0])                  
 
     class Meta:
         model = User

@@ -1,16 +1,19 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.authtoken.models import Token
+from rest_framework import permissions 
 
+from django.contrib import auth 
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from django.core.context_processors import csrf
+
 from serializers import UserSerializer, UserDataAdmin
-
-
-from django.views.decorators.csrf import csrf_exempt
 
 class SignUp(APIView):
 
-    @csrf_exempt
     def get(self, request, format=None):
         """Este metodo sirve solamente para debug """
         query = User.objects.all()
@@ -22,4 +25,32 @@ class SignUp(APIView):
         user_data_admin = UserDataAdmin(data=request.DATA)
         if user_data_admin.save():
             return Response(dict(), status=status.HTTP_201_CREATED)
-        return Response(user_data_admin.get_errors(), status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(user_data_admin.get_errors(), status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogIn(APIView):
+
+    @csrf_exempt
+    def post(self, request, format=None):
+        # Verifica el username y password con authenticate en sus validaciones
+        user_login = AuthTokenSerializer(data=request.DATA)
+        
+        if user_login.is_valid():
+            user = user_login.object['user']
+            auth.login(request, user)
+            #token, created = Token.objects.get_or_create(user=user)
+            #data = {'token': token.key}
+            data = dict()
+            data.update(csrf(request))
+            return Response(data, status=status.HTTP_202_ACCEPTED)
+        else:
+            return Response(user_login.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LogOut(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+#    @csrf_exempt
+    def post(self, request, format=None):
+        auth.logout(request)
+        return Response(dict(), status=status.HTTP_202_ACCEPTED)

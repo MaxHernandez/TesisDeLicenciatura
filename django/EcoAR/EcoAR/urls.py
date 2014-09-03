@@ -1,5 +1,4 @@
 from django.conf.urls import patterns, include, url
-
 from rest_framework.urlpatterns import format_suffix_patterns
 
 # Uncomment the next two lines to enable the admin:
@@ -7,21 +6,16 @@ from rest_framework.urlpatterns import format_suffix_patterns
 # admin.autodiscover()
 
 from searchProduct.views import SearchBarView
-from general.views import SignUp 
+from general.views import SignUp, LogIn, LogOut
 
 urlpatterns = patterns('',
+
+    # Project Views
     url(r'^$', SearchBarView.as_view(), name='searchProduct'),                       
     url(r'^search/?$', SearchBarView.as_view(), name='searchProduct'),
     url(r'^signup/?$', SignUp.as_view(), name='signUp'),
-    # Examples:
-    # url(r'^$', 'EcoAR.views.home', name='home'),
-    # url(r'^EcoAR/', include('EcoAR.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/?$', LogIn.as_view(), name='logIn'),
+    url(r'^logout/?$', LogOut.as_view(), name='logOut'),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
