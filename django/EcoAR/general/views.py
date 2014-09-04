@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.core.context_processors import csrf
 
 from serializers import UserSerializer, UserDataAdmin
+from authentications import IgnoreCSRFSessionAuthentication
 
 class SignUp(APIView):
 
@@ -30,10 +31,15 @@ class SignUp(APIView):
 
 
 class LogIn(APIView):
+    """
+    Este es uno de los pocos views donde realmente se necesita desacivar la proteccion CSRF.
+    """
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (IgnoreCSRFSessionAuthentication,)
 
     @csrf_exempt
     def post(self, request, format=None):
-        # Verifica el username y password con authenticate en sus validaciones
+        """ Verifica el username y password con authenticate en sus validaciones"""
         user_login = AuthTokenSerializer(data=request.DATA)
         
         if user_login.is_valid():
@@ -50,7 +56,7 @@ class LogIn(APIView):
 class LogOut(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-#    @csrf_exempt
+    @csrf_exempt
     def post(self, request, format=None):
         auth.logout(request)
         return Response(dict(), status=status.HTTP_202_ACCEPTED)

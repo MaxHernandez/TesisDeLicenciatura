@@ -28,24 +28,3 @@ class SearchBarView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class SignIn(APIView):
-    """
-    
-    """
-
-class Login(APIView):
-    """
-
-    """
-    
-class Logout(APIView):
-    """
-
-    """
-
-class LastProducts(APIView):
-    """
-    
-    """
-

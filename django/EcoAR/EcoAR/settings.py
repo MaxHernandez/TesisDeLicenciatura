@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     # Third party apps
     'rest_framework',
     'rest_framework.authtoken',
+    'haystack',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -184,3 +185,9 @@ REST_FRAMEWORK = {
    ),
 }
 
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://127.0.0.1:8983/solr'
+    },
+}
