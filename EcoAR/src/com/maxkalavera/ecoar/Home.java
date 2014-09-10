@@ -1,10 +1,13 @@
 package com.maxkalavera.ecoar;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.Gravity;
@@ -29,6 +32,7 @@ import android.graphics.Color;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.maxkalavera.utils.LastProductsList;
 import com.maxkalavera.utils.SlideMenuBarHandler;
+import com.maxkalavera.utils.HTTPRequest;
 
 public class Home extends Activity{
 
@@ -45,6 +49,9 @@ public class Home extends Activity{
 		
 		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");
 		
+		HTTPRequest requestHandler = new HTTPRequest();
+		requestHandler.execute(new String[] {"http://elisa.dyndns-web.com/"});
+
 	}
 
 }
