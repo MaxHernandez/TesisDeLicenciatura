@@ -1,0 +1,71 @@
+import urllib, time
+from bs4 import BeautifulSoup
+
+class WebParser (BeautifulSoup):
+    
+    def __init__(self, url, **kwargs):
+        self.url        = url
+        self.raw_html   = self.load_url()
+        BeautifulSoup(self.raw_html)
+        super(WebParser, self).__init__(self.raw_html, **kwargs)
+        
+    def load_url(self):
+        try:
+            fl = urllib.urlopen(self.url)
+        except Exception, e:
+            print 'Error: La url no es valida,', e
+            return None
+        data = fl.read()
+        fl.close()
+        return data
+
+    def __string__(self):
+        return self.raw_html
+
+class EjemploWC(WebParser):
+
+    def comp_class(self, tag, val, attr='class'):
+        if tag.has_attr(attr) and tag.attrs[attr][0] == val:
+            return True
+        else:
+            return False
+
+    def get_attr(self, tag, attr):
+        if tag.has_attr(attr):
+            return tag.attrs[attr]
+        else:
+            return None
+
+    def get(self):
+        submenus_url_list = self.get_submenus()
+        print len(submenus_url_list), submenus_url_list
+        #products_url_list = self.get_products(submenus_url_list)
+
+    def get_products(self, smlist):
+        for url in sllist:
+            web_parser = WebParser(url)
+            
+            time.sleep(0.1)
+        
+
+    def get_submenus(self):
+        # Main Menu 
+        submenus_url_list = list()
+        query = self.find_all('li')
+        for i in range(len(query)):
+             if self.comp_class(query[i], 'vineta_punto') and self.comp_class(query[i+1], 'has-sub'):
+                submenus_url_list.append(''+self.get_attr(query[i+1].a, 'href'))
+        return submenus_url_list
+
+
+def main():
+    url = 'http://elisa.dyndns-web.com/'
+    #webparser = WebParser(url)
+    #print dir(webparser.find_all('p')[0])
+    #print webparser.find_all('p')[0].attrs
+
+    lacomer_wc = LacomerWC('Ejemplo')
+    lacomer_wc.get()
+
+if __name__ == '__main__':
+    main()
