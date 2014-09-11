@@ -1,0 +1,54 @@
+import urllib, time
+import os.path
+from bs4 import BeautifulSoup
+import requests #git://github.com/kennethreitz/requests.git
+
+GET  = 'get'
+POST = 'post'
+
+class WebParser (BeautifulSoup):
+    
+    def __init__(self, url, method, data = None):
+        self.url = url
+        self.raw_html = None
+        if method == 'get':
+            self.raw_html = self.send_get_request(data)
+        elif method == 'post':
+            self.raw_html = self.send_post_request(data)
+
+        #fl = open(os.path.expanduser('~/Desktop/output.html'), 'w', )
+        #fl.write(self.raw_html.encode("utf-8"))
+        #fl.close()
+
+        super(WebParser, self).__init__(self.raw_html)
+
+    def send_get_request(self, params):
+        if not params:
+            return requests.get(self.url).text
+        else:
+            return requests.get(self.url, params=params).text
+
+    def send_post_request(self, data):
+        return requests.get(self.url, data=data).text
+
+    def __string__(self):
+        return self.raw_html
+
+class AmazonParser(WebParser):
+    
+    def __init__(self, query):
+        super(AmazonParser, self).__init__('http://www.amazon.com/s/', GET, {'field-keywords':query})
+        self.parse_data()
+
+    def parse_data(self):
+        product_name_list = self.find_all('span', class_='lrg bold')
+        for product in product_name_list:
+            print product
+
+def main():
+    #url = 'http://elisa.dyndns-web.com/'
+    #webparser = WebParser(url, GET)    
+    AmazonParser('Car')
+
+if __name__ == '__main__':
+    main()
