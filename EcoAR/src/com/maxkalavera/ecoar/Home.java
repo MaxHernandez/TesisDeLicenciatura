@@ -2,7 +2,9 @@ package com.maxkalavera.ecoar;
 
 import java.io.IOException;
 
+
 import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,7 +36,7 @@ import com.maxkalavera.utils.LastProductsList;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.HTTPRequest;
 
-public class Home extends Activity{
+public class Home extends FragmentActivity{
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +54,9 @@ public class Home extends Activity{
 		HTTPRequest requestHandler = new HTTPRequest();
 		requestHandler.execute(new String[] {"http://elisa.dyndns-web.com/"});
 
+		//TextView usernameText = (TextView)this.findViewById(R.id.home_wellcomeuser_usernametext);
+		//usernameText.setText("Pablo");
+		
 	}
 
 }

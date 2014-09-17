@@ -20,12 +20,21 @@
     	android:orientation="vertical" >
  
     	<!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
+    	<fragment android:name="com.maxkalavera.ecoar.WellcomeUser"
+            android:id="@+id/wellcomeuser_fragment"
+    		android:layout_width="fill_parent"
+	    	android:layout_height="0dp"
+    		android:layout_weight=".55"
+    		android:gravity="center"
+        	/>
+    	<!--
 		<include layout="@layout/home_wellcomeuser"
     		android:layout_width="fill_parent"
 	    	android:layout_height="0dp"
     		android:layout_weight=".55"
     		android:gravity="center"
         	/>
+        -->
     
 	    <!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
 	    <include layout="@layout/home_someproducts"

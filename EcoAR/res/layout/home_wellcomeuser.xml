@@ -13,6 +13,7 @@
     		android:layout_height="wrap_content"
     		android:textSize="30sp"
     		android:textStyle="bold"
+    		android:id="@+id/home_wellcomeuser_usernametext"
     		android:text="@string/home_wellcome"    
         	/>
     	<TextView
