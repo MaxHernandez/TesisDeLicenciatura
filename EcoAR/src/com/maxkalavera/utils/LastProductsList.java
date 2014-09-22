@@ -24,7 +24,7 @@ public class LastProductsList extends LinearLayout implements OnTouchListener{
 	public LastProductsList(Context context){
 		super(context);
 		this.context = context;
-		// Fijar la orientación del widget en vertical es decir que se iran agregando cosas de arriba hacia abajo
+		// Fijar la orientación de la lista en vertical es decir que se iran agregando cosas de arriba hacia abajo
 		this.setOrientation(LinearLayout.VERTICAL);	
 		
 		// Este grupo de lineas sirven para definir el (Width, Height 1.0f) del widget

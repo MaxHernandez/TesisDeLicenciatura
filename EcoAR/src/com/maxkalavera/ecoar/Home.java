@@ -41,21 +41,18 @@ public class Home extends FragmentActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.home);
-		
-		LastProductsList lastProducts = new LastProductsList(this);
-		String [][] lastProductsElements = {{"Trigo", "sirve para tal ..."}, {"Detergente", "Agregado hace 5 min"}};
+	
+		/*
+		LastProductsList lastProducts = new LastProductsList(this);		
 		lastProducts.setElements(lastProductsElements);
-		
 		ScrollView someProductsWidget = (ScrollView)this.findViewById(R.id.home_someproducts_scrollview);
 		someProductsWidget.addView(lastProducts);
+		*/
 		
 		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");
 		
 		HTTPRequest requestHandler = new HTTPRequest();
 		requestHandler.execute(new String[] {"http://elisa.dyndns-web.com/"});
-
-		//TextView usernameText = (TextView)this.findViewById(R.id.home_wellcomeuser_usernametext);
-		//usernameText.setText("Pablo");
 		
 	}
 

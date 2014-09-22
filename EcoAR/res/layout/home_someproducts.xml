@@ -27,5 +27,11 @@
     	    android:layout_marginBottom="10dp"
     	    android:background="@drawable/someproducts_list"
     	    >
+    	    <fragment android:name="com.maxkalavera.ecoar.LastProducts"
+            	android:id="@+id/lastProductsFragment"
+    			android:layout_width="fill_parent"
+	    		android:layout_height="fill_parent"
+    			android:gravity="center"
+        		/>
     	</ScrollView>    	
 </LinearLayout>

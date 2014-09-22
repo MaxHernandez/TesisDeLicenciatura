@@ -16,24 +16,21 @@
     	android:orientation="horizontal"
     	android:gravity="center_vertical"
         >
+        <ImageView 
+           	android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:id="@+id/searchproduct_item_image"
+    		android:src="@drawable/ic_launcher"
+            />
 	    <TextView
 	        android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
 	        android:textSize="20sp"
 	        android:layout_marginLeft="10dp"
 	        android:textStyle="bold"
-	        android:id="@+id/someproducts_item_name"
-	        android:text = "Detergente"
+	        android:id="@+id/searchproduct_item_name"
+	        android:text = "Producto"
 	        />
-	    <TextView
-	        android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-	        android:textSize="12sp"
-	        android:textColor="#AAA"
-	        android:layout_marginLeft="10dp"
-	        android:id="@+id/someproducts_item_description"
-	        android:text="Agregado hace 5 min."
-    		/>
     </LinearLayout>
     
     <TextView
