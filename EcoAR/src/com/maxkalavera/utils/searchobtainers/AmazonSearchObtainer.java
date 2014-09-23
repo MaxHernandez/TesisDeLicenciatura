@@ -1,6 +1,7 @@
 package com.maxkalavera.utils.searchobtainers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
@@ -8,25 +9,27 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.maxkalavera.utils.HTTPRequest;
+import com.maxkalavera.utils.Product;
 
 public class AmazonSearchObtainer {
 	String url = "http://www.amazon.com/s/";
+	HTTPRequest requestHandler = new HTTPRequest();
 		
-	public ArrayList<String[]> getData(String query){
+	public ArrayList<Product> getData(String query){
 		String html = makeRequest(query);
-		ArrayList<String[]> data = parseHTML(html);
+		ArrayList<Product> data = parseHTML(html);
 		return data;
 	}
 	
 	private String makeRequest(String query){
-		HTTPRequest requestHandler = new HTTPRequest();
 		try{
 			ArrayList<String[]> params = new ArrayList<String[]>();
 			params.add(new String[]{"field-keywords", query});
-			String result = requestHandler.sendGetRequest(this.url, params);
+			String result = this.requestHandler.sendGetRequest(this.url, params);
 			return result;
 		} catch(IOException ie) {
 			ie.printStackTrace();
@@ -34,22 +37,22 @@ public class AmazonSearchObtainer {
 		return null;
 	}
 	
-	private ArrayList<String[]> parseHTML(String html){
-		ArrayList<String[]> data = new ArrayList<String[]>();
+	private ArrayList<Product> parseHTML(String html){
+		ArrayList<Product> data = new ArrayList<Product>();
 		Log.i("ecoar-html", html);
 		Document doc = Jsoup.parse(html);
 		Elements products = doc.select("div[class=rslt prod celwidget]");
 		for (Element product : products) {
-			//doc.select("span[class=lrg bold]");
+			Product pdata = new Product();
 			Element productNameElement = product.select("span[class=lrg bold]").first();
-			String productName = productNameElement.text();
-			//Log.i("ecoar", productName);
+			pdata.productName = productNameElement.text();
 			
 			Element productImageURL = product.select("img").first();
-			String imgURL = productImageURL.attr("src");
-			//Log.i("ecoar", imgURL);
+			pdata.productImageURL = productImageURL.attr("src");
 			
-			data.add(new String[] {productName, imgURL});
+			pdata.image = this.requestHandler.downloadImage(pdata.productImageURL);
+			
+			data.add(pdata);
 		}
 		return data;
 	}
