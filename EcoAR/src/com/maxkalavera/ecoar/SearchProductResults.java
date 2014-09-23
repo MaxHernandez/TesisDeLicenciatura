@@ -1,6 +1,10 @@
 package com.maxkalavera.ecoar;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.maxkalavera.utils.HTTPRequest;
+import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,57 +23,68 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class SearchProductResults extends ListFragment implements 
-	LoaderManager.LoaderCallbacks<String[][]> {
+	LoaderManager.LoaderCallbacks<ArrayList<String[]>> {
 			
 	ArrayList<String[]> itemValues = new ArrayList<String[]>();
 	ResultItemsAdapter adapter;
+	Bundle loaderArgs = new Bundle();
 	
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         this.adapter = new ResultItemsAdapter(getActivity(), this.itemValues);
         setListAdapter(adapter);
+		getLoaderManager().initLoader(0, this.loaderArgs, this);
+		Log.i("ecoar", "Loader initiated");
     }
 	
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         showProductInfo(position);
-    }	
+    }
+
+	@Override
+	public Loader<ArrayList<String[]>> onCreateLoader(int arg0, Bundle args) {
+		String query = this.loaderArgs.getString("query");
+		ResultProductsLoader loader = new ResultProductsLoader(this.getActivity(), query);
+		loader.forceLoad();
+		Log.i("ecoar", "Loader created");
+		return loader;
+	}
+
+	@Override
+	public void onLoadFinished(Loader<ArrayList<String[]>> arg0, ArrayList<String[]> loaderRes) {
+		Log.i("ecoar", "Load finished");
+		if (loaderRes != null) {
+			this.itemValues.addAll(loaderRes);
+			Log.i("ecoar", this.itemValues.get(0)[0]);
+			this.adapter.notifyDataSetChanged();
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<ArrayList<String[]>> arg0) {
+		Log.i("ecoar", "Loader reset finished");
+		
+	}
+	
+	void newSearch(String query){
+		this.loaderArgs.putString("query", query);
+		getLoaderManager().restartLoader(0, null, this);
+		Log.i("ecoar", "Loader reseted");
+	}
 	
 	void showProductInfo(int productID) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), ProductInfo.class);
         intent.putExtra("productID", productID);
         startActivity(intent);
-		
-	}
-	
-	void newSearch(String query){
-		getLoaderManager().initLoader(0, null, this);
-		Log.i("ecoar", "Loader initiated");
-	}
-
-	@Override
-	public Loader<String[][]> onCreateLoader(int arg0, Bundle arg1) {
-		return new ResultProductsLoader(this.getActivity());
-	}
-
-	@Override
-	public void onLoadFinished(Loader<String[][]> arg0, String[][] loaderRes) {
-		for (int i = 0; i < loaderRes.length; i++){
-			this.itemValues.add(loaderRes[i]);
-		}
-		this.adapter.notifyDataSetChanged();
-		Log.i("ecoar", "Loader finished");
-	}
-
-	@Override
-	public void onLoaderReset(Loader<String[][]> arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 }
 
+/*
+ *  ADAPTER 
+ */
 
 class ResultItemsAdapter extends ArrayAdapter<ArrayList<String[]>> {
 	private final Activity context;
@@ -97,15 +112,27 @@ class ResultItemsAdapter extends ArrayAdapter<ArrayList<String[]>> {
 	}
 }
 
+/*
+ *  LOADER
+ */
 
-class ResultProductsLoader extends AsyncTaskLoader<String[][]> {
+class ResultProductsLoader extends AsyncTaskLoader<ArrayList<String[]>> {
+	String query;
 	
-	  public ResultProductsLoader(Context context) {
-		    super(context);
-	  }
+	// Metodo constructor
+	public ResultProductsLoader(Context context, String query) {
+		super(context);
+		this.query = query;
+	}
 	
-	  public String[][] loadInBackground() {		  
-		return new String[][]{{"Cafe",""},{"Queso", ""}};
-	  }
+	public ArrayList<String[]> loadInBackground() {
+		//String query = this.args.getString("query");
+		if (query != null) {
+			AmazonSearchObtainer dataObtainer = new AmazonSearchObtainer();
+			ArrayList<String[]> data = dataObtainer.getData(query);
+			return data;
+		}
+		return null;
+	}
 }
 

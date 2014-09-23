@@ -49,11 +49,7 @@ public class Home extends FragmentActivity{
 		someProductsWidget.addView(lastProducts);
 		*/
 		
-		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");
-		
-		HTTPRequest requestHandler = new HTTPRequest();
-		requestHandler.execute(new String[] {"http://elisa.dyndns-web.com/"});
-		
+		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");		
 	}
 
 }
