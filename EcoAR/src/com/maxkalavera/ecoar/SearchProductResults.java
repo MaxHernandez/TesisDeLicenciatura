@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -22,27 +23,53 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SearchProductResults extends ListFragment implements 
-	LoaderManager.LoaderCallbacks<ArrayList<Product>> {
+	LoaderManager.LoaderCallbacks<ArrayList<Product>>, OnScrollListener {
 			
 	ArrayList<Product> itemValues = new ArrayList<Product>();
 	ResultItemsAdapter adapter;
-	Bundle loaderArgs = new Bundle();
+	ProgressBar progressBar;
+	View progressBarView;
+	String query = null;
+	int page = 1;
 	
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		this.progressBarView = inflater.inflate(R.layout.loadingscreen, null);
+		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.progress_bar);
+		this.progressBarView.setVisibility(View.GONE);
+		//this.progressBar.setVisibility(View.GONE);
+		this.getListView().addFooterView(progressBarView);
+        
         this.adapter = new ResultItemsAdapter(getActivity(), this.itemValues);
+        //this.itemValues.add(null);
         setListAdapter(adapter);
-		getLoaderManager().initLoader(0, this.loaderArgs, this);
+		getLoaderManager().initLoader(0, null, this);
+		this.getListView ().setOnScrollListener(this);
+		
 		Log.i("ecoar", "Loader initiated");
     }
 	
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.searchbar_results_fragment, container, false);
+    	//this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    	return view;
+    }
+    
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         showProductInfo(position);
@@ -50,8 +77,8 @@ public class SearchProductResults extends ListFragment implements
 
 	@Override
 	public Loader<ArrayList<Product>> onCreateLoader(int arg0, Bundle args) {
-		String query = this.loaderArgs.getString("query");
-		ResultProductsLoader loader = new ResultProductsLoader(this.getActivity(), query);
+		ResultProductsLoader loader = new ResultProductsLoader(this.getActivity(), this.query, this.page, 
+				this.progressBar);
 		loader.forceLoad();
 		Log.i("ecoar", "Loader created");
 		return loader;
@@ -61,10 +88,15 @@ public class SearchProductResults extends ListFragment implements
 	public void onLoadFinished(Loader<ArrayList<Product>> arg0, ArrayList<Product> loaderRes) {
 		Log.i("ecoar", "Load finished");
 		if (loaderRes != null) {
-			//this.itemValues.addAll(loaderRes);
-			this.itemValues = loaderRes;
+			if (loaderRes.size() > 0 ) {
+				this.page += 1;
+				this.getListView ().setOnScrollListener(this);
+			}				
+			this.itemValues.addAll(loaderRes);
 			this.adapter.notifyDataSetChanged();
 		}
+		this.progressBarView.setVisibility(View.GONE);
+		//this.progressBar.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -72,11 +104,27 @@ public class SearchProductResults extends ListFragment implements
 		Log.i("ecoar", "Loader reset finished");
 		
 	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		if ( (firstVisibleItem+visibleItemCount) >= totalItemCount ) {
+			this.getListView ().setOnScrollListener(null);
+			this.loadData();
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollstate) {
+	}
 	
 	void newSearch(String query){
-		this.loaderArgs.putString("query", query);
-		getLoaderManager().restartLoader(0, null, this);
-		//getLoaderManager().initLoader(0, this.loaderArgs, this);
+		this.getLoaderManager().destroyLoader(0);
+		this.itemValues.clear();
+		this.adapter.notifyDataSetChanged();
+		this.query = query;
+		this.page = 1;
+		this.loadData();
+		
 		Log.i("ecoar", "Loader reseted");
 	}
 	
@@ -85,6 +133,24 @@ public class SearchProductResults extends ListFragment implements
         intent.setClass(getActivity(), ProductInfo.class);
         intent.putExtra("productID", productID);
         startActivity(intent);
+	}
+	
+	private void loadData(){
+		this.progressBarView.setVisibility(View.VISIBLE);
+		this.progressBar.postInvalidate();
+		this.progressBar.setIndeterminate(true);
+		
+		/*this.progressBarView.post(new Runnable() {
+	        public void run() {
+	        	progressBar.setVisibility(View.VISIBLE);
+	        	progressBar.postInvalidate();
+	        	
+	        }
+	    });
+		this.getListView().invalidate();*/
+		
+		//this.adapter.notifyDataSetChanged();
+		getLoaderManager().restartLoader(0, null, this);
 	}
 }
 
@@ -104,19 +170,17 @@ class ResultItemsAdapter extends ArrayAdapter<ArrayList<Product>> {
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
+		Log.i("ecoar", "");
 		if (convertView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
 			convertView = inflater.inflate(R.layout.searchproduct_results_item, null);
-		}		
+		}
 		Product pdata = (Product) this.productList.get(position);
-		
 		TextView productName = (TextView) convertView.findViewById(R.id.searchproduct_item_name);
 		productName.setText(pdata.productName);
 		
 		ImageView productImage = (ImageView) convertView.findViewById(R.id.searchproduct_item_image);
-		productImage.setImageBitmap(pdata.image);
-		
+		productImage.setImageBitmap(pdata.image);		
 		return convertView;
 	}
 }
@@ -127,18 +191,21 @@ class ResultItemsAdapter extends ArrayAdapter<ArrayList<Product>> {
 
 class ResultProductsLoader extends AsyncTaskLoader<ArrayList<Product>> {
 	String query;
+	int page;
+	ProgressBar progressBar;
 	
 	// Metodo constructor
-	public ResultProductsLoader(Context context, String query) {
+	public ResultProductsLoader(Context context, String query, int page, ProgressBar progressBar) {
 		super(context);
 		this.query = query;
+		this.page = page;
+		this.progressBar = progressBar;
 	}
-	
+		
 	public ArrayList<Product> loadInBackground() {
-		//String query = this.args.getString("query");
 		if (query != null) {
 			AmazonSearchObtainer dataObtainer = new AmazonSearchObtainer();
-			ArrayList<Product> data = dataObtainer.getData(query);
+			ArrayList<Product> data = dataObtainer.getData(query, page);
 			return data;
 		}
 		return null;
