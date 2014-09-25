@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
@@ -41,6 +42,7 @@ public class SearchProductResults extends ListFragment implements
 	View progressBarView;
 	String query = null;
 	int page = 1;
+	boolean scrollListenFlag = true;
 	
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -49,12 +51,11 @@ public class SearchProductResults extends ListFragment implements
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		this.progressBarView = inflater.inflate(R.layout.loadingscreen, null);
 		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.progress_bar);
-		this.progressBarView.setVisibility(View.GONE);
 		//this.progressBar.setVisibility(View.GONE);
-		this.getListView().addFooterView(progressBarView);
-        
+		
+		this.getListView().addFooterView(this.progressBarView);
         this.adapter = new ResultItemsAdapter(getActivity(), this.itemValues);
-        //this.itemValues.add(null);
+        
         setListAdapter(adapter);
 		getLoaderManager().initLoader(0, null, this);
 		this.getListView ().setOnScrollListener(this);
@@ -91,12 +92,13 @@ public class SearchProductResults extends ListFragment implements
 			if (loaderRes.size() > 0 ) {
 				this.page += 1;
 				this.getListView ().setOnScrollListener(this);
+				this.scrollListenFlag = true;
 			}				
 			this.itemValues.addAll(loaderRes);
 			this.adapter.notifyDataSetChanged();
 		}
-		this.progressBarView.setVisibility(View.GONE);
-		//this.progressBar.setVisibility(View.GONE);
+		//this.progressBarView.setVisibility(View.INVISIBLE);
+		this.progressBar.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -107,8 +109,11 @@ public class SearchProductResults extends ListFragment implements
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		if ( (firstVisibleItem+visibleItemCount) >= totalItemCount ) {
-			this.getListView ().setOnScrollListener(null);
+		if ( (this.scrollListenFlag) &&
+		( (firstVisibleItem+visibleItemCount) >= totalItemCount ) 
+		) {
+			this.scrollListenFlag = false;
+			this.getListView().setOnScrollListener(null);
 			this.loadData();
 		}
 	}
@@ -122,7 +127,7 @@ public class SearchProductResults extends ListFragment implements
 		this.itemValues.clear();
 		this.adapter.notifyDataSetChanged();
 		this.query = query;
-		this.page = 1;
+		this.page = 1;		
 		this.loadData();
 		
 		Log.i("ecoar", "Loader reseted");
@@ -136,22 +141,12 @@ public class SearchProductResults extends ListFragment implements
 	}
 	
 	private void loadData(){
-		this.progressBarView.setVisibility(View.VISIBLE);
-		this.progressBar.postInvalidate();
-		this.progressBar.setIndeterminate(true);
-		
-		/*this.progressBarView.post(new Runnable() {
-	        public void run() {
-	        	progressBar.setVisibility(View.VISIBLE);
-	        	progressBar.postInvalidate();
-	        	
-	        }
-	    });
-		this.getListView().invalidate();*/
-		
-		//this.adapter.notifyDataSetChanged();
+		Log.i("ecoar", "Loading icon visible!");
+		this.progressBar.setVisibility(View.VISIBLE);
+		//this.progressBar.invalidateDrawable(this.progressBar.getProgressDrawable());
 		getLoaderManager().restartLoader(0, null, this);
 	}
+	
 }
 
 /*
@@ -192,14 +187,12 @@ class ResultItemsAdapter extends ArrayAdapter<ArrayList<Product>> {
 class ResultProductsLoader extends AsyncTaskLoader<ArrayList<Product>> {
 	String query;
 	int page;
-	ProgressBar progressBar;
 	
 	// Metodo constructor
 	public ResultProductsLoader(Context context, String query, int page, ProgressBar progressBar) {
 		super(context);
 		this.query = query;
 		this.page = page;
-		this.progressBar = progressBar;
 	}
 		
 	public ArrayList<Product> loadInBackground() {

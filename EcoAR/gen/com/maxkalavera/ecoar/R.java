@@ -129,14 +129,15 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int commentlist_item=0x7f020001;
         public static final int ic_launcher=0x7f020002;
         public static final int image_not_found=0x7f020003;
-        public static final int search=0x7f020004;
-        public static final int searchcamera=0x7f020005;
-        public static final int searchproduct_foundlist=0x7f020006;
-        public static final int searchproduct_foundlist_item=0x7f020007;
-        public static final int someproducts_item=0x7f020008;
-        public static final int someproducts_item_onselect=0x7f020009;
-        public static final int someproducts_itemlist_onselect=0x7f02000a;
-        public static final int someproducts_list=0x7f02000b;
+        public static final int progressbar=0x7f020004;
+        public static final int search=0x7f020005;
+        public static final int searchcamera=0x7f020006;
+        public static final int searchproduct_foundlist=0x7f020007;
+        public static final int searchproduct_foundlist_item=0x7f020008;
+        public static final int someproducts_item=0x7f020009;
+        public static final int someproducts_item_onselect=0x7f02000a;
+        public static final int someproducts_itemlist_onselect=0x7f02000b;
+        public static final int someproducts_list=0x7f02000c;
     }
     public static final class id {
         public static final int comentarylist_title=0x7f040005;
