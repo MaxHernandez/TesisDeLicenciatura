@@ -13,8 +13,9 @@ import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.maxkalavera.ecoar.Home;
 import com.maxkalavera.ecoar.R;
+import com.maxkalavera.ecoar.home.Home;
+
 import java.util.Hashtable;
 
 public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{	
@@ -68,15 +69,15 @@ public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{
         
         View item = this.addElement("Home");
 		item.setOnTouchListener(this);
-		this.dict.put(item, "Home");
+		this.dict.put(item, "com.maxkalavera.ecoar.home.Home");
 		
 		item = this.addElement("Login");
 		item.setOnTouchListener(this);
-		this.dict.put(item, "Login");
+		this.dict.put(item, "com.maxkalavera.ecoar.login.Login");
 		
 		item = this.addElement("Buscar");
 		item.setOnTouchListener(this);
-		this.dict.put(item, "SearchProduct");
+		this.dict.put(item, "com.maxkalavera.ecoar.searchbar.SearchBar");
 		
 		item = this.addElement("Buscar por cámara");
 		item.setOnTouchListener(this);
@@ -95,7 +96,7 @@ public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{
         	String className = dict.get(item);
         	if (this.callerClass != className) {
         		Intent intent = new Intent();
-        		intent.setClassName("com.maxkalavera.ecoar", "com.maxkalavera.ecoar."+className);
+        		intent.setClassName("com.maxkalavera.ecoar", className);
         		this.activity.startActivity(intent);
         	}
         	

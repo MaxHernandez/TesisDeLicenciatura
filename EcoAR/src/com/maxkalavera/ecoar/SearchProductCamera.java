@@ -10,7 +10,7 @@ public class SearchProductCamera extends Activity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		this.setContentView(R.layout.searchproduct);
+		this.setContentView(R.layout.searchbar);
 		
 		
 		

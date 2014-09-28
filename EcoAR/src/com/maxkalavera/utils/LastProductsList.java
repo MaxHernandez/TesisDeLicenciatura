@@ -1,7 +1,7 @@
 package com.maxkalavera.utils;
-import com.maxkalavera.ecoar.Home;
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.Wellcome;
+import com.maxkalavera.ecoar.home.Home;
+import com.maxkalavera.ecoar.main.Main;
 
 import com.maxkalavera.utils.CircleScore;
 

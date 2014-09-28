@@ -1,15 +1,27 @@
 package com.maxkalavera.utils;                                                                                                    
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,34 +30,111 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Pair;
+import android.webkit.CookieManager;
  
 public class HTTPRequest {
 	HttpClient httpclient;
+	HttpURLConnection getConnection;
+	HttpURLConnection postConnection;
 	
 	public HTTPRequest(){
 		httpclient = new DefaultHttpClient();
 	}
+
+	public Integer sendGetRequest(String url, List<BasicNameValuePair> params, List<BasicNameValuePair> headers) throws IOException {
+		if(params != null)
+			url += "?"+URLEncodedUtils.format(params, "utf-8");
+
+		URL uri = new URL(url);
+		this.getConnection = (HttpURLConnection) uri.openConnection();
+		getConnection.setRequestMethod("GET");
+		
+		if (headers != null)
+			for (int i = 0; i < headers.size(); i++)
+				getConnection.setRequestProperty( headers.get(i).getName(), headers.get(i).getValue());
+		
+		return this.getConnection.getResponseCode();
+	}
 	
-	public String sendGetRequest(String url, ArrayList<String[]> parameters) throws IOException {
+	public String getDataOfGetRequest() throws IOException {
+		BufferedReader in = new BufferedReader(
+		        new InputStreamReader(this.getConnection.getInputStream()));
+		String temp;
+		StringBuffer responseData = new StringBuffer();
 		
-		url += "?";
-		for (int i = 0; i < parameters.size(); i++){
-			url += parameters.get(i)[0]+"="+parameters.get(i)[1]+"&";
-		}
+		while ((temp = in.readLine()) != null)
+			responseData.append(temp);
+		in.close();
+		return responseData.toString();
+	}
+	
+	
+	public HttpResponse sendGetRequestApache(String url, List<BasicNameValuePair> params, List<BasicNameValuePair> headers) throws IOException {
+		if(params != null)
+			url += "?"+URLEncodedUtils.format(params, "utf-8");
 		
-		HttpGet httpGet = new HttpGet(url);
-	    HttpResponse response = this.httpclient.execute(httpGet);
-	    StatusLine statusLine = response.getStatusLine();
-	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-	        ByteArrayOutputStream out = new ByteArrayOutputStream();
-	        response.getEntity().writeTo(out);
-	        out.close();
-	        String responseString = out.toString();
-	        return responseString;
-	    } else{
-	        response.getEntity().getContent().close();
-	        throw new IOException(statusLine.getReasonPhrase());
-	    }
+		HttpGet httpget = new HttpGet(url);
+
+		if (headers != null)
+			for (int i = 0; i < headers.size(); i++)
+				httpget.setHeader( headers.get(i).getName(), headers.get(i).getValue());
+
+	    HttpResponse response = this.httpclient.execute(httpget);
+	    return response;
+	}
+	
+	public Integer sendPostRequest(String url, List<BasicNameValuePair> params, List<BasicNameValuePair> headers) throws IOException {
+		
+		String paramsURL = "";
+		if(params != null)
+			paramsURL += URLEncodedUtils.format(params, "utf-8");
+		
+		URL uri = new URL(url);
+		this.postConnection = (HttpURLConnection) uri.openConnection(); 
+		this.postConnection.setRequestMethod("POST");
+		
+		CookieManager cookieManager = CookieManager.getInstance();
+		String cookie = cookieManager.getCookie(uri.getHost());
+
+		if (headers != null)
+			for (int i = 0; i < headers.size(); i++)
+				this.postConnection.setRequestProperty( headers.get(i).getName(), headers.get(i).getValue());
+
+		this.postConnection.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(this.postConnection.getOutputStream());
+		wr.writeBytes(paramsURL);
+		wr.flush();
+		wr.close();
+		
+		return this.postConnection.getResponseCode();
+	}
+	
+	public String getDataOfPostRequest() throws IOException {
+		BufferedReader in = new BufferedReader(
+		        new InputStreamReader(this.postConnection.getInputStream()));
+		String temp;
+		StringBuffer responseData = new StringBuffer();
+		
+		while ((temp = in.readLine()) != null)
+			responseData.append(temp);
+		in.close();
+		return responseData.toString();
+	}
+	
+	
+	public HttpResponse sendPostRequestApache(String url, List<BasicNameValuePair> params, List<BasicNameValuePair> headers) throws IOException {
+		HttpPost httpPost = new HttpPost(url);
+
+		if (params != null)
+			httpPost.setEntity(new UrlEncodedFormEntity(params));
+		
+		if (headers != null)
+			for (int i = 0; i < headers.size(); i++)
+				httpPost.setHeader( headers.get(i).getName(), headers.get(i).getValue());
+
+	    HttpResponse response = this.httpclient.execute(httpPost);
+	    return response;
 	}
 	
 	public Bitmap downloadImage(String imageURL) {
