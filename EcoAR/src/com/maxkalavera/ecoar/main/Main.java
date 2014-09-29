@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Button;
 
 
@@ -23,10 +24,23 @@ public class Main extends  FragmentActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);
 		
-		 CookieManager cookieManager = CookieManager.getInstance();
+		CookieSyncManager.createInstance(this);
 		
 		Button button = (Button) findViewById(R.id.skip_login_button);
 		button.setOnClickListener(this);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		CookieSyncManager.getInstance().startSync();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		 CookieSyncManager.getInstance().stopSync();
+		
 	}
 	
     @Override

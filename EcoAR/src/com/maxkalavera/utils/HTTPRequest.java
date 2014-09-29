@@ -37,6 +37,7 @@ public class HTTPRequest {
 	HttpClient httpclient;
 	HttpURLConnection getConnection;
 	HttpURLConnection postConnection;
+	String host = "";
 	
 	public HTTPRequest(){
 		httpclient = new DefaultHttpClient();
@@ -47,8 +48,15 @@ public class HTTPRequest {
 			url += "?"+URLEncodedUtils.format(params, "utf-8");
 
 		URL uri = new URL(url);
+		this.host = uri.getHost();
 		this.getConnection = (HttpURLConnection) uri.openConnection();
 		getConnection.setRequestMethod("GET");
+
+		CookieManager cookieManager = CookieManager.getInstance();
+		String cookie = cookieManager.getCookie(this.host);
+	    if (cookie != null) {
+	    	this.getConnection.setRequestProperty("Cookie", cookie);
+	    }
 		
 		if (headers != null)
 			for (int i = 0; i < headers.size(); i++)
@@ -58,6 +66,14 @@ public class HTTPRequest {
 	}
 	
 	public String getDataOfGetRequest() throws IOException {
+		CookieManager cookieManager = CookieManager.getInstance();
+	    List<String> cookieList = this.getConnection.getHeaderFields().get("Set-Cookie");
+	    if (cookieList != null) {
+	        for (String cookieTemp : cookieList) {
+	            cookieManager.setCookie(this.host, cookieTemp);
+	        }
+	    }
+		
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(this.getConnection.getInputStream()));
 		String temp;
@@ -91,11 +107,15 @@ public class HTTPRequest {
 			paramsURL += URLEncodedUtils.format(params, "utf-8");
 		
 		URL uri = new URL(url);
+		this.host = uri.getHost();
 		this.postConnection = (HttpURLConnection) uri.openConnection(); 
 		this.postConnection.setRequestMethod("POST");
 		
 		CookieManager cookieManager = CookieManager.getInstance();
-		String cookie = cookieManager.getCookie(uri.getHost());
+		String cookie = cookieManager.getCookie(this.host);
+	    if (cookie != null) {
+	    	this.postConnection.setRequestProperty("Cookie", cookie);
+	    }
 
 		if (headers != null)
 			for (int i = 0; i < headers.size(); i++)
@@ -111,6 +131,15 @@ public class HTTPRequest {
 	}
 	
 	public String getDataOfPostRequest() throws IOException {
+		
+		CookieManager cookieManager = CookieManager.getInstance();
+	    List<String> cookieList = this.postConnection.getHeaderFields().get("Set-Cookie");
+	    if (cookieList != null) {
+	        for (String cookieTemp : cookieList) {
+	            cookieManager.setCookie(this.host, cookieTemp);
+	        }
+	    }
+		
 		BufferedReader in = new BufferedReader(
 		        new InputStreamReader(this.postConnection.getInputStream()));
 		String temp;

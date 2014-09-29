@@ -13,6 +13,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.ProgressBar;
 
 import com.maxkalavera.utils.HTTPRequest;
@@ -49,6 +51,7 @@ public class LoginFragmentLoginLoader extends AsyncTaskLoader<Cursor> {
 				data = this.requestHandler.getDataOfPostRequest();
 				Log.e("EcoAR-POST", data);
 			}
+			CookieSyncManager.getInstance().sync();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
