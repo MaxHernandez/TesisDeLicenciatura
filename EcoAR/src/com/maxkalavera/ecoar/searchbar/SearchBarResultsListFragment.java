@@ -55,8 +55,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
         
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		this.progressBarView = inflater.inflate(R.layout.loading, null);
-		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.progress_bar);
-		//this.progressBar.setVisibility(View.GONE);
+		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.progressbar);
 		
 		this.getListView().addFooterView(this.progressBarView);
         this.adapter = new SearchBarResultsListFragmentAdapter(getActivity(), this.itemValues);

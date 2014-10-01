@@ -1,0 +1,7 @@
+PORT=8080
+IPADRESS=$(ifconfig wlan0 | awk '/inet:/ {gsub("inet:", "", $2); print $2}')
+sudo ufw enable 
+sudo ufw allow $PORT
+echo "IP Adress: $IPADRESS"
+echo "Port: $PORT"
+python ../manage.py runserver $IPADRESS:$PORT

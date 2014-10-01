@@ -3,4 +3,6 @@ Pendientes:
 
 Preocupaciones: 
 * El sistema de cookies acepta cookies de cualquier servidor al que hace una peticion,
-  verificar si podría causar un problema a futuro. 
+  verificar si podría causar un problema a futuro. #ARREGLADO
+* Esta pendiente agregar la iniciacion y el detenimiento de la sincronizacion de cookies
+  en cada OnResume() y Onpause() de cada activity. 

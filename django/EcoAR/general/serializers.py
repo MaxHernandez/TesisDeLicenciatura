@@ -48,7 +48,7 @@ class UserDataSignUpCheckerSerializer(serializers.ModelSerializer):
 
 class UserDataSignUpSerializer(serializers.ModelSerializer):
     """Esta clase sirve para guardar los datos junto con su relacion con el nuevo usuario"""
-    user         = serializers.PrimaryKeyRelatedField(many = False, required = True)
+    user = serializers.PrimaryKeyRelatedField(many = False, required = True)
 
     class Meta:
         model    = UserData
@@ -81,17 +81,24 @@ class UserDataAdmin:
         return False
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserLogInSerializer(serializers.ModelSerializer):
     """ Esta clase solo sirve para mostrar la informacion de todos los usuarios registrados """
-    userData  = UserDataSignUpSerializer()
+    userdata  = UserDataSignUpSerializer()
 
     def __init__ (self, *args, **kwargs):
          super(serializers.ModelSerializer, self).__init__(*args, **kwargs)
          if type(self.data) == type(list()):
              for i in range(len(self.data)):
-                 temp = self.data[i].pop('userData')
-                 self.data[i].update(temp[0])                  
+                 temp = self.data[i].pop('userdata')
+                 self.data[i].update(temp[0])
+         else:
+             temp = self.data.pop('userdata')
+             for field in self.Meta.userdata_fields:
+                 self.data[field] = temp[0][field]
+             #temp = self.data.pop('userdata')
+             #self.data.update(temp[0])             
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'email', 'first_name', 'last_name', 'userData')
+        fields = ('username', 'email', 'first_name', 'last_name', 'userdata')
+        userdata_fields = ('birthdate', 'gender')

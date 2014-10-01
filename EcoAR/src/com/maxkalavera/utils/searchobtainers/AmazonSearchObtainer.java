@@ -32,36 +32,12 @@ public class AmazonSearchObtainer {
 		return data;
 	}
 	
-	private String makeRequest(String query, int page){
-		String data = null;
-		
+	private String makeRequest(String query, int page){		
 		List<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();
 		params.add(new BasicNameValuePair("field-keywords", String.valueOf(query)));
 		params.add(new BasicNameValuePair("page", String.valueOf(page)));
 		
-		try{
-			int responseStatusCode = this.requestHandler.sendGetRequest(this.url, params, null);
-			
-			if (responseStatusCode == HttpStatus.SC_OK )
-				data = this.requestHandler.getDataOfGetRequest();
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-			Log.e("EcoAR-ERROR", "Exception: "+Log.getStackTraceString(e));
-		}
-		
-		/*
-		// En el codigo siguiente se manda un Get Request utilizando la libreria de Apache
-		try{
-			HttpResponse response = this.requestHandler.sendGetRequestApache(this.url, params, null);
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK )
-				data = EntityUtils.toString(response.getEntity());
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-			Log.e("EcoAR-ERROR", "Exception: "+Log.getStackTraceString(e));
-		}
-		*/
+		String data = this.requestHandler.sendGetRequest(this.url, params, null, HttpStatus.SC_OK);
 		
 		return data;
 	}
