@@ -1,40 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- View de inicio, muestra un texto de bienvenida y despues un texto explicando algo hacerla de la app.
-	En la parte inferior muestra una lista de los ultimos productos buscados o escaneados
- -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    >
-
-    <include layout="@layout/slidemenu_topbar"
-    	android:layout_width="fill_parent"
-    	android:layout_height="48dp"
-        />
     
-	<LinearLayout 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!-- 
+	View de inicio, muestra un texto de bienvenida y despues un texto explicando algo hacerla de la app.
+	En la parte inferior muestra una lista de los ultimos productos buscados o escaneados
+ 	--> 
+
+    <fragment android:name="com.maxkalavera.ecoar.home.HomeWellcomeFragment"
+    	android:id="@+id/wellcomeUserFragment"
     	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:orientation="vertical" >
- 
-    	<!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
-    	<fragment android:name="com.maxkalavera.ecoar.home.HomeWellcomeFragment"
-            android:id="@+id/wellcomeUserFragment"
-    		android:layout_width="fill_parent"
-	    	android:layout_height="0dp"
-    		android:layout_weight=".55"
-    		android:gravity="center"
-        	/>    	    
+	    android:layout_height="0dp"
+    	android:layout_weight=".55"
+    	android:gravity="center"
+        />    	    
 	    <!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
-	    <include layout="@layout/home_someproducts"
-    		android:layout_width="fill_parent"
-	    	android:layout_height="0dp"
-    		android:layout_weight=".45"
-        	/>
-	    
-	</LinearLayout>
+	<include layout="@layout/home_someproducts"
+    	android:layout_width="fill_parent"
+	    android:layout_height="0dp"
+    	android:layout_weight=".45"
+        />
 
 </LinearLayout>
 

@@ -83,15 +83,15 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	@Override
 	public Loader<ArrayList<Product>> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
-		case 0:
-			return null;
-		case 1:
-			SearchBarResultsListFragmentLoader loader = new SearchBarResultsListFragmentLoader(this.getActivity(), this.query, this.page);
-			loader.forceLoad();
-			Log.i("ecoar", "Loader created");
-			return loader;
-		default:
-			return null;
+			case 0:
+				return null;
+			case 1:
+				SearchBarResultsListFragmentLoader loader = new SearchBarResultsListFragmentLoader(this.getActivity(), this.query, this.page);
+				loader.forceLoad();
+				Log.i("ecoar", "Loader created");
+				return loader;
+			default:
+				return null;
 		}
 	}
 

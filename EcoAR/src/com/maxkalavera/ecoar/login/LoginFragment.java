@@ -58,14 +58,14 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<Boolean>,
 	@Override
 	public Loader<Boolean> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
-		case 0:
-			return null;
-		case 1:
-			LoginFragmentLoginLoader loader = new LoginFragmentLoginLoader(getActivity(), this.username, this.password);
-			loader.forceLoad();
-			return loader;
-		default:
-			return null;
+			case 0:
+				return null;
+			case 1:
+				LoginFragmentLoginLoader loader = new LoginFragmentLoginLoader(getActivity(), this.username, this.password);
+				loader.forceLoad();
+				return loader;
+			default:
+				return null;
 		}
 	}
 

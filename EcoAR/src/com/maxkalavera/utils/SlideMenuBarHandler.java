@@ -18,7 +18,7 @@ import com.maxkalavera.ecoar.home.Home;
 
 import java.util.Hashtable;
 
-public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{	
+public class SlideMenuBarHandler implements OnTouchListener{	
 	SlidingMenu menu;
 	View slideMenuView;
 	Activity activity;
@@ -64,8 +64,8 @@ public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{
 	
 	private void setButtons() {
 		// El boton que despliega el SlideMenu 
-		Button displayButton = (Button)this.activity.findViewById(R.id.slidemenu_topbar_displaybutton);
-        displayButton.setOnClickListener(this);
+		//Button displayButton = (Button)this.activity.findViewById(R.id.slidemenu_topbar_displaybutton);
+        //displayButton.setOnClickListener(this);
         
         View item = this.addElement("Home");
 		item.setOnTouchListener(this);
@@ -105,7 +105,7 @@ public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{
 		return false;
 	}
 	
-	
+	/*
 	public void onClick(View view){
 		switch(view.getId()) {
 		case R.id.slidemenu_topbar_displaybutton:
@@ -113,5 +113,6 @@ public class SlideMenuBarHandler implements OnClickListener, OnTouchListener{
 			break;
 		}
 	}
+	*/
 	
 }

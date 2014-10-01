@@ -18,6 +18,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
@@ -30,9 +33,16 @@ public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		CookieSyncManager.createInstance(this);			
 		this.setContentView(R.layout.main);	
+		CookieSyncManager.createInstance(this);
 		getSupportLoaderManager().initLoader(1, null, this);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.blank, menu);
+	    return true;
 	}
 	
 	@Override
@@ -50,19 +60,20 @@ public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
 	@Override
 	public Loader<Boolean> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
-		case 0:
-			return null;
-		case 1:
-			MainCheckSessionLoader loader = new MainCheckSessionLoader(this);
-			loader.forceLoad();
-			return loader;
-		default:
-			return null;
+			case 0:
+				return null;
+			case 1:
+				MainCheckSessionLoader loader = new MainCheckSessionLoader(this);
+				loader.forceLoad();
+				return loader;
+			default:
+				return null;
 		}
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Boolean> arg0, Boolean data) {
+		Log.i("ecoar-CheckSession-Loader", String.valueOf(data));
 		if (data != null) {
 			SharedPreferences sessionSharedPreferences = this.getSharedPreferences(this.prefsSession, Context.MODE_PRIVATE);
 			if (sessionSharedPreferences.getBoolean("sessionAuthenticated", false)){
