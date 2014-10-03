@@ -1,0 +1,11 @@
+\begin{table}
+%\centering
+\caption{Porcentaje de los 30 productos de los cuales se logró extraer o víncular información del producto.}
+\label{table:porcentajeDeImagenesProcesadas}
+    \begin{tabular}{ | m{2.5cm} | m{2.5cm} | m{2.5cm} | m{2.5cm} |}
+    %\begin{tabular}{ | l | c | c | c |}
+    \hline 
+    \textbf{Superficie}   & \textbf{Código de Barras} & \textbf{Logotipo} & \textbf{OCR} \\ \hline
+{%INSERT%}
+    \end{tabular}
+\end{table}

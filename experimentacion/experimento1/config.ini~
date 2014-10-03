@@ -1,0 +1,7 @@
+[MainSection]
+NormalDatos = "experimento1_normal.cvs"
+ARDatos = "experimento1_ar.cvs"
+TiempoAprendizajeNormalDatos = "tiempoAprendizaje_normal.cvs"
+TiempoAprendizajeARDatos = "tiempoAprendizaje_ar.cvs"
+ErroresAprendizajeNormalDatos = "erroresAprendizaje_normal.cvs"
+ErroresAprendizajeARDatos = "erroresAprendizaje_ar.cvs"

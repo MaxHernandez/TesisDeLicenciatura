@@ -1,0 +1,3 @@
+
+all:
+	gnuplot experimento1_boxplot.plot
