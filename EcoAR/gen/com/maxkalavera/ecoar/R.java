@@ -134,10 +134,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchcamera=0x7f020006;
         public static final int searchproduct_foundlist=0x7f020007;
         public static final int searchproduct_foundlist_item=0x7f020008;
-        public static final int someproducts_item=0x7f020009;
-        public static final int someproducts_item_onselect=0x7f02000a;
-        public static final int someproducts_itemlist_onselect=0x7f02000b;
-        public static final int someproducts_list=0x7f02000c;
+        public static final int slidemenuicon=0x7f020009;
+        public static final int someproducts_item=0x7f02000a;
+        public static final int someproducts_item_onselect=0x7f02000b;
+        public static final int someproducts_itemlist_onselect=0x7f02000c;
+        public static final int someproducts_list=0x7f02000d;
     }
     public static final class id {
         public static final int fullscreen=0x7f040003;
@@ -162,6 +163,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchproduct_searchTextBar=0x7f040016;
         public static final int selected_view=0x7f040004;
         public static final int skip_login_button=0x7f040015;
+        public static final int slidemenu_button=0x7f04001f;
         public static final int slidemenu_item_image=0x7f04001c;
         public static final int slidemenu_item_name=0x7f04001d;
         public static final int slidemenu_linearlayout=0x7f04001b;

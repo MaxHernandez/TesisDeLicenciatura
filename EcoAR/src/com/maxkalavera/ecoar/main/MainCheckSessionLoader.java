@@ -27,7 +27,7 @@ public class MainCheckSessionLoader extends AsyncTaskLoader<Boolean>  {
 		List<Integer> acceptanceStatusCodes = new LinkedList<Integer>();
 		acceptanceStatusCodes.add(HttpStatus.SC_OK);
 		acceptanceStatusCodes.add(HttpStatus.SC_FORBIDDEN);
-		
+		 Log.e("EcoAR-DEBG", "Menos UNO");
 		 Pair<String, Integer> responsePair = 
 				 this.requestHandler.sendSessionGetRequest(
 						 getContext(),
@@ -35,6 +35,7 @@ public class MainCheckSessionLoader extends AsyncTaskLoader<Boolean>  {
 						 null, 
 						 null, 
 						 acceptanceStatusCodes);
+		 
 		 if (responsePair != null) {
 			 String responseData = (String) responsePair.first;
 			 int responseStatusCode = (Integer) responsePair.second;

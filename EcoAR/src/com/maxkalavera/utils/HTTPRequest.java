@@ -160,21 +160,26 @@ public class HTTPRequest {
 			List<BasicNameValuePair> params, 
 			List<BasicNameValuePair> headers, 
 			List<Integer> acceptanceStatusCodes) {
-		
+		Log.d("EcoAR-DEBG", "CERO");
 		SharedPreferences sessionSharedPreferences = context.getSharedPreferences(prefsSession, Context.MODE_PRIVATE);
+		Log.d("EcoAR-DEBG", "UNO");
 		String csrf_token = sessionSharedPreferences.getString("csrf_token", null);
-		if (csrf_token != null)
+		Log.d("EcoAR-DEBG", "UNO y un CUARTO");
+		if (csrf_token != null) {
 			if ( params == null)
 				params = new LinkedList<BasicNameValuePair>();
 			params.add(new BasicNameValuePair("csrf_token", csrf_token));
-		
+		}
+		Log.d("EcoAR-DEBG", "UNO y MEDIO");
 		try{
 			String data = null;
-			int responseStatusCode = connectGetRequest(url, params, headers, true);			
+			int responseStatusCode = connectGetRequest(url, params, headers, true);	
+			Log.d("EcoAR-DEBG", "DOS");
 			if (acceptanceStatusCodes != null) {
 				for (Integer acceptanceStatusCode  : acceptanceStatusCodes) {
 					if (acceptanceStatusCode.equals(responseStatusCode) ){
 						data = this.getDataOfGetRequest(true);
+						Log.d("EcoAR-DEBG", "TRES");
 						//CookieSyncManager.getInstance().sync();
 				
 						CSRFJsonModel csrfJsonModel = CSRFJsonModel.create(data);
@@ -339,11 +344,12 @@ public class HTTPRequest {
 	
 		SharedPreferences sessionSharedPreferences = context.getSharedPreferences(prefsSession, Context.MODE_PRIVATE);
 		String csrf_token = sessionSharedPreferences.getString("csrf_token", null);
-		if (csrf_token != null)
+		if (csrf_token != null) {
 			if ( params == null)
 				params = new LinkedList<BasicNameValuePair>();
 			params.add(new BasicNameValuePair("csrf_token", csrf_token));
-			
+		}
+		
 		try{
 			int responseStatusCode = this.connectPostRequest(url, params, headers, true);
 			

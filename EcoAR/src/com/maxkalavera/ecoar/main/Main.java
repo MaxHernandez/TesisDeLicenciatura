@@ -84,7 +84,14 @@ public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
 				Intent intent = new Intent();
 				intent.setClass(this, Login.class);
 				startActivity(intent);			
-			}		
+			}
+		}else{
+			/*
+			 * Esta parte logica dentro del else solo esta para debugear
+			 */
+			Intent intent = new Intent();
+			intent.setClass(this, Home.class);
+			startActivity(intent);		
 		}
 	}
 
