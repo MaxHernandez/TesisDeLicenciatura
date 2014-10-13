@@ -61,25 +61,22 @@ public class Home extends FragmentActivity {
 	    View customView = layoutInflater.inflate(R.layout.actionbar, null);
 	    actionBar.setCustomView(customView);
 	    */
+		this.slideMenu = new SlideMenuBarHandler(this, "Home");
 		
 		ActionBar actionBar = getActionBar(); 
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true); 
-		
-		this.slideMenu = new SlideMenuBarHandler(this, "Home");		
+		actionBar.setHomeButtonEnabled(true); 		
 	}
 	
 	
-	   @Override
-	    public boolean onOptionsItemSelected(MenuItem item) {
-
-	        if (item.getItemId() == android.R.id.home) {
-	        	this.slideMenu.menu.showMenu();
-	            return true;
-	        }
-	        return super.onOptionsItemSelected(item);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == android.R.id.home) {
+	    	this.slideMenu.showMenu();
+	        return true;
 	    }
-	
+	    return super.onOptionsItemSelected(item);
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

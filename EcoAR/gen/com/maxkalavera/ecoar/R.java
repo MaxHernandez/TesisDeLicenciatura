@@ -163,10 +163,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchproduct_searchTextBar=0x7f040016;
         public static final int selected_view=0x7f040004;
         public static final int skip_login_button=0x7f040015;
-        public static final int slidemenu_button=0x7f04001f;
         public static final int slidemenu_item_image=0x7f04001c;
         public static final int slidemenu_item_name=0x7f04001d;
         public static final int slidemenu_linearlayout=0x7f04001b;
+        public static final int slidemenu_searchbutton=0x7f04001f;
         public static final int slidemenu_topbar_displaybutton=0x7f040005;
         public static final int slidingmenumain=0x7f04001e;
         public static final int someproducts_item_description=0x7f04000b;
@@ -236,6 +236,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f070001;
+        public static final int Theme_mainTheme=0x7f070003;
+        public static final int mainThemeActionBarStyle=0x7f070002;
     }
     public static final class styleable {
         /** Attributes that can be used with a SlidingMenu.

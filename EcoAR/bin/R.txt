@@ -49,10 +49,10 @@ int id searchproduct_searchButton 0x7f040017
 int id searchproduct_searchTextBar 0x7f040016
 int id selected_view 0x7f040004
 int id skip_login_button 0x7f040015
-int id slidemenu_button 0x7f04001f
 int id slidemenu_item_image 0x7f04001c
 int id slidemenu_item_name 0x7f04001d
 int id slidemenu_linearlayout 0x7f04001b
+int id slidemenu_searchbutton 0x7f04001f
 int id slidemenu_topbar_displaybutton 0x7f040005
 int id slidingmenumain 0x7f04001e
 int id someproducts_item_description 0x7f04000b
@@ -90,6 +90,8 @@ int string skip_login 0x7f060002
 int string username 0x7f060001
 int style AppBaseTheme 0x7f070000
 int style AppTheme 0x7f070001
+int style Theme_mainTheme 0x7f070003
+int style mainThemeActionBarStyle 0x7f070002
 int[] styleable SlidingMenu { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d }
 int styleable SlidingMenu_behindOffset 3
 int styleable SlidingMenu_behindScrollScale 5

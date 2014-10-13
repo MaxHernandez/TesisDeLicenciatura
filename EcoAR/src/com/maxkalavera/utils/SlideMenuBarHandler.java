@@ -18,8 +18,8 @@ import com.maxkalavera.ecoar.home.Home;
 
 import java.util.Hashtable;
 
-public class SlideMenuBarHandler implements OnTouchListener{	
-	public SlidingMenu menu;
+public class SlideMenuBarHandler implements OnTouchListener{
+	private SlidingMenu menu;
 	View slideMenuView;
 	Activity activity;
 	Hashtable<View, String> dict = new Hashtable<View, String>();
@@ -46,6 +46,10 @@ public class SlideMenuBarHandler implements OnTouchListener{
         
         this.setButtons();
         }
+	
+	public void showMenu() {
+		this.menu.toggle();
+	}
 	
 	public View addElement(String nameStr){
 		LinearLayout slideMenuLinearLayout = (LinearLayout)this.slideMenuView.findViewById(R.id.slidemenu_linearlayout);

@@ -17,4 +17,12 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="mainThemeActionBarStyle" parent="android:style/Widget.Holo.Light.ActionBar">
+    	<item name="android:background">#44A044</item>
+	</style>
+    
+    <style name="Theme.mainTheme" parent="android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/mainThemeActionBarStyle</item>
+	</style>
+    
 </resources>
