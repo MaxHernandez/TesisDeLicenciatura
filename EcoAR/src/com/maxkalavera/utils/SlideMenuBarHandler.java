@@ -19,7 +19,7 @@ import com.maxkalavera.ecoar.home.Home;
 import java.util.Hashtable;
 
 public class SlideMenuBarHandler implements OnTouchListener{	
-	SlidingMenu menu;
+	public SlidingMenu menu;
 	View slideMenuView;
 	Activity activity;
 	Hashtable<View, String> dict = new Hashtable<View, String>();

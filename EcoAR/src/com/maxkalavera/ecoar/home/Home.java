@@ -3,6 +3,7 @@ package com.maxkalavera.ecoar.home;
 import java.io.IOException;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.Gravity;
@@ -41,7 +43,8 @@ import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.HTTPRequest;
 
 public class Home extends FragmentActivity {
-
+	private SlideMenuBarHandler slideMenu;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.home);
@@ -52,10 +55,32 @@ public class Home extends FragmentActivity {
 		ScrollView someProductsWidget = (ScrollView)this.findViewById(R.id.home_someproducts_scrollview);
 		someProductsWidget.addView(lastProducts);
 		*/
+		/*
+	    ActionBar actionBar = getActionBar();
+	    LayoutInflater layoutInflater = LayoutInflater.from(this);
+	    View customView = layoutInflater.inflate(R.layout.actionbar, null);
+	    actionBar.setCustomView(customView);
+	    */
 		
-		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");		
+		ActionBar actionBar = getActionBar(); 
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true); 
+		
+		this.slideMenu = new SlideMenuBarHandler(this, "Home");		
 	}
+	
+	
+	   @Override
+	    public boolean onOptionsItemSelected(MenuItem item) {
 
+	        if (item.getItemId() == android.R.id.home) {
+	        	this.slideMenu.menu.showMenu();
+	            return true;
+	        }
+	        return super.onOptionsItemSelected(item);
+	    }
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();

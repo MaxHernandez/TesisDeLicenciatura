@@ -12,14 +12,5 @@
     	android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         />
-    <TextView
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:textStyle="bold"
-    	android:textSize = "24sp"
-    	android:text="Titulo"
-    	android:layout_centerHorizontal="true"
-    	android:layout_centerVertical="true"
-        />    
     
 </RelativeLayout>
