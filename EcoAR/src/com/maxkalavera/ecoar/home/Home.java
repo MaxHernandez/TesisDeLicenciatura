@@ -38,6 +38,8 @@ import android.graphics.Color;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.layout;
+import com.maxkalavera.ecoar.login.Login;
+import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.LastProductsList;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.HTTPRequest;
@@ -55,33 +57,31 @@ public class Home extends FragmentActivity {
 		ScrollView someProductsWidget = (ScrollView)this.findViewById(R.id.home_someproducts_scrollview);
 		someProductsWidget.addView(lastProducts);
 		*/
-		/*
-	    ActionBar actionBar = getActionBar();
-	    LayoutInflater layoutInflater = LayoutInflater.from(this);
-	    View customView = layoutInflater.inflate(R.layout.actionbar, null);
-	    actionBar.setCustomView(customView);
-	    */
 		this.slideMenu = new SlideMenuBarHandler(this, "Home");
 		
-		ActionBar actionBar = getActionBar(); 
-		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setHomeButtonEnabled(true); 		
 	}
 	
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-	    	this.slideMenu.showMenu();
-	        return true;
-	    }
-	    return super.onOptionsItemSelected(item);
+	public boolean onOptionsItemSelected(MenuItem item) {		
+		switch (item.getItemId()) {
+			case android.R.id.home:
+	    		this.slideMenu.showMenu();
+	    		return true;
+			case R.id.slidemenu_searchbutton: 
+				Intent intent = new Intent();
+				intent.setClass(this, SearchBar.class);
+				startActivity(intent);
+				return true;
+			default:
+			    return super.onOptionsItemSelected(item);		
+		}
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.blank, menu);
+	    inflater.inflate(R.menu.mainmenu, menu);
 	    return true;
 	}
 	
