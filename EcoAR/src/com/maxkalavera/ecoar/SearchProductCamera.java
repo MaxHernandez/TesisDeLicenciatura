@@ -14,7 +14,7 @@ public class SearchProductCamera extends Activity{
 		
 		
 		
-		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "Home");
+		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this);
 		
 	}
 }

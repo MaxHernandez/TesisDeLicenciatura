@@ -3,6 +3,7 @@ package com.maxkalavera.ecoar.searchbar;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
+import com.maxkalavera.utils.ActionBarHandler;
 import com.maxkalavera.utils.CircleScore;
 import com.maxkalavera.utils.LastProductsList;
 import com.maxkalavera.utils.SlideMenuBarHandler;
@@ -31,11 +32,12 @@ import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
 public class SearchBar extends FragmentActivity implements OnClickListener{
+	private ActionBarHandler actionBarHandler;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		this.setContentView(R.layout.searchbar);
-		SlideMenuBarHandler slideMenu = new SlideMenuBarHandler(this, "SearchProduct");
+		this.actionBarHandler = new ActionBarHandler(this);
 		
 		Button startSearchButton = (Button) findViewById(R.id.searchproduct_searchButton);
 		startSearchButton.setOnClickListener(this);

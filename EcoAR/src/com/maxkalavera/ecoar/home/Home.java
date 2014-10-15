@@ -36,19 +36,21 @@ import android.graphics.drawable.shapes.Shape;
 import android.graphics.Color;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.searchbar.SearchBar;
+import com.maxkalavera.utils.ActionBarHandler;
 import com.maxkalavera.utils.LastProductsList;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.HTTPRequest;
 
-public class Home extends FragmentActivity {
-	private SlideMenuBarHandler slideMenu;
+public class Home extends BaseActivity {//FragmentActivity {
+	//private ActionBarHandler actionBarHandler;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState, this);
 		this.setContentView(R.layout.home);
 	
 		/*
@@ -57,25 +59,16 @@ public class Home extends FragmentActivity {
 		ScrollView someProductsWidget = (ScrollView)this.findViewById(R.id.home_someproducts_scrollview);
 		someProductsWidget.addView(lastProducts);
 		*/
-		this.slideMenu = new SlideMenuBarHandler(this, "Home");
-		
+		//this.actionBarHandler = new ActionBarHandler(this);
 	}
-	
-	
+	/*
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {		
-		switch (item.getItemId()) {
-			case android.R.id.home:
-	    		this.slideMenu.showMenu();
-	    		return true;
-			case R.id.slidemenu_searchbutton: 
-				Intent intent = new Intent();
-				intent.setClass(this, SearchBar.class);
-				startActivity(intent);
-				return true;
-			default:
-			    return super.onOptionsItemSelected(item);		
-		}
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Boolean rval = this.actionBarHandler.onOptionsItemSelected(item);
+		if (rval != null) 
+			return (boolean)rval;
+		else
+			return super.onOptionsItemSelected(item);
 	}
 	
 	@Override
@@ -84,5 +77,5 @@ public class Home extends FragmentActivity {
 	    inflater.inflate(R.menu.mainmenu, menu);
 	    return true;
 	}
-	
+	*/
 }

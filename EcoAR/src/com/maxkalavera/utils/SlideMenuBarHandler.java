@@ -2,6 +2,7 @@ package com.maxkalavera.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,12 +23,12 @@ public class SlideMenuBarHandler implements OnTouchListener{
 	private SlidingMenu menu;
 	View slideMenuView;
 	Activity activity;
+	String localClassName;
 	Hashtable<View, String> dict = new Hashtable<View, String>();
-	String callerClass;
 	
-	public SlideMenuBarHandler(Activity activity, String callerClass) {
+	public SlideMenuBarHandler(Activity activity) {
 		this.activity = activity;
-		this.callerClass = callerClass;
+		this.localClassName = this.activity.getComponentName(). getClassName();
 		// SlidingMenu obtenido del repositorio 
         menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
@@ -98,7 +99,7 @@ public class SlideMenuBarHandler implements OnTouchListener{
         	item.setBackgroundResource(R.drawable.someproducts_item);
         	
         	String className = dict.get(item);
-        	if (this.callerClass != className) {
+        	if (!this.localClassName.equals(className)) {
         		Intent intent = new Intent();
         		intent.setClassName("com.maxkalavera.ecoar", className);
         		this.activity.startActivity(intent);
