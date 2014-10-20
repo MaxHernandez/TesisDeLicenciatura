@@ -16,7 +16,6 @@ import android.widget.LinearLayout.LayoutParams;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
-
 import java.util.Hashtable;
 
 public class SlideMenuBarHandler implements OnTouchListener{
@@ -29,7 +28,8 @@ public class SlideMenuBarHandler implements OnTouchListener{
 	public SlideMenuBarHandler(Activity activity) {
 		this.activity = activity;
 		this.localClassName = this.activity.getComponentName(). getClassName();
-		// SlidingMenu obtenido del repositorio 
+
+		// Se llevan a cabo configuraciones en SlidingMenu obtenido del repositorio 
         menu = new SlidingMenu(activity);
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
@@ -45,14 +45,22 @@ public class SlideMenuBarHandler implements OnTouchListener{
 		this.slideMenuView = slideMenuView;
         menu.setMenu(slideMenuView);
         
-        this.setButtons();
+        //this.setButtons();
         }
 	
 	public void showMenu() {
 		this.menu.toggle();
 	}
 	
-	public View addElement(String nameStr){
+	public void setButtons(SlideMenuBarHandlerButton[] buttons) {
+		for (int i = 0; i < buttons.length; i++) {
+			View item = this.addElement(buttons[i]);
+			item.setOnTouchListener(this);
+			this.dict.put(item, buttons[i].className);
+		}
+	}
+	
+	public View addElement(SlideMenuBarHandlerButton button){
 		LinearLayout slideMenuLinearLayout = (LinearLayout)this.slideMenuView.findViewById(R.id.slidemenu_linearlayout);
 		
 		// Para cargar el Layout que servira como plantilla para cada elemento
@@ -61,34 +69,10 @@ public class SlideMenuBarHandler implements OnTouchListener{
 		
 		// Se cambia el nombre del producto en la plantilla
 		TextView name = (TextView)itemPattern.findViewById(R.id.slidemenu_item_name);
-		name.setText(nameStr);
+		name.setText(button.text);
 		
 		slideMenuLinearLayout.addView(itemPattern);
 		return itemPattern;
-	}
-	
-	private void setButtons() {
-		// El boton que despliega el SlideMenu 
-		//Button displayButton = (Button)this.activity.findViewById(R.id.slidemenu_topbar_displaybutton);
-        //displayButton.setOnClickListener(this);
-        
-        View item = this.addElement("Home");
-		item.setOnTouchListener(this);
-		this.dict.put(item, "com.maxkalavera.ecoar.home.Home");
-		
-		item = this.addElement("Login");
-		item.setOnTouchListener(this);
-		this.dict.put(item, "com.maxkalavera.ecoar.login.Login");
-		
-		item = this.addElement("Buscar");
-		item.setOnTouchListener(this);
-		this.dict.put(item, "com.maxkalavera.ecoar.searchbar.SearchBar");
-		
-		item = this.addElement("Buscar por cámara");
-		item.setOnTouchListener(this);
-		
-		item = this.addElement("Lista del super");
-		item.setOnTouchListener(this);
 	}
 	
 	public boolean onTouch(View item, MotionEvent event) {
@@ -109,15 +93,5 @@ public class SlideMenuBarHandler implements OnTouchListener{
         }	
 		return false;
 	}
-	
-	/*
-	public void onClick(View view){
-		switch(view.getId()) {
-		case R.id.slidemenu_topbar_displaybutton:
-			this.menu.showMenu();
-			break;
-		}
-	}
-	*/
 	
 }

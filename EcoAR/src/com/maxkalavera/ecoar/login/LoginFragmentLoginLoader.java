@@ -57,14 +57,15 @@ public class LoginFragmentLoginLoader extends AsyncTaskLoader<Boolean> {
 						 this.url, 
 						 params, 
 						 headers, 
-						 acceptanceStatusCodes);		 
+						 acceptanceStatusCodes);	
+		 
 		 if (responsePair != null) {
 			 String responseData = (String) responsePair.first;
 			 int responseStatusCode = (Integer) responsePair.second;
 			 Log.e("EcoAR-ResponseData", responseData);
 			 
 			 switch(responseStatusCode) {
-			 	case HttpStatus.SC_ACCEPTED: 
+			 	case HttpStatus.SC_ACCEPTED:
 			 		return new Boolean(true);
 			 	case HttpStatus.SC_UNAUTHORIZED:
 			 		return new Boolean(false);
