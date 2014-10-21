@@ -30,18 +30,18 @@ public class BaseActivity extends FragmentActivity  {
 		
 		if (sessionFlag) {
 			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
-					new SlideMenuBarHandlerButton("Login", "com.maxkalavera.ecoar.login.Login", 0),
-					new SlideMenuBarHandlerButton("Buscar", "com.maxkalavera.ecoar.searchbar.SearchBar", 0),
-					new SlideMenuBarHandlerButton("Buscar por cámara", "", 0),
-					new SlideMenuBarHandlerButton("Lista del super", "", 0),
+					new SlideMenuBarHandlerButton("Login", "com.maxkalavera.ecoar.login.Login", R.drawable.home),
+					new SlideMenuBarHandlerButton("Buscar", "com.maxkalavera.ecoar.searchbar.SearchBar", R.drawable.search),
+					new SlideMenuBarHandlerButton("Buscar por cámara", "", R.drawable.searchcamera),
+					new SlideMenuBarHandlerButton("Lista del super", "", R.drawable.shoppinglist),
 					};
 			this.slideMenu.setButtons(slideMenuButtonsDefault);
 		}else {
 			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
-					new SlideMenuBarHandlerButton("Home", "com.maxkalavera.ecoar.home.Home", 0),
-					new SlideMenuBarHandlerButton("Buscar", "com.maxkalavera.ecoar.searchbar.SearchBar", 0),
-					new SlideMenuBarHandlerButton("Buscar por cámara", "", 0),
-					new SlideMenuBarHandlerButton("Lista del super", "", 0),
+					new SlideMenuBarHandlerButton("Home", "com.maxkalavera.ecoar.home.Home", R.drawable.home),
+					new SlideMenuBarHandlerButton("Buscar", "com.maxkalavera.ecoar.searchbar.SearchBar", R.drawable.search),
+					new SlideMenuBarHandlerButton("Buscar por cámara", "", R.drawable.searchcamera),
+					new SlideMenuBarHandlerButton("Lista del super", "", R.drawable.shoppinglist),
 					};
 			this.slideMenu.setButtons(slideMenuButtonsDefault);			
 		}

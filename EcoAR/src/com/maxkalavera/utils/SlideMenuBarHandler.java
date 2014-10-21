@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
@@ -70,6 +71,9 @@ public class SlideMenuBarHandler implements OnTouchListener{
 		// Se cambia el nombre del producto en la plantilla
 		TextView name = (TextView)itemPattern.findViewById(R.id.slidemenu_item_name);
 		name.setText(button.text);
+		
+		ImageView icon = (ImageView)itemPattern.findViewById(R.id.slidemenu_item_image);
+		icon.setImageResource(button.iconID);
 		
 		slideMenuLinearLayout.addView(itemPattern);
 		return itemPattern;
