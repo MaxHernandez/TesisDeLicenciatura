@@ -21,6 +21,6 @@
     	android:layout_alignParentBottom="true"
     	android:layout_marginRight="10dp"
     	android:layout_marginBottom="5dp"
-	    android:text="@string/skip_login"
+	    android:text="@string/loginintro_skiplogin"
 	    />
 </RelativeLayout>

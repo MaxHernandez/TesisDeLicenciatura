@@ -27,6 +27,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.jsonmodels.CSRFJsonModel;
 
 import android.content.Context;
@@ -48,10 +49,12 @@ public class HTTPRequest {
 	HttpClient httpclient;
 	HttpURLConnection getConnection;
 	HttpURLConnection postConnection;
-	String host = "";
-	String prefsSession = "Session_prefs";
+	String host;
+	String prefsSession;
 	
-	public HTTPRequest(){
+	public HTTPRequest(Context context){
+		this.host = "";
+		this.prefsSession = context.getResources().getString(R.string.sessionprefsfile);
 		this.httpclient = new DefaultHttpClient();
 	}
 
@@ -160,26 +163,20 @@ public class HTTPRequest {
 			List<BasicNameValuePair> params, 
 			List<BasicNameValuePair> headers, 
 			List<Integer> acceptanceStatusCodes) {
-		Log.d("EcoAR-DEBG", "CERO");
 		SharedPreferences sessionSharedPreferences = context.getSharedPreferences(prefsSession, Context.MODE_PRIVATE);
-		Log.d("EcoAR-DEBG", "UNO");
 		String csrf_token = sessionSharedPreferences.getString("csrf_token", null);
-		Log.d("EcoAR-DEBG", "UNO y un CUARTO");
 		if (csrf_token != null) {
 			if ( params == null)
 				params = new LinkedList<BasicNameValuePair>();
 			params.add(new BasicNameValuePair("csrf_token", csrf_token));
 		}
-		Log.d("EcoAR-DEBG", "UNO y MEDIO");
 		try{
 			String data = null;
 			int responseStatusCode = connectGetRequest(url, params, headers, true);	
-			Log.d("EcoAR-DEBG", "DOS");
 			if (acceptanceStatusCodes != null) {
 				for (Integer acceptanceStatusCode  : acceptanceStatusCodes) {
 					if (acceptanceStatusCode.equals(responseStatusCode) ){
 						data = this.getDataOfGetRequest(true);
-						Log.d("EcoAR-DEBG", "TRES");
 						//CookieSyncManager.getInstance().sync();
 				
 						CSRFJsonModel csrfJsonModel = CSRFJsonModel.create(data);

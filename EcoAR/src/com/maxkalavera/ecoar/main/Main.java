@@ -9,7 +9,9 @@ import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.login.LoginFragmentLoginLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
+import com.maxkalavera.utils.UserSession;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,20 +31,20 @@ import android.widget.Button;
 
 
 public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
-	String prefsSession = "Session_prefs";
+	UserSession userSession;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);	
+		this.userSession = new UserSession(this);
+		
 		CookieSyncManager.createInstance(this);
 		getSupportLoaderManager().initLoader(1, null, this);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.mainmenu, menu);
-	    return true;
+		
+		ActionBar actionBar = this.getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false); 
+		actionBar.setDisplayShowHomeEnabled(false);
+		
 	}
 	
 	@Override
@@ -63,7 +65,7 @@ public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
 			case 0:
 				return null;
 			case 1:
-				MainCheckSessionLoader loader = new MainCheckSessionLoader(this);
+				MainCheckSessionLoader loader = new MainCheckSessionLoader(this, this.userSession);
 				loader.forceLoad();
 				return loader;
 			default:
@@ -75,8 +77,7 @@ public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
 	public void onLoadFinished(Loader<Boolean> arg0, Boolean data) {
 		Log.i("ecoar-CheckSession-Loader", String.valueOf(data));
 		if (data != null) {
-			SharedPreferences sessionSharedPreferences = this.getSharedPreferences(this.prefsSession, Context.MODE_PRIVATE);
-			if (sessionSharedPreferences.getBoolean("sessionAuthenticated", false)){
+			if (this.userSession.checkSessionStatus()){
 				Intent intent = new Intent();
 				intent.setClass(this, Home.class);
 				startActivity(intent);

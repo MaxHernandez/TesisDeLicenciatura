@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.apache.http.HttpStatus;
 
+import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.HTTPRequest;
+import com.maxkalavera.utils.UserSession;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,12 +16,15 @@ import android.util.Log;
 import android.util.Pair;
 
 public class MainCheckSessionLoader extends AsyncTaskLoader<Boolean>  {
-	String url = "http://192.168.1.73:8080/csession/";
-	String prefsSession = "Session_prefs";
-	HTTPRequest requestHandler = new HTTPRequest();
+	String url;
+	UserSession userSession;
+	HTTPRequest requestHandler;
 	
-	public MainCheckSessionLoader(Context context) {
+	public MainCheckSessionLoader(Context context, UserSession userSession) {
 		super(context);
+		this.userSession =  userSession;
+		this.requestHandler = new HTTPRequest(context);
+		this.url = context.getResources().getString(R.string.webservice_csession);
 	}
 	
 	@Override
@@ -27,7 +32,6 @@ public class MainCheckSessionLoader extends AsyncTaskLoader<Boolean>  {
 		List<Integer> acceptanceStatusCodes = new LinkedList<Integer>();
 		acceptanceStatusCodes.add(HttpStatus.SC_OK);
 		acceptanceStatusCodes.add(HttpStatus.SC_FORBIDDEN);
-		 Log.e("EcoAR-DEBG", "Menos UNO");
 		 Pair<String, Integer> responsePair = 
 				 this.requestHandler.sendSessionGetRequest(
 						 getContext(),
@@ -43,10 +47,7 @@ public class MainCheckSessionLoader extends AsyncTaskLoader<Boolean>  {
 			 	case HttpStatus.SC_OK: 
 			 		return true;
 			 	case HttpStatus.SC_FORBIDDEN:
-			 		SharedPreferences sessionSharedPreferences = getContext().getSharedPreferences(this.prefsSession, Context.MODE_PRIVATE);
-					SharedPreferences.Editor editor = sessionSharedPreferences.edit();
-					editor.putBoolean("sessionAuthenticated", false);
-					editor.commit();
+			 		this.userSession.setSessionStatus(false);
 			 		return false;
 			 	default:
 			 		return null;

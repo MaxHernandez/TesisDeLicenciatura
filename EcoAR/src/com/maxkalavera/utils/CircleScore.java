@@ -1,5 +1,6 @@
 package com.maxkalavera.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -54,12 +55,10 @@ public class CircleScore extends RelativeLayout{
 		this.drawShape();
 	}
 	
-	private void drawShape(){
-		//this.score = ;
-		//String hexColor = #000000;
-		
+	private void drawShape(){		
 		CircleDrawable circleDrawable = new CircleDrawable("#FFAA00", this.circleSize, this.circleSize);
-		this.setBackground(circleDrawable);
+		// Se necesita modificar el background para que funcione este metodo
+		//this.setBackground(circleDrawable);
 	}
 	
 	private void drawText(){

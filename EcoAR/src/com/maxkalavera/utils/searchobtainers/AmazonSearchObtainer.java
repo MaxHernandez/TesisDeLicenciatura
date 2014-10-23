@@ -15,20 +15,27 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.util.Pair;
 
+import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.HTTPRequest;
-import com.maxkalavera.utils.Product;
+import com.maxkalavera.utils.datamodels.ProductModel;
 
 public class AmazonSearchObtainer {
-	String url = "http://www.amazon.com/s/";
-	HTTPRequest requestHandler = new HTTPRequest();
-		
-	public ArrayList<Product> getData(String query, int page){
+	String url;
+	HTTPRequest requestHandler;
+	
+	public AmazonSearchObtainer(Context context) {
+		this.requestHandler = new HTTPRequest(context);
+		this.url = context.getResources().getString(R.string.amazonurl);
+	}
+	
+	public ArrayList<ProductModel> getData(String query, int page){
 		String html = makeRequest(query, page);
-		ArrayList<Product> data = parseHTML(html);
+		ArrayList<ProductModel> data = parseHTML(html);
 		return data;
 	}
 	
@@ -42,12 +49,12 @@ public class AmazonSearchObtainer {
 		return data;
 	}
 	
-	private ArrayList<Product> parseHTML(String html){
-		ArrayList<Product> data = new ArrayList<Product>();
+	private ArrayList<ProductModel> parseHTML(String html){
+		ArrayList<ProductModel> data = new ArrayList<ProductModel>();
 		Document doc = Jsoup.parse(html);
 		Elements products = doc.select("div[class=rslt prod celwidget]");
 		for (Element product : products) {
-			Product pdata = new Product();
+			ProductModel pdata = new ProductModel();
 			Element productNameElement = product.select("span[class=lrg bold]").first();
 			pdata.productName = productNameElement.text();
 			

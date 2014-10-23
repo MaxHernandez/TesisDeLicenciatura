@@ -13,15 +13,16 @@ import android.widget.Button;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.main.Main;
+import com.maxkalavera.utils.UserSession;
 
 public class LoginIntro extends FragmentActivity implements OnClickListener{
-	String prefsSession = "Session_prefs";
+	UserSession userSession;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.userSession = new UserSession(this);
 		
-		SharedPreferences sessionSharedPreferences = this.getSharedPreferences(prefsSession, Context.MODE_PRIVATE);
-		if (sessionSharedPreferences.getBoolean("sessionAuthenticated", false)){
+		if (this.userSession.checkSessionStatus()){
             Intent intent = new Intent();
             intent.setClass(this, Home.class);
             startActivity(intent);

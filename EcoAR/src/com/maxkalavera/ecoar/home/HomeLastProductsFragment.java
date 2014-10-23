@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.ListView;
 
 public class HomeLastProductsFragment extends ListFragment implements LoaderCallbacks<Cursor> {

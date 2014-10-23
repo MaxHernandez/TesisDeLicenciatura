@@ -1,17 +1,33 @@
 <resources>
-
+	<!-- General data -->
     <string name="app_name">EcoAR</string>
-    <string name="username">Max</string>
-    <string name="skip_login">Saltar login</string>
-    <string name="example_product">1 lt Leche</string>
     
-    <string name="email">Correo</string>
-    <string name="email_hint">example@example.com</string>
-    <string name="singup_link"><a href="https://www.google.pl/">Registrarse</a></string>
-    <string name="recoverpass_link"><a href="https://www.google.pl/">¿Has olvidado tu contraseña?</a></string>
+    <!-- URL preferences -->
+    <string name="webservice">http://192.168.1.73:8080/</string>
+    <string name="webservice_login">http://192.168.1.73:8080/login/</string>
+    <string name="webservice_csession">http://192.168.1.73:8080/csession/</string>
+    <string name="amazonurl">http://www.amazon.com/s/</string>
     
-    <string name="home_wellcome">Bienvenido Max</string>
-    <string name="home_introtext">Este es un sistema de bla para bla, para empezar a usarlo haz bla</string>
+    <!-- SharedPreferences preferences -->
+    <string name="sessionprefsfile">Session_prefs</string>
+    <string name="sessionstatuskeyword">sessionAuthenticated</string>
+    
+    <!-- Home Activity -->
+    <string name="home_wellcome_wellcomeuser">Bienvenido </string>
+    <string name="home_wellcome_intro">Este es un sistema de bla para bla, para empezar a usarlo haz bla.</string>
     <string name="home_someproducts">Productos recientes</string>
+    
+    <!-- Login activity -->
+    <string name="login_user"><a href="" >Usuario</a></string>
+    <string name="login_password">Contraseña</string>
+   	<string name="login_send">Enviar</string>
+    <string name="login_singuptext"><a href="" >Registrarse</a></string>
+    <string name="login_singupurl">http://www.example.com</string>
+    <string name="login_recoverpasstext"><a href="">Recuperar contraseña</a></string>
+    <string name="login_recoverpassurl">http://www.example.com</string>
+    <string name="loginintro_skiplogin">Saltar</string>
+    
+    <!-- Login login errors -->
+    <string name="login_errorsdefault">El nombre de usuario o la contraseña no son validos.</string>
     
 </resources>

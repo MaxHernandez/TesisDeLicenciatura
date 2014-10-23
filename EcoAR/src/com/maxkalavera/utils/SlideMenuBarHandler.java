@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,8 +38,10 @@ public class SlideMenuBarHandler implements OnTouchListener{
         //menu.setShadowWidthRes(R.dimen.shadow_width);
         menu.setShadowDrawable(R.drawable.commentlist_item);
         //menu.setBehindOffsetRes(R.dimen.slidemenu_slide_offset);
-        menu.setBehindWidthRes(R.dimen.slidemenu_slide_offset);
-        menu.setFadeDegree(0.35f);
+        menu.setBehindWidthRes(R.dimen.slidemenu_slideoffset);
+        TypedValue fadeDegreeOutValue = new TypedValue();
+        this.activity.getResources().getValue(R.dimen.slidemenu_fadedegree, fadeDegreeOutValue, true);
+        menu.setFadeDegree(fadeDegreeOutValue.getFloat()); 
         menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
         
 	    LayoutInflater inflater = (LayoutInflater) this.activity.getSystemService(this.activity.LAYOUT_INFLATER_SERVICE);

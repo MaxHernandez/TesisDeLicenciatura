@@ -10,7 +10,7 @@ import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.login.LoginFragmentLoginLoader;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.utils.HTTPRequest;
-import com.maxkalavera.utils.Product;
+import com.maxkalavera.utils.datamodels.ProductModel;
 import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
 
 import android.app.Activity;
@@ -39,9 +39,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class SearchBarResultsListFragment extends ListFragment implements 
-	LoaderManager.LoaderCallbacks<ArrayList<Product>>, OnScrollListener {
+	LoaderManager.LoaderCallbacks<ArrayList<ProductModel>>, OnScrollListener {
 			
-	ArrayList<Product> itemValues = new ArrayList<Product>();
+	ArrayList<ProductModel> itemValues = new ArrayList<ProductModel>();
 	SearchBarResultsListFragmentAdapter adapter;
 	ProgressBar progressBar;
 	View progressBarView;
@@ -60,18 +60,16 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		this.getListView().addFooterView(this.progressBarView);
         this.adapter = new SearchBarResultsListFragmentAdapter(getActivity(), this.itemValues);
         
+		this.getListView ().setOnScrollListener(this);
+        
         setListAdapter(adapter);
 		getLoaderManager().initLoader(0, null, this);
-		this.getListView ().setOnScrollListener(this);
-		
-		Log.i("ecoar", "Loader initiated");
     }
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.searchbar_results, container, false);
-    	//this.progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     	return view;
     }
     
@@ -81,14 +79,13 @@ public class SearchBarResultsListFragment extends ListFragment implements
     }
 
 	@Override
-	public Loader<ArrayList<Product>> onCreateLoader(int loaderID, Bundle args) {
+	public Loader<ArrayList<ProductModel>> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
 			case 0:
 				return null;
 			case 1:
 				SearchBarResultsListFragmentLoader loader = new SearchBarResultsListFragmentLoader(this.getActivity(), this.query, this.page);
 				loader.forceLoad();
-				Log.i("ecoar", "Loader created");
 				return loader;
 			default:
 				return null;
@@ -96,8 +93,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ArrayList<Product>> arg0, ArrayList<Product> loaderRes) {
-		Log.i("ecoar", "Load finished");
+	public void onLoadFinished(Loader<ArrayList<ProductModel>> arg0, ArrayList<ProductModel> loaderRes) {
 		if (loaderRes != null) {
 			if (loaderRes.size() > 0 ) {
 				this.page += 1;
@@ -107,14 +103,11 @@ public class SearchBarResultsListFragment extends ListFragment implements
 			this.itemValues.addAll(loaderRes);
 			this.adapter.notifyDataSetChanged();
 		}
-		//this.progressBarView.setVisibility(View.INVISIBLE);
 		this.progressBar.setVisibility(View.GONE);
 	}
 
 	@Override
-	public void onLoaderReset(Loader<ArrayList<Product>> arg0) {
-		Log.i("ecoar", "Loader reset finished");
-		
+	public void onLoaderReset(Loader<ArrayList<ProductModel>> arg0) {
 	}
 
 	@Override
@@ -139,8 +132,6 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		this.query = query;
 		this.page = 1;		
 		this.loadData();
-		
-		Log.i("ecoar", "Loader reseted");
 	}
 	
 	void showProductInfo(int productID) {
@@ -151,7 +142,6 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	}
 	
 	private void loadData(){
-		Log.i("ecoar", "Loading icon visible!");
 		this.progressBar.setVisibility(View.VISIBLE);
 		//this.progressBar.invalidateDrawable(this.progressBar.getProgressDrawable());
 		getLoaderManager().restartLoader(1, null, this);

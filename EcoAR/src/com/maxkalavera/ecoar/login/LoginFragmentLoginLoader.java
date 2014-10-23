@@ -19,29 +19,31 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.ProgressBar;
 
+import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.HTTPRequest;
-import com.maxkalavera.utils.Product;
+import com.maxkalavera.utils.datamodels.ProductModel;
 import com.maxkalavera.utils.jsonmodels.CSRFJsonModel;
 
 public class LoginFragmentLoginLoader extends AsyncTaskLoader<Boolean> {
-	String username = "max";
-	String password = "123456";
-	String url = "http://192.168.1.73:8080/login/";
-	String prefsSession = "Session_prefs";
-	HTTPRequest requestHandler = new HTTPRequest();
+	String usernameBuff;
+	String passwordBuff;
+	String url;
+	HTTPRequest requestHandler; 
 	
 	public LoginFragmentLoginLoader(Context context, String username, String password) {
 		super(context);
-		this.username = username;
-		this.password = password;
+		this.requestHandler = new HTTPRequest(context);
+		this.usernameBuff = username;
+		this.passwordBuff = password;
+		this.url = context.getResources().getString(R.string.webservice_login);
 	}
 
 	@Override
 	public Boolean loadInBackground() {
 		
 		List<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair("username", String.valueOf(this.username)));
-		params.add(new BasicNameValuePair("password", String.valueOf(this.password)));
+		params.add(new BasicNameValuePair("username", String.valueOf(this.usernameBuff)));
+		params.add(new BasicNameValuePair("password", String.valueOf(this.passwordBuff)));
 		
 		List<BasicNameValuePair> headers = new LinkedList<BasicNameValuePair>();
 		headers.add(new BasicNameValuePair("Accept", "application/json"));
@@ -62,7 +64,6 @@ public class LoginFragmentLoginLoader extends AsyncTaskLoader<Boolean> {
 		 if (responsePair != null) {
 			 String responseData = (String) responsePair.first;
 			 int responseStatusCode = (Integer) responsePair.second;
-			 Log.e("EcoAR-ResponseData", responseData);
 			 
 			 switch(responseStatusCode) {
 			 	case HttpStatus.SC_ACCEPTED:

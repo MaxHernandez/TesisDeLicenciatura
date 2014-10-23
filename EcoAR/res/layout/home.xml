@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+View de inicio, muestra un texto de bienvenida y despues un texto explicando algo hacerla de la app.
+En la parte inferior muestra una lista de los ultimos productos buscados o escaneados
+--> 
     
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <!-- 
-	View de inicio, muestra un texto de bienvenida y despues un texto explicando algo hacerla de la app.
-	En la parte inferior muestra una lista de los ultimos productos buscados o escaneados
- 	--> 
 
     <fragment android:name="com.maxkalavera.ecoar.home.HomeWellcomeFragment"
     	android:id="@+id/wellcomeUserFragment"

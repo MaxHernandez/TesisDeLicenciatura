@@ -1,9 +1,6 @@
 package com.maxkalavera.ecoar.home;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.R.layout;
-
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

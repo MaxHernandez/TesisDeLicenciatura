@@ -1,19 +1,15 @@
 package com.maxkalavera.ecoar;
 
-import java.util.LinkedList;
-
 import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.SlideMenuBarHandlerButton;
+import com.maxkalavera.utils.UserSession;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +21,7 @@ public class BaseActivity extends FragmentActivity  {
 		super.onCreate(savedInstanceState);
 		this.setContentView(contentViewLayout);
 				
-		boolean sessionFlag = this.getSharedPreferences("Session_prefs", Context.MODE_PRIVATE).getBoolean("sessionAuthenticated", false);
+		boolean sessionFlag = new UserSession(this).checkSessionStatus();
 		this.slideMenu = new SlideMenuBarHandler(this);
 		
 		if (sessionFlag) {

@@ -39,7 +39,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginRight="15dp"
         android:layout_marginLeft="15dp"
-        android:text="El nombre de usuario o la contraseña no son validos."
+        android:text="@string/login_errorsdefault"
         android:textColor="#CC0000"
         android:visibility="invisible"
         />    
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:text="Usuario"
+            android:text="@string/login_user"
              />
         <EditText
             android:id="@+id/login_username"
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:text="Contraseña"
+            android:text="@string/login_user"
              />
         <EditText
             android:id="@+id/login_password"
@@ -101,7 +101,7 @@
     		android:layout_marginTop="5dp"
         	android:layout_marginBottom="5dp"
     		android:textSize="14sp"
-	    	android:text="Enviar"
+	    	android:text="@string/login_send"
 	    	android:scaleType="center"
 	    	/>
 	    <ProgressBar
@@ -115,21 +115,23 @@
     		/>
     </FrameLayout>
     <TextView
+        android:id="@+id/login_singuptext"
     	android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textSize="14sp"
-        android:text="@string/singup_link"
+        android:text="@string/login_singuptext"
        	android:linksClickable="true"
         />
    	<TextView
+   	    android:id="@+id/login_recoverpasstext"
     	android:layout_width="wrap_content"
         android:layout_height="wrap_content"
       	android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textSize="14sp"
-        android:text="@string/recoverpass_link"
+        android:text="@string/login_recoverpasstext"
        	android:linksClickable="true"
         />
 

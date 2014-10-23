@@ -12,27 +12,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.Product;
+import com.maxkalavera.utils.datamodels.ProductModel;
 
 
-public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<Product>> {
+public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<ProductModel>> {
 	private final Activity context;
-	private final ArrayList productList;
+	private final ArrayList<ProductModel> productList;
 	
-	public SearchBarResultsListFragmentAdapter(Activity context, ArrayList productList) {
-		super(context, R.layout.searchbar_results_item, productList);
+	public SearchBarResultsListFragmentAdapter(Activity context, ArrayList<ProductModel> productList) {
+		super(context, R.layout.searchbar_results_item, (ArrayList)productList);
 	    this.context = context;
 	    this.productList = productList;
 	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Log.i("ecoar", "");
 		if (convertView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
 			convertView = inflater.inflate(R.layout.searchbar_results_item, null);
 		}
-		Product pdata = (Product) this.productList.get(position);
+		ProductModel pdata = (ProductModel) this.productList.get(position);
 		TextView productName = (TextView) convertView.findViewById(R.id.searchproduct_item_name);
 		productName.setText(pdata.productName);
 		
