@@ -32,7 +32,7 @@ public class LoginIntro extends FragmentActivity implements OnClickListener{
 		
 		CookieSyncManager.createInstance(this);
 		
-		Button button = (Button) findViewById(R.id.skip_login_button);
+		Button button = (Button) findViewById(R.id.skiploginbutton);
 		button.setOnClickListener(this);
 	}
 	

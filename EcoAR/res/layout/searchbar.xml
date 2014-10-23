@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:orientation="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	>
     
-	    <!-- Search bar -->
-		<LinearLayout
-    		android:layout_width="match_parent"
-    		android:layout_height="48dp"
-   		 	android:layout_marginTop="15dp"
-    		android:layout_marginRight="15dp"
-    		android:layout_marginLeft="15dp"
-    		android:gravity="center_horizontal"
-    		android:orientation="horizontal" >    
-	    
-	    	<EditText
-		    	android:layout_width="0dp"
-    			android:layout_height="48dp"
-    			android:textSize="14sp"
-    			android:layout_weight=".75"
-    			android:id = "@+id/searchproduct_searchTextBar"
-    			/>
-	    
-	    	<Button
-	        	android:layout_width="0dp"
-	       	 	android:layout_height="48dp"
-	        	android:textSize="12sp"
-	        	android:text="Search"
-	        	android:layout_weight=".25"
-	        	android:id = "@+id/searchproduct_searchButton"
-	        	/>
-	    	    
-		</LinearLayout>
-		    <fragment class="com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragment"
-            android:id="@+id/searchProductResultsFragment"
-            android:layout_width="fill_parent"
-    		android:layout_height="fill_parent"
-    	    android:layout_marginTop="10dp"
-    	    android:layout_marginBottom="10dp"
+	<!-- Search bar -->
+	<LinearLayout
+		android:orientation="horizontal"
+		android:gravity="center_horizontal"
+		android:layout_marginRight="15dp"
+		android:layout_marginLeft="15dp"
+		android:layout_marginTop="15dp"
+		android:layout_width="match_parent"
+		android:layout_height="48dp" 
+		>    
+		<EditText
+			android:id = "@+id/searchproduct_searchTextBar"
+			android:inputType="text"
+			android:textSize="14sp"
+			android:layout_weight=".75"
+			android:layout_width="0dp"
+			android:layout_height="48dp"
+			/>
+	    <Button
+			android:id = "@+id/searchproduct_searchButton"
+			android:text="@string/searchbar_sendbutton"
+			android:textSize="12sp"
+			android:layout_weight=".25"
+			android:layout_width="0dp"
+			android:layout_height="48dp"
 			/>
 	</LinearLayout>
+	<fragment class="com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragment"
+		android:id="@+id/searchProductResultsFragment"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		/>
+</LinearLayout>

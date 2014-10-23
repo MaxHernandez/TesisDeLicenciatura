@@ -12,12 +12,22 @@
     <string name="sessionprefsfile">Session_prefs</string>
     <string name="sessionstatuskeyword">sessionAuthenticated</string>
     
-    <!-- Home Activity -->
-    <string name="home_wellcome_wellcomeuser">Bienvenido </string>
-    <string name="home_wellcome_intro">Este es un sistema de bla para bla, para empezar a usarlo haz bla.</string>
-    <string name="home_someproducts">Productos recientes</string>
+    <!-- ActionBar -->
+    <string name="actionbar_home">Inicio</string>
+	<string name="actionbar_login">Iniciar sesión</string>
+	<string name="actionbar_logout">Cerrar sesión</string>
+    <string name="actionbar_search">Buscar</string>
+    <string name="actionbar_searchcamera">Buscar (cámara)</string>
+    <string name="actionbar_shoppinglist">Lista de compras</string>    
     
-    <!-- Login activity -->
+    <!-- Home -->
+    <string name="home_wellcome_title">Bienvenido </string>
+    <string name="home_wellcome_intro">Este es un sistema de bla para bla, para empezar a usarlo haz bla.</string>
+
+    <!-- SomeProducts -->
+    <string name="someproducts_title">Productos recientes</string>
+    
+    <!-- Login -->
     <string name="login_user"><a href="" >Usuario</a></string>
     <string name="login_password">Contraseña</string>
    	<string name="login_send">Enviar</string>
@@ -29,5 +39,19 @@
     
     <!-- Login login errors -->
     <string name="login_errorsdefault">El nombre de usuario o la contraseña no son validos.</string>
+    
+    <!-- Home.SomeProducts -->
+    <string name="someproducts_item_defaultname">Nombre del producto</string>
+    <string name="someproducts_item_defaultdescription">Descripción</string>
+    
+    <!-- SearchBar -->
+	<string name="searchbar_sendbutton">Buscar</string>
+    <string name="searchbar_results_itemname">Nombre</string>
+    
+    
+    
+    
+    
+    
     
 </resources>

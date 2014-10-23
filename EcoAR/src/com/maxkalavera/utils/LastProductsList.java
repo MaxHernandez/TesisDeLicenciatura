@@ -46,7 +46,7 @@ public class LastProductsList extends LinearLayout implements OnTouchListener{
 		
 		// Para cargar el Layout que servira como plantilla para cada elemento
 	    LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View itemPattern = inflater.inflate(R.layout.home_someproducts_item, null);
+		View itemPattern = inflater.inflate(R.layout.someproducts_item, null);
 		
 		float circleSize = (float)48.0;
 		float textSize = 20;
@@ -60,11 +60,11 @@ public class LastProductsList extends LinearLayout implements OnTouchListener{
 					, 0);
 		
 		// Se cambia el nombre del producto en la plantilla
-		TextView name = (TextView)itemPattern.findViewById(R.id.someproducts_item_name);
+		TextView name = (TextView)itemPattern.findViewById(R.id.someproducts_name);
 		name.setText(nameStr);
 		
 		// Se cambia el nombre del producto en la plantilla
-		TextView descript = (TextView)itemPattern.findViewById(R.id.someproducts_item_description);
+		TextView descript = (TextView)itemPattern.findViewById(R.id.someproducts_description);
 		descript.setText(descriptStr);
 
 		

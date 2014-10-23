@@ -32,7 +32,7 @@ public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<
 			convertView = inflater.inflate(R.layout.searchbar_results_item, null);
 		}
 		ProductModel pdata = (ProductModel) this.productList.get(position);
-		TextView productName = (TextView) convertView.findViewById(R.id.searchproduct_item_name);
+		TextView productName = (TextView) convertView.findViewById(R.id.searchproduct_itemname);
 		productName.setText(pdata.productName);
 		
 		ImageView productImage = (ImageView) convertView.findViewById(R.id.searchproduct_item_image);

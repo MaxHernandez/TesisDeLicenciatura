@@ -23,21 +23,53 @@ public class BaseActivity extends FragmentActivity  {
 				
 		boolean sessionFlag = new UserSession(this).checkSessionStatus();
 		this.slideMenu = new SlideMenuBarHandler(this);
-		
+				
 		if (sessionFlag) {
 			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
-					new SlideMenuBarHandlerButton("Login", "com.maxkalavera.ecoar.login.Login", R.drawable.home),
-					new SlideMenuBarHandlerButton("Buscar", "com.maxkalavera.ecoar.searchbar.SearchBar", R.drawable.search),
-					new SlideMenuBarHandlerButton("Buscar por cámara", "", R.drawable.searchcamera),
-					new SlideMenuBarHandlerButton("Lista del super", "", R.drawable.shoppinglist),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_login),
+							"com.maxkalavera.ecoar.login.Login",
+							R.drawable.home),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_search),
+							"com.maxkalavera.ecoar.searchbar.SearchBar",
+							R.drawable.search),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_searchcamera),
+							"",
+							R.drawable.searchcamera),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_shoppinglist),
+							"",
+							R.drawable.shoppinglist),
+					new SlideMenuBarHandlerButton(
+						getResources().getString(R.string.actionbar_logout),
+						"",
+						null),
 					};
 			this.slideMenu.setButtons(slideMenuButtonsDefault);
 		}else {
 			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
-					new SlideMenuBarHandlerButton("Home", "com.maxkalavera.ecoar.home.Home", R.drawable.home),
-					new SlideMenuBarHandlerButton("Buscar", "com.maxkalavera.ecoar.searchbar.SearchBar", R.drawable.search),
-					new SlideMenuBarHandlerButton("Buscar por cámara", "", R.drawable.searchcamera),
-					new SlideMenuBarHandlerButton("Lista del super", "", R.drawable.shoppinglist),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_home),
+							"com.maxkalavera.ecoar.login.Login",
+							R.drawable.home),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_search),
+							"com.maxkalavera.ecoar.searchbar.SearchBar",
+							R.drawable.search),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_searchcamera),
+							"",
+							R.drawable.searchcamera),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_shoppinglist),
+							"",
+							R.drawable.shoppinglist),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_logout),
+							"",
+							null),
 					};
 			this.slideMenu.setButtons(slideMenuButtonsDefault);			
 		}
