@@ -31,11 +31,28 @@
     		android:layout_height="wrap_content"
 	        />
     </LinearLayout>
-    <ImageView
-        android:src="@drawable/arrow"
+    <LinearLayout
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-    	android:layout_height="match_parent" 
-        />
+        android:layout_height="wrap_content" 
+   	 	>
+	    <Button        	
+        	android:drawable="@drawable/addtoshoppinglist"
+        	android:layout_marginRight="15dp"
+        	android:layout_width="30dp"
+        	android:layout_height="30dp" 
+        	/>
+    	<ImageView
+        	android:src="@drawable/addtoshoppinglist"
+        	android:layout_marginRight="15dp"
+        	android:layout_width="30dp"
+        	android:layout_height="30dp" 
+        	/>
+    	<ImageView
+        	android:src="@drawable/arrow"
+        	android:layout_width="wrap_content"
+    		android:layout_height="match_parent" 
+        	/>
+    </LinearLayout>
 </RelativeLayout>
