@@ -18,7 +18,7 @@
 	<string name="actionbar_logout">Cerrar sesión</string>
     <string name="actionbar_search">Buscar</string>
     <string name="actionbar_searchcamera">Buscar (cámara)</string>
-    <string name="actionbar_shoppinglist">Lista de compras</string>    
+    <string name="actionbar_groceries">Lista del super</string>    
     
     <!-- Home -->
     <string name="home_wellcome_title">Bienvenido </string>
@@ -47,6 +47,11 @@
     <!-- SearchBar -->
 	<string name="searchbar_sendbutton">Buscar</string>
     <string name="searchbar_results_itemname">Nombre</string>
+    
+    <!-- Groceries -->
+    <string name="grocery_title">Lista del super</string>
+    
+    
     
     
     

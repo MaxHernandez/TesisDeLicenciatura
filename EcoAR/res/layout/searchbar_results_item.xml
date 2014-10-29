@@ -7,10 +7,11 @@
 	android:layout_height="48dp"
     >
     <LinearLayout
-        android:id="@+id/someproducts_item_socket"
+        android:id="@+id/searchbar_results_item_info"
     	android:orientation="horizontal"
     	android:gravity="center_vertical"
         android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/searchbar_results_item_rightmenu"
         android:layout_centerVertical="true"
         android:layout_width="match_parent"
     	android:layout_height="wrap_content"
@@ -32,19 +33,15 @@
 	        />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/searchbar_results_item_rightmenu"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
    	 	>
-	    <Button        	
-        	android:drawable="@drawable/addtoshoppinglist"
-        	android:layout_marginRight="15dp"
-        	android:layout_width="30dp"
-        	android:layout_height="30dp" 
-        	/>
-    	<ImageView
-        	android:src="@drawable/addtoshoppinglist"
+	    <Button
+	        android:id="@+id/searchproduct_item_addshoppinglist"
+        	android:background="@drawable/addtoshoppinglist"
         	android:layout_marginRight="15dp"
         	android:layout_width="30dp"
         	android:layout_height="30dp" 

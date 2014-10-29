@@ -54,7 +54,7 @@ public class LastProductsList extends LinearLayout implements OnTouchListener{
 		
 		// Se agrega el icono de calificacion ambiental que cambia de color
 		// dependiendo de la calificacion
-		LinearLayout circleIconSocket = (LinearLayout)itemPattern.findViewById(R.id.someproducts_item_socket);
+		LinearLayout circleIconSocket = (LinearLayout)itemPattern.findViewById(R.id.someproducts_itemsocket);
 		circleIconSocket.addView(
 					new CircleScore(this.context, circleSize, textSize, score)
 					, 0);

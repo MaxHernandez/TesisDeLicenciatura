@@ -41,7 +41,7 @@ import android.widget.TextView;
 public class SearchBarResultsListFragment extends ListFragment implements 
 	LoaderManager.LoaderCallbacks<ArrayList<ProductModel>>, OnScrollListener {
 			
-	ArrayList<ProductModel> itemValues = new ArrayList<ProductModel>();
+	ArrayList<ProductModel> valuesList = new ArrayList<ProductModel>();
 	SearchBarResultsListFragmentAdapter adapter;
 	ProgressBar progressBar;
 	View progressBarView;
@@ -58,10 +58,9 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.progressbar);
 		
 		this.getListView().addFooterView(this.progressBarView);
-        this.adapter = new SearchBarResultsListFragmentAdapter(getActivity(), this.itemValues);
-        
 		this.getListView ().setOnScrollListener(this);
         
+		this.adapter = new SearchBarResultsListFragmentAdapter(getActivity(), this.valuesList);
         setListAdapter(adapter);
 		getLoaderManager().initLoader(0, null, this);
     }
@@ -100,7 +99,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
 				this.getListView ().setOnScrollListener(this);
 				this.scrollListenFlag = true;
 			}				
-			this.itemValues.addAll(loaderRes);
+			this.valuesList.addAll(loaderRes);
 			this.adapter.notifyDataSetChanged();
 		}
 		this.progressBar.setVisibility(View.GONE);
@@ -127,7 +126,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	
 	void newSearch(String query){
 		this.getLoaderManager().destroyLoader(0);
-		this.itemValues.clear();
+		this.valuesList.clear();
 		this.adapter.notifyDataSetChanged();
 		this.query = query;
 		this.page = 1;		

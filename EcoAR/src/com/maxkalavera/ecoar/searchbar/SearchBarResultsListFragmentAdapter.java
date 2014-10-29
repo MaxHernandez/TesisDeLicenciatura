@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,12 +18,12 @@ import com.maxkalavera.utils.datamodels.ProductModel;
 
 public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<ProductModel>> {
 	private final Activity context;
-	private final ArrayList<ProductModel> productList;
+	private final ArrayList<ProductModel> elementList;
 	
 	public SearchBarResultsListFragmentAdapter(Activity context, ArrayList<ProductModel> productList) {
 		super(context, R.layout.searchbar_results_item, (ArrayList)productList);
 	    this.context = context;
-	    this.productList = productList;
+	    this.elementList = productList;
 	}
 	
 	@Override
@@ -31,12 +32,24 @@ public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<
 			LayoutInflater inflater = context.getLayoutInflater();
 			convertView = inflater.inflate(R.layout.searchbar_results_item, null);
 		}
-		ProductModel pdata = (ProductModel) this.productList.get(position);
+		ProductModel pdata = (ProductModel) this.elementList.get(position);
 		TextView productName = (TextView) convertView.findViewById(R.id.searchproduct_itemname);
 		productName.setText(pdata.productName);
 		
 		ImageView productImage = (ImageView) convertView.findViewById(R.id.searchproduct_item_image);
-		productImage.setImageBitmap(pdata.image);		
+		productImage.setImageBitmap(pdata.image);
+		
+		Button addShoppingButton = (Button) convertView.findViewById(R.id.searchproduct_item_addshoppinglist);
+		addShoppingButton.setOnClickListener(new View.OnClickListener(){
+
+			@Override
+			public void onClick(View view) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
 		return convertView;
 	}
 }

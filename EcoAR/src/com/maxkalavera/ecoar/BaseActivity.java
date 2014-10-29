@@ -39,9 +39,9 @@ public class BaseActivity extends FragmentActivity  {
 							"",
 							R.drawable.searchcamera),
 					new SlideMenuBarHandlerButton(
-							getResources().getString(R.string.actionbar_shoppinglist),
-							"",
-							R.drawable.shoppinglist),
+							getResources().getString(R.string.actionbar_groceries),
+							"com.maxkalavera.ecoar.groceries.Groceries",
+							R.drawable.groceries),
 					new SlideMenuBarHandlerButton(
 						getResources().getString(R.string.actionbar_logout),
 						"",
@@ -63,9 +63,9 @@ public class BaseActivity extends FragmentActivity  {
 							"",
 							R.drawable.searchcamera),
 					new SlideMenuBarHandlerButton(
-							getResources().getString(R.string.actionbar_shoppinglist),
+							getResources().getString(R.string.actionbar_groceries),
 							"",
-							R.drawable.shoppinglist),
+							R.drawable.groceries),
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_logout),
 							"",
