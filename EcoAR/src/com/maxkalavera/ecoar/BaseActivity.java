@@ -36,7 +36,7 @@ public class BaseActivity extends FragmentActivity  {
 							R.drawable.search),
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_searchcamera),
-							"",
+							"com.maxkalavera.ecoar.searchcamera.SearchCamera",
 							R.drawable.searchcamera),
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_groceries),

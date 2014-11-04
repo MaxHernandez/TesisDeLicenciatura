@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.datamodels.ProductModel;
+import com.maxkalavera.utils.jsonmodels.GroceryListJsonModel;
 
 
 public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<ProductModel>> {
@@ -32,22 +33,19 @@ public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<
 			LayoutInflater inflater = context.getLayoutInflater();
 			convertView = inflater.inflate(R.layout.searchbar_results_item, null);
 		}
-		ProductModel pdata = (ProductModel) this.elementList.get(position);
+		ProductModel pData = (ProductModel) this.elementList.get(position);
 		TextView productName = (TextView) convertView.findViewById(R.id.searchproduct_itemname);
-		productName.setText(pdata.productName);
+		productName.setText(pData.productName);
 		
 		ImageView productImage = (ImageView) convertView.findViewById(R.id.searchproduct_item_image);
-		productImage.setImageBitmap(pdata.image);
+		productImage.setImageBitmap(pData.image);
 		
 		Button addShoppingButton = (Button) convertView.findViewById(R.id.searchproduct_item_addshoppinglist);
 		addShoppingButton.setOnClickListener(new View.OnClickListener(){
-
 			@Override
 			public void onClick(View view) {
 				// TODO Auto-generated method stub
-				
 			}
-			
 		});
 		
 		return convertView;

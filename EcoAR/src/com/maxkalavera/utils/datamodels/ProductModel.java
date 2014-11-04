@@ -3,11 +3,11 @@ package com.maxkalavera.utils.datamodels;
 import android.graphics.Bitmap;
 
 public class ProductModel {
-	public String productName     = null;
-	public String productImageURL = null;
-	public String description     = null; 
-	public String url             = null;
-	public String shopingService  = null;
+	public String productName     = "";
+	public String productImageURL = "";
+	public String description     = ""; 
+	public String url             = "";
+	public String shopingService  = "";
 	public Bitmap image           = null;
 	
 }
