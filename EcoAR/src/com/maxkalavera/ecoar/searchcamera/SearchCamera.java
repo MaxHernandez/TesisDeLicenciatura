@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.FrameLayout;
@@ -26,20 +27,27 @@ public class SearchCamera extends BaseActivity implements SurfaceHolder.Callback
     
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.searchcamera);	
-        // Create an instance of Camera
-	    try {
-	        this.mCamera = Camera.open();
-	    } catch (RuntimeException e) {
-	        Log.e("SearchCamera_startCamera", e.getMessage());
-	    }
 	    
 	    this.surfaceView = (SurfaceView) findViewById(R.id.searchcamera_surface);
 	    this.surfaceHolder = surfaceView.getHolder();
 	    this.surfaceHolder.addCallback(this);
-	    
+	    this.surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+	}
+	
+	@Override
+	public void surfaceCreated(SurfaceHolder arg0) {
 	    try {
-	        this.mCamera.setPreviewDisplay(this.surfaceHolder);
-	        this.mCamera.startPreview();
+	    	this.mCamera = Camera.open(0);
+            Camera.Parameters camParam = this.mCamera.getParameters();
+            //camParam.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+            camParam.setZoom(0);
+            this.setCameraDisplayOrientation(this, 0, this.mCamera);
+            this.mCamera.setParameters(camParam);
+            
+	    	if (this.mCamera != null) {
+	    		this.mCamera.setPreviewDisplay(this.surfaceHolder);
+	    		this.mCamera.startPreview();
+	    	}
 	    } catch (IOException e) {
 	        Log.e("SearchCamera_startCamera", e.getMessage());
 	    }
@@ -52,14 +60,35 @@ public class SearchCamera extends BaseActivity implements SurfaceHolder.Callback
 	}
 
 	@Override
-	public void surfaceCreated(SurfaceHolder arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void surfaceDestroyed(SurfaceHolder arg0) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	 public static void setCameraDisplayOrientation(Activity activity,
+	         int cameraId, android.hardware.Camera camera) {
+	     android.hardware.Camera.CameraInfo info =
+	             new android.hardware.Camera.CameraInfo();
+	     android.hardware.Camera.getCameraInfo(cameraId, info);
+	     int rotation = activity.getWindowManager().getDefaultDisplay()
+	             .getRotation();
+	     int degrees = 0;
+	     switch (rotation) {
+	         case Surface.ROTATION_0: degrees = 0; break;
+	         case Surface.ROTATION_90: degrees = 90; break;
+	         case Surface.ROTATION_180: degrees = 180; break;
+	         case Surface.ROTATION_270: degrees = 270; break;
+	     }
+
+	     int result;
+	     if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+	         result = (info.orientation + degrees) % 360;
+	         result = (360 - result) % 360;  // compensate the mirror
+	     } else {  // back-facing
+	         result = (info.orientation - degrees + 360) % 360;
+	     }
+	     camera.setDisplayOrientation(result);
+	 }
+	 
+	
 };
