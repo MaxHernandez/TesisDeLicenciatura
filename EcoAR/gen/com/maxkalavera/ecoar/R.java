@@ -151,8 +151,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int someproducts_list=0x7f020011;
     }
     public static final class id {
-        public static final int button_capture=0x7f04001e;
-        public static final int camera_preview=0x7f04001d;
         public static final int fullscreen=0x7f040003;
         public static final int groceriesListFragment=0x7f040005;
         public static final int home_wellcomeuser_usernametext=0x7f040009;
@@ -173,6 +171,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchProductResultsFragment=0x7f040017;
         public static final int searchbar_results_item_info=0x7f040018;
         public static final int searchbar_results_item_rightmenu=0x7f040019;
+        public static final int searchcamera_surface=0x7f04001d;
+        public static final int searchcamera_takepicture=0x7f04001e;
         public static final int searchproduct_item_addshoppinglist=0x7f04001c;
         public static final int searchproduct_item_image=0x7f04001a;
         public static final int searchproduct_itemname=0x7f04001b;
@@ -297,7 +297,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
-        public static final int Theme_mainTheme=0x7f080003;
+        public static final int ButtonTheme=0x7f080003;
+        public static final int Theme_mainTheme=0x7f080004;
         public static final int mainThemeActionBarStyle=0x7f080002;
     }
     public static final class styleable {

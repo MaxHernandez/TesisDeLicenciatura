@@ -1,10 +1,15 @@
 package com.maxkalavera.ecoar.searchcamera;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -13,31 +18,48 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 
-public class SearchCamera extends BaseActivity{
+public class SearchCamera extends BaseActivity implements SurfaceHolder.Callback {
     private Camera mCamera;
     private CameraPreview mPreview;
-
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
+    
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.layout.searchbar);	
+		super.onCreate(savedInstanceState, R.layout.searchcamera);	
         // Create an instance of Camera
-        mCamera = getCameraInstance();
-
-        // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreview(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-        preview.addView(mPreview);
-			
-	}
-
-	public static Camera getCameraInstance(){
-	    Camera c = null;
 	    try {
-	        c = Camera.open(); // attempt to get a Camera instance
+	        this.mCamera = Camera.open();
+	    } catch (RuntimeException e) {
+	        Log.e("SearchCamera_startCamera", e.getMessage());
 	    }
-	    catch (Exception e){
-	        // Camera is not available (in use or does not exist)
+	    
+	    this.surfaceView = (SurfaceView) findViewById(R.id.searchcamera_surface);
+	    this.surfaceHolder = surfaceView.getHolder();
+	    this.surfaceHolder.addCallback(this);
+	    
+	    try {
+	        this.mCamera.setPreviewDisplay(this.surfaceHolder);
+	        this.mCamera.startPreview();
+	    } catch (IOException e) {
+	        Log.e("SearchCamera_startCamera", e.getMessage());
 	    }
-	    return c; // returns null if camera is unavailable
 	}
 	
+	@Override
+	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void surfaceCreated(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 };

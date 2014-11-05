@@ -33,8 +33,6 @@ int drawable someproducts_item 0x7f02000e
 int drawable someproducts_item_onselect 0x7f02000f
 int drawable someproducts_itemlist_onselect 0x7f020010
 int drawable someproducts_list 0x7f020011
-int id button_capture 0x7f04001e
-int id camera_preview 0x7f04001d
 int id fullscreen 0x7f040003
 int id groceriesListFragment 0x7f040005
 int id home_wellcomeuser_usernametext 0x7f040009
@@ -55,6 +53,8 @@ int id right 0x7f040001
 int id searchProductResultsFragment 0x7f040017
 int id searchbar_results_item_info 0x7f040018
 int id searchbar_results_item_rightmenu 0x7f040019
+int id searchcamera_surface 0x7f04001d
+int id searchcamera_takepicture 0x7f04001e
 int id searchproduct_item_addshoppinglist 0x7f04001c
 int id searchproduct_item_image 0x7f04001a
 int id searchproduct_itemname 0x7f04001b
@@ -125,7 +125,8 @@ int string webservice_csession 0x7f070003
 int string webservice_login 0x7f070002
 int style AppBaseTheme 0x7f080000
 int style AppTheme 0x7f080001
-int style Theme_mainTheme 0x7f080003
+int style ButtonTheme 0x7f080003
+int style Theme_mainTheme 0x7f080004
 int style mainThemeActionBarStyle 0x7f080002
 int[] styleable SlidingMenu { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d }
 int styleable SlidingMenu_behindOffset 3
