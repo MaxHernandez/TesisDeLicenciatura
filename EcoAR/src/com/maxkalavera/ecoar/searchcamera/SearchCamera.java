@@ -5,12 +5,17 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -22,20 +27,20 @@ import com.maxkalavera.utils.SlideMenuBarHandler;
 public class SearchCamera extends BaseActivity implements SurfaceHolder.Callback {
     private Camera mCamera;
     private CameraPreview mPreview;
+    private Button takePictureButton;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
     
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState, R.layout.searchcamera);	
-	    
+		super.onCreate(savedInstanceState, R.layout.searchcamera);		
 	    this.surfaceView = (SurfaceView) findViewById(R.id.searchcamera_surface);
 	    this.surfaceHolder = surfaceView.getHolder();
 	    this.surfaceHolder.addCallback(this);
 	    this.surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+	    this.takePictureButton = (Button) findViewById(R.id.searchcamera_takepicture);
 	}
 	
-	@Override
-	public void surfaceCreated(SurfaceHolder arg0) {
+	public void startCamera () {
 	    try {
 	    	this.mCamera = Camera.open(0);
             Camera.Parameters camParam = this.mCamera.getParameters();
@@ -51,6 +56,40 @@ public class SearchCamera extends BaseActivity implements SurfaceHolder.Callback
 	    } catch (IOException e) {
 	        Log.e("SearchCamera_startCamera", e.getMessage());
 	    }
+	    setTakePictureButton(true);
+	}
+	
+	public void setTakePictureButton(boolean conf) {
+		if (!conf) {
+		    this.takePictureButton.setOnClickListener(new Button.OnClickListener(){
+				@Override
+				public void onClick(View v) {
+		    		mCamera.takePicture(null, null, jpgPictureCallback);				
+				}
+		    });
+		} else {
+			this.takePictureButton.setOnClickListener(null);
+		}
+	}
+	
+	public void stopCamera() {
+		this.mCamera.stopPreview();
+		this.mCamera.setPreviewCallback(null);
+		this.mCamera.release();
+	}
+	
+	PictureCallback jpgPictureCallback = new PictureCallback(){
+		 @Override
+		 public void onPictureTaken(byte[] data, Camera arg1) {
+			  Bitmap bitmapPicture
+			   = BitmapFactory.decodeByteArray(data, 0, data.length);
+			  stopCamera();
+			  setTakePictureButton(false);
+		 }};
+	
+	@Override
+	public void surfaceCreated(SurfaceHolder arg0) {
+		startCamera();
 	}
 	
 	@Override
