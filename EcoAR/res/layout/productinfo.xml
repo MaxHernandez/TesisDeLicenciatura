@@ -111,12 +111,14 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
-					android:layout_width="wrap_content"
-    				android:layout_height="wrap_content"
+				    android:src="@drawable/transport"
+					android:layout_width="20dp"
+    				android:layout_height="20dp"
 			    	/>
             	<TextView
     				android:text="Gastos de transportación"
 					android:textSize="16sp"
+					android:layout_marginLeft="5dp"
 					android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
     				/>
@@ -133,12 +135,14 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
-					android:layout_width="wrap_content"
-    				android:layout_height="wrap_content"
+				    android:src="@drawable/energy"
+					android:layout_width="20dp"
+    				android:layout_height="20dp"
 			    	/>
             	<TextView
     				android:text="Ahorro de energía"
 					android:textSize="16sp"
+					android:layout_marginLeft="5dp"
 					android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
     				/>
@@ -155,12 +159,14 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
-					android:layout_width="wrap_content"
-    				android:layout_height="wrap_content"
+				    android:src="@drawable/water"
+					android:layout_width="20dp"
+    				android:layout_height="20dp"
 			    	/>
 	            <TextView
     				android:text="Ahorro de agua"
 					android:textSize="16sp"
+					android:layout_marginLeft="5dp"
 					android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
 	    			/>
@@ -177,12 +183,14 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
-					android:layout_width="wrap_content"
-    				android:layout_height="wrap_content"
+				    android:src="@drawable/society"
+					android:layout_width="20dp"
+    				android:layout_height="20dp"
 				    />
 				<TextView
     				android:text="Ayuda en la sociedad"
 					android:textSize="16sp"
+					android:layout_marginLeft="5dp"
 					android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
     				/>
@@ -199,12 +207,14 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
-					android:layout_width="wrap_content"
-    				android:layout_height="wrap_content"
+				    android:src="@drawable/recyclable"
+					android:layout_width="20dp"
+    				android:layout_height="20dp"
 			    	/>
 	            <TextView
     				android:text="Es un producto recicable"
 					android:textSize="16sp"
+					android:layout_marginLeft="5dp"
 					android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
     				/>
