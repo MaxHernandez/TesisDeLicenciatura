@@ -112,6 +112,7 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
+				    android:id="@+id/productinfo_transport"				    
 				    android:src="@drawable/transport"
 					android:layout_width="20dp"
     				android:layout_height="20dp"
@@ -136,6 +137,7 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
+				    android:id="@+id/productinfo_energy"	
 				    android:src="@drawable/energy"
 					android:layout_width="20dp"
     				android:layout_height="20dp"
@@ -160,6 +162,7 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
+				    android:id="@+id/productinfo_water"	
 				    android:src="@drawable/water"
 					android:layout_width="20dp"
     				android:layout_height="20dp"
@@ -184,6 +187,7 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
+				    android:id="@+id/productinfo_society"	
 				    android:src="@drawable/society"
 					android:layout_width="20dp"
     				android:layout_height="20dp"
@@ -208,6 +212,7 @@
     			android:layout_height="wrap_content"
         		>
 				<ImageView
+				    android:id="@+id/productinfo_recyclable"	
 				    android:src="@drawable/recyclable"
 					android:layout_width="20dp"
     				android:layout_height="20dp"
