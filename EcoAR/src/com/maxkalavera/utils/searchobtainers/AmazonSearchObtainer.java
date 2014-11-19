@@ -39,13 +39,14 @@ public class AmazonSearchObtainer {
 		return data;
 	}
 	
-	private String makeRequest(String query, int page){		
+	private String makeRequest(String query, int page){
+		Log.i("EcoAR-Search-URL", url);
 		List<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();
 		params.add(new BasicNameValuePair("field-keywords", String.valueOf(query)));
 		params.add(new BasicNameValuePair("page", String.valueOf(page)));
 		
 		String data = this.requestHandler.sendGetRequest(this.url, params, null, HttpStatus.SC_OK);
-		
+		Log.i("EcoAR-Search-Data", data);
 		return data;
 	}
 	

@@ -133,10 +133,10 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		this.loadData();
 	}
 	
-	void showProductInfo(int productID) {
+	void showProductInfo(int position) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), ProductInfo.class);
-        intent.putExtra("productID", productID);
+        intent.putExtra("product", valuesList.get(position));
         startActivity(intent);
 	}
 	

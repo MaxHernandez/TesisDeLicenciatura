@@ -1,8 +1,9 @@
 package com.maxkalavera.utils.datamodels;
 
 import android.graphics.Bitmap;
+import java.io.Serializable;
 
-public class ProductModel {
+public class ProductModel implements Serializable {
 	public String productName     = "";
 	public String productImageURL = "";
 	public String description     = ""; 
