@@ -5,6 +5,7 @@
     <!-- URL preferences -->
     <string name="webservice">http://192.168.1.73:8080/</string>
     <string name="webservice_login">http://192.168.1.73:8080/login/</string>
+    <string name="webservice_logout">http://192.168.1.73:8080/logout/</string>
     <string name="webservice_csession">http://192.168.1.73:8080/csession/</string>
     <string name="amazonurl">http://www.amazon.com/s/</string>
     

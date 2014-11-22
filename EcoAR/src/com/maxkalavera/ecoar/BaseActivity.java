@@ -60,16 +60,16 @@ public class BaseActivity extends FragmentActivity  {
 							R.drawable.search),
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_searchcamera),
-							"",
+							"com.maxkalavera.ecoar.searchcamera.SearchCamera",
 							R.drawable.searchcamera),
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_groceries),
-							"",
+							"com.maxkalavera.ecoar.groceries.Groceries",
 							R.drawable.groceries),
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_logout),
 							"",
-							null),
+							R.drawable.logout),
 					};
 			this.slideMenu.setButtons(slideMenuButtonsDefault);			
 		}

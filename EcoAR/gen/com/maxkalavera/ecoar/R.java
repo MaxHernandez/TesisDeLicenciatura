@@ -141,21 +141,22 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int home=0x7f020007;
         public static final int ic_launcher=0x7f020008;
         public static final int image_not_found=0x7f020009;
-        public static final int notaproved=0x7f02000a;
-        public static final int point=0x7f02000b;
-        public static final int recyclable=0x7f02000c;
-        public static final int search=0x7f02000d;
-        public static final int searchcamera=0x7f02000e;
-        public static final int searchproduct_foundlist=0x7f02000f;
-        public static final int searchproduct_foundlist_item=0x7f020010;
-        public static final int slidemenuicon=0x7f020011;
-        public static final int society=0x7f020012;
-        public static final int someproducts_item=0x7f020013;
-        public static final int someproducts_item_onselect=0x7f020014;
-        public static final int someproducts_itemlist_onselect=0x7f020015;
-        public static final int someproducts_list=0x7f020016;
-        public static final int transport=0x7f020017;
-        public static final int water=0x7f020018;
+        public static final int logout=0x7f02000a;
+        public static final int notaproved=0x7f02000b;
+        public static final int point=0x7f02000c;
+        public static final int recyclable=0x7f02000d;
+        public static final int search=0x7f02000e;
+        public static final int searchcamera=0x7f02000f;
+        public static final int searchproduct_foundlist=0x7f020010;
+        public static final int searchproduct_foundlist_item=0x7f020011;
+        public static final int slidemenuicon=0x7f020012;
+        public static final int society=0x7f020013;
+        public static final int someproducts_item=0x7f020014;
+        public static final int someproducts_item_onselect=0x7f020015;
+        public static final int someproducts_itemlist_onselect=0x7f020016;
+        public static final int someproducts_list=0x7f020017;
+        public static final int transport=0x7f020018;
+        public static final int water=0x7f020019;
     }
     public static final class id {
         public static final int fullscreen=0x7f040003;
@@ -236,58 +237,59 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int mainmenu=0x7f090000;
     }
     public static final class string {
-        public static final int actionbar_groceries=0x7f07000c;
+        public static final int actionbar_groceries=0x7f07000d;
         /**  ActionBar 
          */
-        public static final int actionbar_home=0x7f070007;
-        public static final int actionbar_login=0x7f070008;
-        public static final int actionbar_logout=0x7f070009;
-        public static final int actionbar_search=0x7f07000a;
-        public static final int actionbar_searchcamera=0x7f07000b;
-        public static final int amazonurl=0x7f070004;
+        public static final int actionbar_home=0x7f070008;
+        public static final int actionbar_login=0x7f070009;
+        public static final int actionbar_logout=0x7f07000a;
+        public static final int actionbar_search=0x7f07000b;
+        public static final int actionbar_searchcamera=0x7f07000c;
+        public static final int amazonurl=0x7f070005;
         /**  General data 
          */
         public static final int app_name=0x7f070000;
         /**  Groceries 
          */
-        public static final int grocery_title=0x7f07001d;
-        public static final int home_wellcome_intro=0x7f07000e;
+        public static final int grocery_title=0x7f07001e;
+        public static final int home_wellcome_intro=0x7f07000f;
         /**  Home 
          */
-        public static final int home_wellcome_title=0x7f07000d;
+        public static final int home_wellcome_title=0x7f07000e;
         /**  Login login errors 
          */
-        public static final int login_errorsdefault=0x7f070018;
-        public static final int login_password=0x7f070011;
-        public static final int login_recoverpasstext=0x7f070015;
-        public static final int login_recoverpassurl=0x7f070016;
-        public static final int login_send=0x7f070012;
-        public static final int login_singuptext=0x7f070013;
-        public static final int login_singupurl=0x7f070014;
+        public static final int login_errorsdefault=0x7f070019;
+        public static final int login_password=0x7f070012;
+        public static final int login_recoverpasstext=0x7f070016;
+        public static final int login_recoverpassurl=0x7f070017;
+        public static final int login_send=0x7f070013;
+        public static final int login_singuptext=0x7f070014;
+        public static final int login_singupurl=0x7f070015;
         /**  Login 
          */
-        public static final int login_user=0x7f070010;
-        public static final int loginintro_skiplogin=0x7f070017;
-        public static final int searchbar_results_itemname=0x7f07001c;
+        public static final int login_user=0x7f070011;
+        public static final int loginintro_skiplogin=0x7f070018;
+        public static final int searchbar_results_itemname=0x7f07001d;
         /**  SearchBar 
          */
-        public static final int searchbar_sendbutton=0x7f07001b;
+        public static final int searchbar_sendbutton=0x7f07001c;
         /**  SharedPreferences preferences 
          */
-        public static final int sessionprefsfile=0x7f070005;
-        public static final int sessionstatuskeyword=0x7f070006;
-        public static final int someproducts_item_defaultdescription=0x7f07001a;
+        public static final int sessionprefsfile=0x7f070006;
+        public static final int sessionstatuskeyword=0x7f070007;
+        public static final int someproducts_item_defaultdescription=0x7f07001b;
         /**  Home.SomeProducts 
          */
-        public static final int someproducts_item_defaultname=0x7f070019;
+        public static final int someproducts_item_defaultname=0x7f07001a;
         /**  SomeProducts 
          */
-        public static final int someproducts_title=0x7f07000f;
+        public static final int someproducts_title=0x7f070010;
         /**  URL preferences 
          */
         public static final int webservice=0x7f070001;
-        public static final int webservice_csession=0x7f070003;
+        public static final int webservice_csession=0x7f070004;
         public static final int webservice_login=0x7f070002;
+        public static final int webservice_logout=0x7f070003;
     }
     public static final class style {
         /** 
