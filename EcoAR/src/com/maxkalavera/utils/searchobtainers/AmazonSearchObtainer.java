@@ -53,18 +53,24 @@ public class AmazonSearchObtainer {
 	private ArrayList<ProductModel> parseHTML(String html){
 		ArrayList<ProductModel> data = new ArrayList<ProductModel>();
 		Document doc = Jsoup.parse(html);
-		Elements products = doc.select("div[class=rslt prod celwidget]");
+		Elements products = doc.select("div[class=s-item-container]");
 		for (Element product : products) {
 			ProductModel pdata = new ProductModel();
-			Element productNameElement = product.select("span[class=lrg bold]").first();
-			pdata.productName = productNameElement.text();
 			
-			Element productImageURL = product.select("img").first();
-			pdata.productImageURL = productImageURL.attr("src");
+			Element productNameElementContainer = product.select("a[class=a-link-normal s-access-detail-page a-text-normal]").first();
+			if (productNameElementContainer != null) {
+				Element productNameElement = productNameElementContainer .select("h2").first();
+				pdata.productName = productNameElement.text();
 			
-			pdata.image = this.requestHandler.downloadImage(pdata.productImageURL);
+				Element productImageURL = product.select("img").first();
+				pdata.productImageURL = productImageURL.attr("src");
 			
-			data.add(pdata);
+				pdata.image = this.requestHandler.downloadImage(pdata.productImageURL);
+			
+				data.add(pdata);
+			}
+			Log.i("EcoAR-Search-Data", pdata.productName);
+			Log.i("EcoAR-Search-Data", pdata.productImageURL);
 		}
 		return data;
 	}

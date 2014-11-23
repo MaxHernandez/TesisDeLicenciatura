@@ -30,6 +30,7 @@ class WebParser (BeautifulSoup):
     def __string__(self):
         return self.raw_html
 
+"""
 class AmazonParser(WebParser):
     
     def __init__(self, query):
@@ -48,6 +49,35 @@ class AmazonParser(WebParser):
             pdata['product_url'] = product.find('div', class_='image imageContainer').find('a')['href']
             data.append(pdata)
             print pdata
+"""
+
+class AmazonParser(WebParser):
+
+    def __init__(self, query):
+        super(AmazonParser, self).__init__('http://www.amazon.com/s/', GET, {'field-keywords':query})
+        self.parse_data()
+
+    def parse_data(self):
+        data = list()
+
+        product_name_list = self.find_all('div', class_='s-item-container')
+        print len(product_name_list)
+
+        for product in product_name_list:
+            #print product 
+            print product.find('a', class_='a-link-normal s-access-detail-page a-text-normal').find('h2').get_text()
+            print product.find('img', alt='Product Details')
+ 
+
+            #pdata = dict()
+            #pdata['product_name'] = product.find('span', class_='lrg bold').get_text()
+            #pdata['description'] = ""
+            #pdata['img_url'] = product.find('img')['src']
+            #pdata['shoping_service'] = "Amazon"
+            #pdata['product_url'] = product.find('div', class_='image imageContainer').find('a')['href']
+            #data.append(pdata)
+            #print pdata
+
 
 def main():
     #url = 'http://elisa.dyndns-web.com/'
