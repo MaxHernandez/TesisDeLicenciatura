@@ -52,10 +52,11 @@
     <!-- Groceries -->
     <string name="grocery_title">Lista del super</string>
     
-    
-    
-    
-    
+    <!-- ProductInfo -->
+    <string name="productinfo_userrating_title">Calificación de usuarios</string>
+    <string name="productinfo_userrating_rating">0.0</string>
+    <string name="productinfo_userrating_titleuser">Tu calificación:</string>
+      <string name="productinfo_userrating_ratinguser">0/10</string>
     
     
     
