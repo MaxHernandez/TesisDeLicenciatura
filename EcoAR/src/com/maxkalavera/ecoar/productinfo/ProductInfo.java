@@ -16,23 +16,35 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 import android.graphics.BitmapFactory;
 import 	android.graphics.Bitmap;
 import android.util.Log;
 
 public class ProductInfo extends BaseActivity implements 
-LoaderManager.LoaderCallbacks<ProductInfoModel>{
+LoaderManager.LoaderCallbacks<ProductInfoModel>, OnRatingBarChangeListener{
 	private ProductModel product;
+	private ProductInfoModel productInfo;
+	private int GET  = 0;
+	private int POST = 1;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.productinfo);
 		try{
 			this.product =  
 					(ProductModel) getIntent().getSerializableExtra("product");
-       } catch(Exception e){
-              Log.e("ProductInfo_create:", e.toString());
-       }
+		} catch(Exception e){
+			Log.e("ProductInfo_create:", e.toString());
+		}
+
+		this.confRatingBar();
+	}
+	
+	private void confRatingBar(){
+		RatingBar ratingBar = (RatingBar) findViewById(R.id.productinfo_ratingbar);
+		ratingBar.setOnRatingBarChangeListener(this);
 	}
 	
 	@Override
@@ -44,6 +56,12 @@ LoaderManager.LoaderCallbacks<ProductInfoModel>{
 				ProductInfoLoader loader = new ProductInfoLoader(this, this.product);
 				loader.forceLoad();
 				return loader;
+			case 2:
+				RatingBarLoader ratingBarGETLoader = new RatingBarLoader(this, this.productInfo, this.GET);
+				ratingBarGETLoader.forceLoad();
+			case 3:
+				RatingBarLoader ratingBarPOSTLoader = new RatingBarLoader(this, this.productInfo, this.GET);
+				ratingBarPOSTLoader.forceLoad();
 			default:
 				return null;
 		}
@@ -89,6 +107,12 @@ LoaderManager.LoaderCallbacks<ProductInfoModel>{
 			}
 		}
 
+	}
+
+	@Override
+	public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+		TextView ratingBarText = (TextView) findViewById(R.id.productinfo_ratingbartext);
+		ratingBarText.setText(String.valueOf((int)rating)+"/10");
 	}
 	
 

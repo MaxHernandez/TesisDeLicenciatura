@@ -227,5 +227,12 @@
 			    	/>
 	    	</LinearLayout>
 	    </LinearLayout>
+	    
+    	<include layout="@layout/productinfo_userrating"
+    	    android:layout_marginTop="15dp"
+			android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    	    />
+
 	</LinearLayout>
 </ScrollView>
