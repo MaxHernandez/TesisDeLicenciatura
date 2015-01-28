@@ -179,7 +179,7 @@ public class HTTPRequest {
 						data = this.getDataOfGetRequest(true);
 						//CookieSyncManager.getInstance().sync();
 				
-						CSRFJsonModel csrfJsonModel = CSRFJsonModel.create(data);
+						CSRFJsonModel csrfJsonModel = CSRFJsonModel.deserialize(data);
 						if (csrfJsonModel != null) {
 							SharedPreferences.Editor editor = sessionSharedPreferences.edit();
 							editor.putString("csrf_token", csrfJsonModel.csrf_token);
@@ -355,13 +355,12 @@ public class HTTPRequest {
 					if (acceptanceStatusCode.equals(responseStatusCode) ){
 						data = this.getDataOfPostRequest(true);
 
-						CSRFJsonModel csrfJsonModel = CSRFJsonModel.create(data);
+						CSRFJsonModel csrfJsonModel = CSRFJsonModel.deserialize(data);
 						if (csrfJsonModel != null) {
 							SharedPreferences.Editor editor = sessionSharedPreferences.edit();
 							editor.putString("csrf_token", csrfJsonModel.csrf_token);
 							editor.commit();
 						}
-					
 						return new Pair<String, Integer>(data, acceptanceStatusCode);
 					}	
 				}

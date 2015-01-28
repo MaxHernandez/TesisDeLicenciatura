@@ -1,7 +1,6 @@
 package com.maxkalavera.ecoar.main;
 
-import java.net.CookieStore;
-
+import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
@@ -10,6 +9,9 @@ import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.login.LoginFragmentLoginLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
 import com.maxkalavera.utils.UserSession;
+import com.maxkalavera.utils.HTTPR.InternetStatus;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -30,42 +32,43 @@ import android.webkit.CookieSyncManager;
 import android.widget.Button;
 
 
-public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
+public class Main extends BaseActivity implements LoaderCallbacks<Response>{
 	UserSession userSession;
 	
+	/************************************************************
+	 * Constructor Method
+	 ************************************************************/
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);	
-		this.userSession = new UserSession(this);
 		
-		CookieSyncManager.createInstance(this);
+		this.userSession = new UserSession(this);		
 		getSupportLoaderManager().initLoader(1, null, this);
+		
+		this.initCoockieSyncManager();
 		
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false); 
 		actionBar.setDisplayShowHomeEnabled(false);
 		
 	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		CookieSyncManager.getInstance().startSync();
-	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
-		 CookieSyncManager.getInstance().stopSync();	
-	}
 
+	/************************************************************
+	 * Loading HTTP requests Methods
+	 ************************************************************/
 	@Override
-	public Loader<Boolean> onCreateLoader(int loaderID, Bundle args) {
+	public Loader<Response> onCreateLoader(int loaderID, Bundle args) {
+		InternetStatus internetStatus = new InternetStatus(this);
+		if (!internetStatus.isOnline()){
+			// Aqui hay que imprimir un aviso en la pantalla de que es necesaria conexion a internet
+			return null;
+		}
+		
 		switch (loaderID) {
 			case 0:
 				return null;
 			case 1:
-				MainCheckSessionLoader loader = new MainCheckSessionLoader(this, this.userSession);
+				MainCheckSessionLoader loader = new MainCheckSessionLoader(this, args);
 				loader.forceLoad();
 				return loader;
 			default:
@@ -74,29 +77,21 @@ public class Main extends FragmentActivity implements LoaderCallbacks<Boolean>{
 	}
 
 	@Override
-	public void onLoadFinished(Loader<Boolean> arg0, Boolean data) {
-		Log.i("ecoar-CheckSession-Loader", String.valueOf(data));
-		if (data != null) {
-			if (this.userSession.checkSessionStatus()){
-				Intent intent = new Intent();
-				intent.setClass(this, Home.class);
-				startActivity(intent);
-			}else{
-				Intent intent = new Intent();
-				intent.setClass(this, Login.class);
-				startActivity(intent);			
-			}
-		}else{
-			/*
-			 * Esta parte logica dentro del else solo esta para debugear
-			 */
+	public void onLoadFinished(Loader<Response> arg0, Response response) {
+		if (response != null) {
+			this.userSession.setSessionStatus(true);
 			Intent intent = new Intent();
 			intent.setClass(this, Home.class);
+			startActivity(intent);
+		}else{
+			this.userSession.setSessionStatus(false);
+			Intent intent = new Intent();
+			intent.setClass(this, LoginIntro.class);
 			startActivity(intent);		
 		}
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Boolean> arg0) {		
+	public void onLoaderReset(Loader<Response> arg0) {		
 	}
 }

@@ -14,7 +14,7 @@ public class CSRFJsonModel {
         return gson.toJson(this);
     }
     
-    static public CSRFJsonModel create(String serializedData) {
+    static public CSRFJsonModel deserialize(String serializedData) {
         Gson gson = new Gson();
         return gson.fromJson(serializedData, CSRFJsonModel.class);
     }

@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.CookieSyncManager;
 
 public class BaseActivity extends FragmentActivity  {
 	private SlideMenuBarHandler slideMenu;
@@ -79,6 +80,29 @@ public class BaseActivity extends FragmentActivity  {
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		CookieSyncManager.getInstance().startSync();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		 CookieSyncManager.getInstance().stopSync();	
+	}
+	
+	/*************************************************************
+	 *  Configuracion de Cookies
+	 *************************************************************/
+	
+	public void initCoockieSyncManager(){
+		CookieSyncManager.createInstance(this);
+	}
+	
+	/*************************************************************
+	 * Configuracion del SlideMenu
+	 *************************************************************/
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -102,5 +126,7 @@ public class BaseActivity extends FragmentActivity  {
 	    inflater.inflate(R.menu.mainmenu, menu);
 	    return true;
 	}
+	
+	
 	
 };
