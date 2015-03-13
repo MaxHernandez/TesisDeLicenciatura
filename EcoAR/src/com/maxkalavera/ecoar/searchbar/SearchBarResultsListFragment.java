@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
-import com.maxkalavera.ecoar.login.LoginFragmentLoginLoader;
+import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
-import com.maxkalavera.utils.HTTPRequest;
-import com.maxkalavera.utils.datamodels.ProductModel;
+import com.maxkalavera.utils.HTTPRequestTemp;
+import com.maxkalavera.utils.databasemodels.ProductModel;
 import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
 
 import android.app.Activity;

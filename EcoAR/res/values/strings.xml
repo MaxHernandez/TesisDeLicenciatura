@@ -10,6 +10,8 @@
     <string name="amazonurl">http://www.amazon.com/s/</string>
     
     <!-- SharedPreferences preferences -->
+    <string name="userdata_filepath">userdatafile</string>
+    <!-- SharedPreferences preferences -->
     <string name="sessionprefsfile">Session_prefs</string>
     <string name="sessionstatuskeyword">sessionAuthenticated</string>
     

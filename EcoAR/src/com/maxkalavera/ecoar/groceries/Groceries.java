@@ -11,6 +11,9 @@ import com.maxkalavera.ecoar.R;
 
 public class Groceries extends BaseActivity {
 	
+	/************************************************************
+	 * Constructor Method
+	 ************************************************************/
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.groceries);
 	}    

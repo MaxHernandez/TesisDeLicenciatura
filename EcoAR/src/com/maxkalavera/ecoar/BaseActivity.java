@@ -4,6 +4,7 @@ import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.SlideMenuBarHandlerButton;
 import com.maxkalavera.utils.UserSession;
+import com.maxkalavera.utils.datamanagers.UserDataManager;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -23,8 +24,9 @@ public class BaseActivity extends FragmentActivity  {
 		this.setContentView(contentViewLayout);
 				
 		boolean sessionFlag = new UserSession(this).checkSessionStatus();
+
+		// Configuracion del SlideMenuBarHandler
 		this.slideMenu = new SlideMenuBarHandler(this);
-				
 		if (sessionFlag) {
 			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
 					new SlideMenuBarHandlerButton(
@@ -80,6 +82,11 @@ public class BaseActivity extends FragmentActivity  {
 		actionBar.setHomeButtonEnabled(true);
 	}
 	
+	
+	/*************************************************************
+	 *  Configuracion de Cookies
+	 *************************************************************/
+	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -91,10 +98,7 @@ public class BaseActivity extends FragmentActivity  {
 		super.onPause();
 		 CookieSyncManager.getInstance().stopSync();	
 	}
-	
-	/*************************************************************
-	 *  Configuracion de Cookies
-	 *************************************************************/
+
 	
 	public void initCoockieSyncManager(){
 		CookieSyncManager.createInstance(this);
@@ -127,6 +131,16 @@ public class BaseActivity extends FragmentActivity  {
 	    return true;
 	}
 	
+	/*************************************************************
+	 * Revisión de la sesión de usuario por medio del 
+	 * UserDataManager
+	 *************************************************************/
+	UserDataManager userDataManager = null;
 	
+	public UserDataManager getUserDataManager(){
+		if ( this.userDataManager == null )
+			this.userDataManager = new UserDataManager(this);
+		return this.userDataManager;
+	}
 	
 };

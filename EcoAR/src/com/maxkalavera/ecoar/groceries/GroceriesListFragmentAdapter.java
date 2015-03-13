@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.datamodels.ProductModel;
+import com.maxkalavera.utils.databasemodels.ProductModel;
 
 public class GroceriesListFragmentAdapter extends ArrayAdapter<ArrayList<ProductModel>> {
 	private final Activity context;

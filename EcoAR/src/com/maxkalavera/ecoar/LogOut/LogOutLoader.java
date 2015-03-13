@@ -11,17 +11,17 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Pair;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.HTTPRequest;
+import com.maxkalavera.utils.HTTPRequestTemp;
 import com.maxkalavera.utils.UserSession;
 
 public class LogOutLoader extends AsyncTaskLoader<Boolean> {
 	String url;
-	HTTPRequest requestHandler; 
+	HTTPRequestTemp requestHandler; 
 	UserSession userSession;
 	
 	public LogOutLoader(Context context) {
 		super(context);
-		this.requestHandler = new HTTPRequest(context);
+		this.requestHandler = new HTTPRequestTemp(context);
 		this.url = context.getResources().getString(R.string.webservice_logout);
 	}
 

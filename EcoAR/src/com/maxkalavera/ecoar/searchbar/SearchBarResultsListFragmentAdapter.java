@@ -13,8 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.datamodels.ProductModel;
-import com.maxkalavera.utils.jsonmodels.GroceryListJsonModel;
+import com.maxkalavera.utils.databasemodels.ProductModel;
 
 
 public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<ProductModel>> {

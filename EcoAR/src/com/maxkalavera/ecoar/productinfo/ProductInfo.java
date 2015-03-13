@@ -7,8 +7,8 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentLoader;
 import com.maxkalavera.utils.SlideMenuBarHandler;
-import com.maxkalavera.utils.datamodels.ProductInfoModel;
-import com.maxkalavera.utils.datamodels.ProductModel;
+import com.maxkalavera.utils.databasemodels.ProductInfoModel;
+import com.maxkalavera.utils.databasemodels.ProductModel;
 
 import android.app.Activity;
 import android.os.Bundle;

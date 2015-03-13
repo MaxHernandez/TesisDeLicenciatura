@@ -3,6 +3,8 @@ package com.maxkalavera.ecoar.login;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.utils.UserSession;
+import com.maxkalavera.utils.httprequest.RequestParamsBundle;
+import com.maxkalavera.utils.httprequest.ResponseBundle;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -20,9 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
-public class LoginFragment extends Fragment implements LoaderCallbacks<Boolean>, OnClickListener {
-	String usernameBuff;
-	String passwordBuff;
+public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseBundle>, OnClickListener {
+	RequestParamsBundle paramsBundle;
 	Button sendButton;
 	ProgressBar progressBar;
 	EditText usernameEditText;
@@ -30,16 +31,19 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<Boolean>,
 	TextView errorText;
 	UserSession userSession;
 	
+	/************************************************************
+	 * Constructor Method
+	 ************************************************************/
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(0, null, this);
-        this.userSession = new UserSession(getActivity());
         
-		this.usernameEditText = (EditText) getActivity()
-				.findViewById(R.id.login_username);
-		this.passwordEditText = (EditText) getActivity()
-				.findViewById(R.id.login_password);
+        RequestParamsBundle paramsBundle = null;
+        
+        this.userSession = new UserSession(getActivity());
+		this.usernameEditText = (EditText) getActivity().findViewById(R.id.login_username);
+		this.passwordEditText = (EditText) getActivity().findViewById(R.id.login_password);
+		
 		this.sendButton = (Button) getActivity().findViewById(R.id.login_send);
 		this.sendButton.setOnClickListener(this);
 		this.progressBar = (ProgressBar) getActivity().findViewById(R.id.login_progressbar);
@@ -49,24 +53,25 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<Boolean>,
 		singuptext.setOnClickListener(this);
 		TextView recoverpasstext = (TextView) getActivity().findViewById(R.id.login_recoverpasstext);
 		recoverpasstext.setOnClickListener(this);
-		
-		this.usernameBuff = "";
-		this.passwordBuff = "";
     }
 	
+    // Method to set inner layout of the fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
     	return inflater.inflate(R.layout.login, container, false);
     }
     
+	/************************************************************
+	 * HTTP Request methods
+	 ************************************************************/
 	@Override
-	public Loader<Boolean> onCreateLoader(int loaderID, Bundle args) {
+	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
 			case 0:
 				return null;
 			case 1:
-				LoginFragmentLoginLoader loader = 
-					new LoginFragmentLoginLoader(getActivity(), this.usernameBuff, this.passwordBuff);
+				LoginFragmentHTTPLoader loader = 
+					new LoginFragmentHTTPLoader(getActivity(), this.paramsBundle);
 				loader.forceLoad();
 				return loader;
 			default:
@@ -74,40 +79,58 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<Boolean>,
 		}
 	}
 
-	@Override
-	public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
 		this.usernameEditText.setEnabled(true);
 		this.passwordEditText.setEnabled(true);
 		this.progressBar.setVisibility(View.GONE);
         this.sendButton.setVisibility(View.VISIBLE);
-        if (data != null) {
-        	if (data) {
+        
+        if (responseBundle.getResponse() != null) {
+        	if (responseBundle.getResponse().isSuccessful()) {
         		this.userSession.setSessionStatus(true);        	
         		Intent intent = new Intent();
         		intent.setClass(getActivity(), Home.class);
         		startActivity(intent);
         	}else{
-                this.errorText.setVisibility(View.VISIBLE);
+        		
+        		this.errorText.setVisibility(View.VISIBLE);
         	}
+        } else {
+        	// Error sending HTTP request
         }
 	}
 
 	@Override
-	public void onLoaderReset(Loader<Boolean> loader) {		
+	public void onLoaderReset(Loader<ResponseBundle> loader) {		
 	}
 
+	/************************************************************
+	 * Method that reacts when the send button is pressed
+	 ************************************************************/	
 	private void send() {
-		this.usernameBuff = this.usernameEditText.getText().toString();
-		this.passwordBuff = this.passwordEditText.getText().toString();
 		this.usernameEditText.setEnabled(false);
 		this.passwordEditText.setEnabled(false);
 		this.progressBar.setVisibility(View.VISIBLE);
         this.sendButton.setVisibility(View.GONE);
         this.errorText.setVisibility(View.INVISIBLE);
+        
+		if (this.paramsBundle == null) {
+			this.paramsBundle = new RequestParamsBundle();
+			this.paramsBundle.addJSONParam("username", this.usernameEditText.getText().toString());
+			this.paramsBundle.addJSONParam("password", this.passwordEditText.getText().toString());
+			getLoaderManager().initLoader(1, null, this);
+		} else {
+			this.paramsBundle = new RequestParamsBundle();
+			this.paramsBundle.addJSONParam("username", this.usernameEditText.getText().toString());
+			this.paramsBundle.addJSONParam("password", this.passwordEditText.getText().toString());
+			getLoaderManager().restartLoader(1, null, this);			
+		}
 		
-		getLoaderManager().restartLoader(1, null, this);
 	}
 	
+	/************************************************************
+	 * Buttons listeners
+	 ************************************************************/
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -128,6 +151,5 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<Boolean>,
 				break;
 		}		
 	}
-	
 	
 };

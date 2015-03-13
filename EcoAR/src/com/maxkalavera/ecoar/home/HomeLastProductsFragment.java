@@ -1,12 +1,13 @@
 package com.maxkalavera.ecoar.home;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentAdapter;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentLoader;
-import com.maxkalavera.utils.datamodels.ProductModel;
+import com.maxkalavera.utils.databasemodels.ProductModel;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,10 +19,13 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-public class HomeLastProductsFragment extends ListFragment implements LoaderCallbacks<ArrayList<ProductModel>> {
+public class HomeLastProductsFragment extends ListFragment implements LoaderCallbacks<List<ProductModel>> {
 	HomeLastProductsFragmentAdapter adapter;
 	ArrayList<ProductModel> valuesList = new ArrayList<ProductModel>();
 	
+	/************************************************************
+	 * Constructor Method
+	 ************************************************************/
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);        
@@ -42,8 +46,12 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
         startActivity(intent);
 	}
     
+	
+	/************************************************************
+	 * Loading HTTP requests Methods
+	 ************************************************************/
 	@Override
-	public Loader<ArrayList<ProductModel>> onCreateLoader(int loaderID, Bundle args) {
+	public Loader<List<ProductModel>> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
 		case 0:
 			return null;
@@ -57,13 +65,13 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ArrayList<ProductModel>> loader, ArrayList<ProductModel> data) {		
+	public void onLoadFinished(Loader<List<ProductModel>> loader, List<ProductModel> data) {		
 		this.valuesList.addAll(data);
 		this.adapter.notifyDataSetChanged();
 	}
 
 	@Override
-	public void onLoaderReset(Loader<ArrayList<ProductModel>> loader) {		
+	public void onLoaderReset(Loader<List<ProductModel>> loader) {		
 	}
 
 	

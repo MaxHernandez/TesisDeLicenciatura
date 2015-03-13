@@ -242,59 +242,62 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int mainmenu=0x7f090000;
     }
     public static final class string {
-        public static final int actionbar_groceries=0x7f07000d;
+        public static final int actionbar_groceries=0x7f07000e;
         /**  ActionBar 
          */
-        public static final int actionbar_home=0x7f070008;
-        public static final int actionbar_login=0x7f070009;
-        public static final int actionbar_logout=0x7f07000a;
-        public static final int actionbar_search=0x7f07000b;
-        public static final int actionbar_searchcamera=0x7f07000c;
+        public static final int actionbar_home=0x7f070009;
+        public static final int actionbar_login=0x7f07000a;
+        public static final int actionbar_logout=0x7f07000b;
+        public static final int actionbar_search=0x7f07000c;
+        public static final int actionbar_searchcamera=0x7f07000d;
         public static final int amazonurl=0x7f070005;
         /**  General data 
          */
         public static final int app_name=0x7f070000;
         /**  Groceries 
          */
-        public static final int grocery_title=0x7f07001e;
-        public static final int home_wellcome_intro=0x7f07000f;
+        public static final int grocery_title=0x7f07001f;
+        public static final int home_wellcome_intro=0x7f070010;
         /**  Home 
          */
-        public static final int home_wellcome_title=0x7f07000e;
+        public static final int home_wellcome_title=0x7f07000f;
         /**  Login login errors 
          */
-        public static final int login_errorsdefault=0x7f070019;
-        public static final int login_password=0x7f070012;
-        public static final int login_recoverpasstext=0x7f070016;
-        public static final int login_recoverpassurl=0x7f070017;
-        public static final int login_send=0x7f070013;
-        public static final int login_singuptext=0x7f070014;
-        public static final int login_singupurl=0x7f070015;
+        public static final int login_errorsdefault=0x7f07001a;
+        public static final int login_password=0x7f070013;
+        public static final int login_recoverpasstext=0x7f070017;
+        public static final int login_recoverpassurl=0x7f070018;
+        public static final int login_send=0x7f070014;
+        public static final int login_singuptext=0x7f070015;
+        public static final int login_singupurl=0x7f070016;
         /**  Login 
          */
-        public static final int login_user=0x7f070011;
-        public static final int loginintro_skiplogin=0x7f070018;
-        public static final int productinfo_userrating_rating=0x7f070020;
-        public static final int productinfo_userrating_ratinguser=0x7f070022;
+        public static final int login_user=0x7f070012;
+        public static final int loginintro_skiplogin=0x7f070019;
+        public static final int productinfo_userrating_rating=0x7f070021;
+        public static final int productinfo_userrating_ratinguser=0x7f070023;
         /**  ProductInfo 
          */
-        public static final int productinfo_userrating_title=0x7f07001f;
-        public static final int productinfo_userrating_titleuser=0x7f070021;
-        public static final int searchbar_results_itemname=0x7f07001d;
+        public static final int productinfo_userrating_title=0x7f070020;
+        public static final int productinfo_userrating_titleuser=0x7f070022;
+        public static final int searchbar_results_itemname=0x7f07001e;
         /**  SearchBar 
          */
-        public static final int searchbar_sendbutton=0x7f07001c;
+        public static final int searchbar_sendbutton=0x7f07001d;
         /**  SharedPreferences preferences 
          */
-        public static final int sessionprefsfile=0x7f070006;
-        public static final int sessionstatuskeyword=0x7f070007;
-        public static final int someproducts_item_defaultdescription=0x7f07001b;
+        public static final int sessionprefsfile=0x7f070007;
+        public static final int sessionstatuskeyword=0x7f070008;
+        public static final int someproducts_item_defaultdescription=0x7f07001c;
         /**  Home.SomeProducts 
          */
-        public static final int someproducts_item_defaultname=0x7f07001a;
+        public static final int someproducts_item_defaultname=0x7f07001b;
         /**  SomeProducts 
          */
-        public static final int someproducts_title=0x7f070010;
+        public static final int someproducts_title=0x7f070011;
+        /**  SharedPreferences preferences 
+         */
+        public static final int userdata_filepath=0x7f070006;
         /**  URL preferences 
          */
         public static final int webservice=0x7f070001;

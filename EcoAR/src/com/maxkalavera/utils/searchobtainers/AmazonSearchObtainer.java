@@ -21,15 +21,15 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.HTTPRequest;
-import com.maxkalavera.utils.datamodels.ProductModel;
+import com.maxkalavera.utils.HTTPRequestTemp;
+import com.maxkalavera.utils.databasemodels.ProductModel;
 
 public class AmazonSearchObtainer {
 	String url;
-	HTTPRequest requestHandler;
+	HTTPRequestTemp requestHandler;
 	
 	public AmazonSearchObtainer(Context context) {
-		this.requestHandler = new HTTPRequest(context);
+		this.requestHandler = new HTTPRequestTemp(context);
 		this.url = context.getResources().getString(R.string.amazonurl);
 	}
 	

@@ -1,6 +1,7 @@
 package com.maxkalavera.ecoar.home;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,22 +12,29 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.datamodels.ProductModel;
+import com.maxkalavera.utils.databasemodels.ProductModel;
 
-public class HomeLastProductsFragmentAdapter extends ArrayAdapter<ArrayList<ProductModel>> {
-	private final ArrayList<ProductModel> elementList;
-	private final Activity context;
+public class HomeLastProductsFragmentAdapter extends ArrayAdapter<List<ProductModel>> {
+	private final List<ProductModel> elementList;
+	private final Activity activity;
 	
-	public HomeLastProductsFragmentAdapter(Activity context, ArrayList<ProductModel> productList) {
-		super(context, R.layout.searchbar_results_item, (ArrayList)productList);
-		this.context = context;
+	/************************************************************
+	 * Constructor Method
+	 ************************************************************/
+	public HomeLastProductsFragmentAdapter(Activity activity, List<ProductModel> productList) {
+		super(activity, R.layout.searchbar_results_item, (List)productList);
+		this.activity = activity;
 	    this.elementList = productList;
 	}
 	
+	/************************************************************
+	 * For every element in the list this method defines an 
+	 * element view with a layout.
+	 ************************************************************/
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			LayoutInflater inflater = this.context.getLayoutInflater();
+			LayoutInflater inflater = this.activity.getLayoutInflater();
 			convertView = inflater.inflate(R.layout.lastproducts_item, null);
 		}
 		

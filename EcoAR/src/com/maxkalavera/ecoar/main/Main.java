@@ -6,10 +6,12 @@ import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.Login;
-import com.maxkalavera.ecoar.login.LoginFragmentLoginLoader;
+import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
 import com.maxkalavera.utils.UserSession;
-import com.maxkalavera.utils.HTTPR.InternetStatus;
+import com.maxkalavera.utils.httprequest.InternetStatus;
+import com.maxkalavera.utils.httprequest.RequestParamsBundle;
+import com.maxkalavera.utils.httprequest.ResponseBundle;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
@@ -32,7 +34,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.Button;
 
 
-public class Main extends BaseActivity implements LoaderCallbacks<Response>{
+public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle>{
 	UserSession userSession;
 	
 	/************************************************************
@@ -57,7 +59,7 @@ public class Main extends BaseActivity implements LoaderCallbacks<Response>{
 	 * Loading HTTP requests Methods
 	 ************************************************************/
 	@Override
-	public Loader<Response> onCreateLoader(int loaderID, Bundle args) {
+	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle args) {
 		InternetStatus internetStatus = new InternetStatus(this);
 		if (!internetStatus.isOnline()){
 			// Aqui hay que imprimir un aviso en la pantalla de que es necesaria conexion a internet
@@ -68,17 +70,38 @@ public class Main extends BaseActivity implements LoaderCallbacks<Response>{
 			case 0:
 				return null;
 			case 1:
-				MainCheckSessionLoader loader = new MainCheckSessionLoader(this, args);
+				MainCheckSessionHTTPLoader loader = new MainCheckSessionHTTPLoader(this, null);
 				loader.forceLoad();
 				return loader;
 			default:
 				return null;
 		}
 	}
+	
+	public void startRequestLoader(int id, RequestParamsBundle bundle) {
+		
+	}
 
 	@Override
-	public void onLoadFinished(Loader<Response> arg0, Response response) {
-		if (response != null) {
+	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
+		switch(loader.getId()) {
+			case 1:
+				checkSessionInResponse(responseBundle);
+				break;
+			default:
+				break;
+		}
+	}
+
+	@Override
+	public void onLoaderReset(Loader<ResponseBundle> arg0) {		
+	}
+	
+	/************************************************************
+	 * Check the status of the user session with the server
+	 ************************************************************/
+	public void checkSessionInResponse(ResponseBundle responseBundle) {
+		if (responseBundle.getResponse() != null) {
 			this.userSession.setSessionStatus(true);
 			Intent intent = new Intent();
 			intent.setClass(this, Home.class);
@@ -90,8 +113,5 @@ public class Main extends BaseActivity implements LoaderCallbacks<Response>{
 			startActivity(intent);		
 		}
 	}
-
-	@Override
-	public void onLoaderReset(Loader<Response> arg0) {		
-	}
+	
 }
