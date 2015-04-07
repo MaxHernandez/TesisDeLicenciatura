@@ -3,7 +3,7 @@ package com.maxkalavera.ecoar.home;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 
 import android.content.Context;
 import android.database.Cursor;

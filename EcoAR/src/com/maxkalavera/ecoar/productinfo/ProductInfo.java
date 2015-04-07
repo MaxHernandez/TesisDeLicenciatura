@@ -7,8 +7,8 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentLoader;
 import com.maxkalavera.utils.SlideMenuBarHandler;
-import com.maxkalavera.utils.databasemodels.ProductInfoModel;
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductInfoModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -77,7 +77,7 @@ LoaderManager.LoaderCallbacks<ProductInfoModel>, OnRatingBarChangeListener{
 	}
 	
 	public void setData(ProductInfoModel info) {
-		((TextView) findViewById(R.id.productinfo_productname)).setText(info.product.productName);
+		((TextView) findViewById(R.id.productinfo_productname)).setText(info.product.name);
 		((ImageView) findViewById(R.id.productinfo_productimage)).setImageBitmap(info.product.image);
 		((TextView) findViewById(R.id.productinfo_productqualification)).setText(info.qualification);
 

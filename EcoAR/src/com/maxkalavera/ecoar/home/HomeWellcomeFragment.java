@@ -2,9 +2,12 @@ package com.maxkalavera.ecoar.home;
 
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.datamanagers.UserDataManager;
+import com.maxkalavera.ecoar.main.MainCheckSessionHTTPLoader;
+import com.maxkalavera.utils.database.UserDataDAO;
+import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
+import com.maxkalavera.utils.httprequest.InternetStatus;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
-import com.maxkalavera.utils.jsonmodels.UserDataJsonModel;
+import com.squareup.okhttp.Response;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -15,12 +18,12 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<ResponseBundle>{
 
-	UserDataManager userDM;
-	UserDataJsonModel userDataJM;
+	UserDataDAO userDM;
 	
 	/*************************************************************
 	 * 
@@ -33,7 +36,8 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
 	/*************************************************************
 	 * 
 	 *************************************************************/    
-    @Override public void onActivityCreated(Bundle savedInstanceState) {
+    @Override 
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         
         // Get User Profile data 
@@ -44,27 +48,59 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
         // Si los datos de usuarios se encuentran guardados
         // localmente los carga, de lo contrario los recupera
         // del servidor.
-        if (this.userDM.existUserDataProfile())
-        	this.userDataJM = this.userDM.getUserData();
-        else
+        if (this.userDM.existUserDataProfile()) {
+        	UserDataJsonModel userDataJM = this.userDM.getUserData();
+        	loadInfo(userDataJM);
+        } else {
         	getLoaderManager().initLoader(1, null, this);
-        
+        }
         
     }
     
 	/*************************************************************
 	 * 
 	 *************************************************************/ 
+    public void loadInfo(UserDataJsonModel userDataJM) {
+    	((TextView) getActivity().findViewById(R.id.home_wellcomeuser_name)). 
+    			setText(userDataJM.firstName);
+    }
+    
+	/*************************************************************
+	 * Metodos del Loader para recuperar los datos del usuario del 
+	 * servidor.
+	 *************************************************************/ 
 	@Override
-	public Loader<ResponseBundle> onCreateLoader(int arg0, Bundle arg1) {
-		// TODO Auto-generated method stub
-		return null;
+	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle arg1) {
+		InternetStatus internetStatus = new InternetStatus(this.getActivity());
+		if (!internetStatus.isOnline()){
+			// Aqui hay que imprimir un aviso en la pantalla de que es necesaria conexion a internet
+			return null;
+		}
+		
+		switch (loaderID) {
+			case 0:
+				return null;
+			case 1:
+				HomeUserDataLoader loader = new HomeUserDataLoader(this.getActivity());
+				loader.forceLoad();
+				return loader;
+			default:
+				return null;
+		}
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ResponseBundle> arg0, ResponseBundle arg1) {
-		// TODO Auto-generated method stub
-		
+	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
+		Response response = responseBundle.getResponse();
+		UserDataJsonModel userDataJM = (UserDataJsonModel)responseBundle.getResponseJsonObject();
+		if (response == null){
+			// Hubo un error al mandar la petición al servidor
+		}
+		if (userDataJM == null) {
+			// Hubo un error al deserializar el objeto JSON
+		}
+		this.userDM.createUserDataProfile(userDataJM);
+		loadInfo(userDataJM);
 	}
 
 	@Override

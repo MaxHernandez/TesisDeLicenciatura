@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 
 
 public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<ProductModel>> {
@@ -34,7 +34,7 @@ public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ArrayList<
 		}
 		ProductModel pData = (ProductModel) this.elementList.get(position);
 		TextView productName = (TextView) convertView.findViewById(R.id.searchproduct_itemname);
-		productName.setText(pData.productName);
+		productName.setText(pData.name);
 		
 		ImageView productImage = (ImageView) convertView.findViewById(R.id.searchproduct_item_image);
 		productImage.setImageBitmap(pData.image);

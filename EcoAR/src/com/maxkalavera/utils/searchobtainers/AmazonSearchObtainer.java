@@ -22,7 +22,7 @@ import android.util.Pair;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.HTTPRequestTemp;
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 
 public class AmazonSearchObtainer {
 	String url;
@@ -60,17 +60,17 @@ public class AmazonSearchObtainer {
 			Element productNameElementContainer = product.select("a[class=a-link-normal s-access-detail-page a-text-normal]").first();
 			if (productNameElementContainer != null) {
 				Element productNameElement = productNameElementContainer .select("h2").first();
-				pdata.productName = productNameElement.text();
+				pdata.name = productNameElement.text();
 			
 				Element productImageURL = product.select("img").first();
-				pdata.productImageURL = productImageURL.attr("src");
+				pdata.imageURL = productImageURL.attr("src");
 			
-				pdata.image = this.requestHandler.downloadImage(pdata.productImageURL);
+				pdata.image = this.requestHandler.downloadImage(pdata.imageURL);
 			
 				data.add(pdata);
 			}
-			Log.i("EcoAR-Search-Data", pdata.productName);
-			Log.i("EcoAR-Search-Data", pdata.productImageURL);
+			Log.i("EcoAR-Search-Data", pdata.name);
+			Log.i("EcoAR-Search-Data", pdata.imageURL);
 		}
 		return data;
 	}

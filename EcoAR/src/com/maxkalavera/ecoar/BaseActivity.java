@@ -4,7 +4,7 @@ import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.SlideMenuBarHandlerButton;
 import com.maxkalavera.utils.UserSession;
-import com.maxkalavera.utils.datamanagers.UserDataManager;
+import com.maxkalavera.utils.database.UserDataDAO;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -135,11 +135,11 @@ public class BaseActivity extends FragmentActivity  {
 	 * Revisión de la sesión de usuario por medio del 
 	 * UserDataManager
 	 *************************************************************/
-	UserDataManager userDataManager = null;
+	UserDataDAO userDataManager = null;
 	
-	public UserDataManager getUserDataManager(){
+	public UserDataDAO getUserDataManager(){
 		if ( this.userDataManager == null )
-			this.userDataManager = new UserDataManager(this);
+			this.userDataManager = new UserDataDAO(this);
 		return this.userDataManager;
 	}
 	

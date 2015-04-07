@@ -6,7 +6,7 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.widget.ProgressBar;
 
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
 
 

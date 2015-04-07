@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.maxkalavera.utils.jsonmodels.BaseRequestJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.BaseRequestJsonModel;
 
 public class RequestParamsBundle {
 	private HashMap<String, String> uriParamsMap;

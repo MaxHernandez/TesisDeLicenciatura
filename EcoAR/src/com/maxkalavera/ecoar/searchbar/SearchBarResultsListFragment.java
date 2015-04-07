@@ -10,7 +10,7 @@ import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.utils.HTTPRequestTemp;
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
 
 import android.app.Activity;

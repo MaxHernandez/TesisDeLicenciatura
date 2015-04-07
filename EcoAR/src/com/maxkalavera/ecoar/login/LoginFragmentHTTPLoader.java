@@ -20,12 +20,12 @@ import android.webkit.CookieSyncManager;
 import android.widget.ProgressBar;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.login.JSONModels.LoginErrorJsonModel;
+import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorJsonModel;
 import com.maxkalavera.utils.HTTPRequestTemp;
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.jsonmodels.CSRFJsonModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
-import com.maxkalavera.utils.jsonmodels.CSRFJsonModel;
 
 public class LoginFragmentHTTPLoader extends HttpRequestLoader  {
 

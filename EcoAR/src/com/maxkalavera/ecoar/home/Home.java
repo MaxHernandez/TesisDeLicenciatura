@@ -7,7 +7,7 @@ import android.support.v4.content.Loader;
 
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.datamanagers.UserDataManager;
+import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
 
 

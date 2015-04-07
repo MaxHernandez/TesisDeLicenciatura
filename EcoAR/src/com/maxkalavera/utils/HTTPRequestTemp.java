@@ -28,7 +28,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.jsonmodels.CSRFJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.CSRFJsonModel;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,7 +1,7 @@
 package com.maxkalavera.utils.httprequest;
 
 import com.squareup.okhttp.Response;
-import com.maxkalavera.utils.jsonmodels.BaseResponseJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.BaseResponseJsonModel;
 
 public class ResponseBundle {
 	private Response response;

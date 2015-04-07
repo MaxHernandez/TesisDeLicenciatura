@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 
 public class HomeLastProductsFragmentAdapter extends ArrayAdapter<List<ProductModel>> {
 	private final List<ProductModel> elementList;
@@ -40,7 +40,7 @@ public class HomeLastProductsFragmentAdapter extends ArrayAdapter<List<ProductMo
 		
 		ProductModel pData = (ProductModel) this.elementList.get(position);
 		TextView productName = (TextView) convertView.findViewById(R.id.lastproducts_itemname);
-		productName.setText(pData.productName);
+		productName.setText(pData.name);
 		
 		return convertView;
 	}

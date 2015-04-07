@@ -7,7 +7,7 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentAdapter;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentLoader;
-import com.maxkalavera.utils.databasemodels.ProductModel;
+import com.maxkalavera.utils.database.models.ProductModel;
 
 import android.content.Intent;
 import android.os.Bundle;
