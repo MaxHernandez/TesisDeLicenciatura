@@ -34,6 +34,8 @@ public class LoginFragmentHTTPLoader extends HttpRequestLoader  {
 				context.getResources().getString(R.string.webservice_login),
 				POST,
 				requestBundle); 
+		this.setCookiesOn();
+		this.setCSRFOn();
 		this.setJsonResponseOn(new LoginErrorJsonModel());
 	}
 	

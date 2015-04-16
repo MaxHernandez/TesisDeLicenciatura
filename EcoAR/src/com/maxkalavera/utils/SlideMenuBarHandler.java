@@ -2,37 +2,34 @@ package com.maxkalavera.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.home.Home;
 import java.util.Hashtable;
 
 public class SlideMenuBarHandler implements OnTouchListener{
+	
+	Context context; 
 	private SlidingMenu menu;
 	View slideMenuView;
-	Activity activity;
+//	Activity activity;
 	String localClassName;
 	Hashtable<View, String> dict = new Hashtable<View, String>();
 	
 	public SlideMenuBarHandler(Activity activity) {
-		this.activity = activity;
-		this.localClassName = this.activity.getComponentName(). getClassName();
+		this.context = activity.getApplicationContext();
+		this.localClassName = activity.getComponentName().getClassName();
 
 		// Se llevan a cabo configuraciones en SlidingMenu obtenido del repositorio 
-        menu = new SlidingMenu(activity);
+        menu = new SlidingMenu(this.getContext());
         menu.setMode(SlidingMenu.LEFT);
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         //menu.setShadowWidthRes(R.dimen.shadow_width);
@@ -40,11 +37,11 @@ public class SlideMenuBarHandler implements OnTouchListener{
         //menu.setBehindOffsetRes(R.dimen.slidemenu_slide_offset);
         menu.setBehindWidthRes(R.dimen.slidemenu_slideoffset);
         TypedValue fadeDegreeOutValue = new TypedValue();
-        this.activity.getResources().getValue(R.dimen.slidemenu_fadedegree, fadeDegreeOutValue, true);
+        this.getContext().getResources().getValue(R.dimen.slidemenu_fadedegree, fadeDegreeOutValue, true);
         menu.setFadeDegree(fadeDegreeOutValue.getFloat()); 
         menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
         
-	    LayoutInflater inflater = (LayoutInflater) this.activity.getSystemService(this.activity.LAYOUT_INFLATER_SERVICE);
+	    LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View slideMenuView = inflater.inflate(R.layout.slidemenu, null);
 		this.slideMenuView = slideMenuView;
         menu.setMenu(slideMenuView);
@@ -52,8 +49,18 @@ public class SlideMenuBarHandler implements OnTouchListener{
         //this.setButtons();
         }
 	
+	public Context getContext() {
+		return this.context;
+	}
+	
 	public void showMenu() {
 		this.menu.toggle();
+	}
+	
+	public void addButton(SlideMenuBarHandlerButton button) {
+		View item = this.addElement(button);
+		item.setOnTouchListener(this);
+		this.dict.put(item, button.className);
 	}
 	
 	public void setButtons(SlideMenuBarHandlerButton[] buttons) {
@@ -68,7 +75,7 @@ public class SlideMenuBarHandler implements OnTouchListener{
 		LinearLayout slideMenuLinearLayout = (LinearLayout)this.slideMenuView.findViewById(R.id.slidemenu_linearlayout);
 		
 		// Para cargar el Layout que servira como plantilla para cada elemento
-	    LayoutInflater inflater = (LayoutInflater) this.activity.getSystemService(this.activity.LAYOUT_INFLATER_SERVICE);
+	    LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View itemPattern = inflater.inflate(R.layout.slidemenu_item, null);
 		
 		// Se cambia el nombre del producto en la plantilla
@@ -95,7 +102,7 @@ public class SlideMenuBarHandler implements OnTouchListener{
         	if (!this.localClassName.equals(className)) {
         		Intent intent = new Intent();
         		intent.setClassName("com.maxkalavera.ecoar", className);
-        		this.activity.startActivity(intent);
+        		this.getContext().startActivity(intent);
         	}
         	
         	return false;

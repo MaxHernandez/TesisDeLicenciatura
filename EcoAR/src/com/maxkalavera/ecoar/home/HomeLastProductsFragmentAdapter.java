@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
+import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
 import com.maxkalavera.utils.database.models.ProductModel;
 
 public class HomeLastProductsFragmentAdapter extends ArrayAdapter<List<ProductModel>> {

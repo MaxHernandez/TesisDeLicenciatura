@@ -2,7 +2,8 @@ package com.maxkalavera.ecoar.login;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
-import com.maxkalavera.utils.UserSession;
+import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorJsonModel;
+import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
 
@@ -29,7 +30,7 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 	EditText usernameEditText;
 	EditText passwordEditText;
 	TextView errorText;
-	UserSession userSession;
+	UserSessionDAO userSession;
 	
 	/************************************************************
 	 * Constructor Method
@@ -40,7 +41,7 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
         
         RequestParamsBundle paramsBundle = null;
         
-        this.userSession = new UserSession(getActivity());
+        this.userSession = new UserSessionDAO(getActivity());
 		this.usernameEditText = (EditText) getActivity().findViewById(R.id.login_username);
 		this.passwordEditText = (EditText) getActivity().findViewById(R.id.login_password);
 		
@@ -59,6 +60,14 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
     	return inflater.inflate(R.layout.login, container, false);
+    }
+    
+	/************************************************************
+	 * Method used to save the data needed to make the login 
+	 ************************************************************/
+    
+    private void saveLogin() {
+    	this.userSession.setSessionStatus(true);
     }
     
 	/************************************************************
@@ -81,19 +90,31 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 
 	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
 		this.usernameEditText.setEnabled(true);
-		this.passwordEditText.setEnabled(true);
+		this.passwordEditText.setEnabled(true);	
 		this.progressBar.setVisibility(View.GONE);
         this.sendButton.setVisibility(View.VISIBLE);
         
         if (responseBundle.getResponse() != null) {
         	if (responseBundle.getResponse().isSuccessful()) {
-        		this.userSession.setSessionStatus(true);        	
+        		
+        		this.saveLogin();
+        		
         		Intent intent = new Intent();
         		intent.setClass(getActivity(), Home.class);
         		startActivity(intent);
         	}else{
-        		
-        		this.errorText.setVisibility(View.VISIBLE);
+        		LoginErrorJsonModel loginErrorJsonModel = 
+        				(LoginErrorJsonModel) responseBundle.getResponseJsonObject();
+        		if (loginErrorJsonModel != null) {
+        			if (loginErrorJsonModel.username != null) {
+        				this.errorText.setVisibility(View.VISIBLE);
+        				this.errorText.setText(loginErrorJsonModel.username);
+        			} else if (loginErrorJsonModel.password != null) {
+        				this.errorText.setVisibility(View.VISIBLE);
+        			} else if (loginErrorJsonModel.non_field_errors != null) {
+        				this.errorText.setVisibility(View.VISIBLE);
+        			}        			
+        		}
         	}
         } else {
         	// Error sending HTTP request

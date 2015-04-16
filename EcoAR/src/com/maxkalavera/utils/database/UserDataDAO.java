@@ -5,89 +5,168 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
+import com.maxkalavera.utils.database.jsonprimitives.DateJsonPrimitive;
 
 public class UserDataDAO {
+	private Context context;
+	private String sharedPreferencesKeyword;
+	private SharedPreferences sharedPreferences;
+	private SharedPreferences.Editor sharedPreferencesEditor;
 	
-	private Activity activity;
-	private String filepath;
+	private static final String EXISTENCE = "exist";
+	
+	public static final String USERNAME = "username";
+	public static final String FIRSTNAME = "firstname";
+	public static final String SECONDNAME = "secondname";
+	public static final String EMAIL = "email";
+	public static final String GENDER = "gender";
+	public static final String BIRTHDATE = "birthdate";
 	
 	/*************************************************************
 	 * Constructor de la clase
 	 *************************************************************/
-	public UserDataDAO(Activity activity) {
-		this.activity = activity;
-		this.filepath = 
-				activity.getResources().getString(R.string.userdata_filepath);
+	public String getUsername() {
+		return this.getUserDataSharedPreferences().
+				getString(UserDataDAO.USERNAME , "");
+	}
+
+	public String getFirstName() {
+		return this.getUserDataSharedPreferences().
+				getString(UserDataDAO.FIRSTNAME , "");
+	}
+
+	public String getSecondName() {
+		return this.getUserDataSharedPreferences().
+				getString(UserDataDAO.SECONDNAME , "");
+	}
+
+	public String getEmail() {
+		return this.getUserDataSharedPreferences().
+				getString(UserDataDAO.EMAIL , "");
+	}
+
+	public String getGender() {
+		return this.getUserDataSharedPreferences().
+				getString(UserDataDAO.GENDER , "");
+	}
+
+	public Date getBirthDate() {
+		DateJsonPrimitive dateJsonPrimitive = DateJsonPrimitive.getInstance();
+		String temp = this.getUserDataSharedPreferences().
+			getString(UserDataDAO.BIRTHDATE , "");
+		return dateJsonPrimitive.deserialize(new JsonPrimitive(temp), null, null);
+	}
+	
+	public String serializeBirthDate(Date in) {
+		DateJsonPrimitive dateJsonPrimitive = DateJsonPrimitive.getInstance();
+		return dateJsonPrimitive.serialize(in, null, null).getAsString();
+	}
+	
+	/*************************************************************
+	 * Constructor de la clase
+	 *************************************************************/
+	public UserDataDAO(Context context) {
+		this.context = context;
+		this.sharedPreferencesKeyword = 
+				context.getResources().getString(R.string.userdata_filename);
+		
+		this.sharedPreferences = this.getContext().getSharedPreferences(
+				this.sharedPreferencesKeyword, 
+				Context.MODE_PRIVATE);
+	}
+	
+	
+	private Context getContext() {
+		return this.context;
 	}
 	
 	/*************************************************************
 	 * Verificar si existe un perfil de usuario guardado en la
 	 * memoria. 
 	 *************************************************************/	
-	public boolean existUserDataProfile() {
-		File file = new File(this.filepath);
-		if(file.exists())
+	public Boolean existUserDataProfile() {
+		if (this.getUserDataSharedPreferences() .contains(UserDataDAO.EXISTENCE)) 
 			return true;
-		return false;
+		else
+			return false;
 	}
 	
-	// it will only create one newProfile if the last was deleted
-	public boolean createUserDataProfile(UserDataJsonModel userDataJsonModel) {
-		FileOutputStream fos;
+	/*************************************************************
+	 *  # it will only create one newProfile if the last one has 
+	 *  been deleted
+	 *************************************************************/	
+	public void createUserDataProfile(UserDataJsonModel userDataJsonModel) {
 		if (this.existUserDataProfile())
-			return false;
-		try {
-			fos = this.activity.openFileOutput(this.filepath, Context.MODE_PRIVATE);
-			fos.write(userDataJsonModel.serialize().getBytes());
-			fos.close();
-			return true;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+			return ;
+		
+		SharedPreferences sharedPreferences = getUserDataSharedPreferences();
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(UserDataDAO.EXISTENCE, true);
+		editor.commit();
+		
+		this.saveUserData(userDataJsonModel);
 	}
 	
+	/*************************************************************
+	 * 
+	 *************************************************************/	
+	public void saveUserData(UserDataJsonModel userDataJsonModel) {
+		SharedPreferences sharedPreferences = getUserDataSharedPreferences();
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		
+		editor.putString(UserDataDAO.USERNAME, userDataJsonModel.username);
+		editor.putString(UserDataDAO.FIRSTNAME, userDataJsonModel.firstName);
+		editor.putString(UserDataDAO.SECONDNAME, userDataJsonModel.secondName);
+		editor.putString(UserDataDAO.EMAIL, userDataJsonModel.email);
+		editor.putString(UserDataDAO.GENDER, userDataJsonModel.gender);
+		editor.putString(UserDataDAO.BIRTHDATE, 
+				this.serializeBirthDate(userDataJsonModel.birthdate));
+
+		editor.commit();
+	}
+	
+	public UserDataJsonModel getAsUserDataModel() {
+		UserDataJsonModel userDataJsonModel = new UserDataJsonModel();
+		
+		userDataJsonModel.username = this.getUsername();
+		userDataJsonModel.firstName = this.getFirstName();
+		userDataJsonModel.secondName = this.getSecondName();
+		userDataJsonModel.email = this.getEmail();
+		userDataJsonModel.gender = this.getGender();
+		userDataJsonModel.birthdate = this.getBirthDate();
+		
+		return userDataJsonModel;
+	}
 	
 	/*************************************************************
 	 * Esta funcion sirve para remover el archivo que contiene 
 	 * los datos del usuario
 	 *************************************************************/	
-	public boolean removeUserDataProfile() {
-		File file = new File(this.filepath);
-		return file.delete();
+	public void removeUserDataProfile() {
+		SharedPreferences sharedPreferences = getUserDataSharedPreferences();
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.clear();
+		editor.commit();
 	}
 	
 	/*************************************************************
 	 * Esta funcion sirve para remover el archivo que contiene 
 	 * los datos del usuario
 	 *************************************************************/	
-	public UserDataJsonModel getUserData() {
-		try {
-			FileInputStream fin = this.activity.openFileInput(this.filepath);
-			int c;
-			String temp="";
-				while( (c = fin.read()) != -1){
-				   temp = temp + Character.toString((char)c);
-				}
-			fin.close();
-			return (UserDataJsonModel) new UserDataJsonModel().deserialize(temp);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-		
-	}
+	public SharedPreferences getUserDataSharedPreferences() {
+		return this.sharedPreferences;
+	}	
 	
-}
+};

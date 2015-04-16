@@ -3,8 +3,8 @@ package com.maxkalavera.ecoar;
 import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.SlideMenuBarHandlerButton;
-import com.maxkalavera.utils.UserSession;
 import com.maxkalavera.utils.database.UserDataDAO;
+import com.maxkalavera.utils.database.UserSessionDAO;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -23,10 +23,11 @@ public class BaseActivity extends FragmentActivity  {
 		super.onCreate(savedInstanceState);
 		this.setContentView(contentViewLayout);
 				
-		boolean sessionFlag = new UserSession(this).checkSessionStatus();
+		boolean sessionFlag = new UserSessionDAO(this).checkSessionStatus();
 
 		// Configuracion del SlideMenuBarHandler
 		this.slideMenu = new SlideMenuBarHandler(this);
+		
 		if (sessionFlag) {
 			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
 					new SlideMenuBarHandlerButton(

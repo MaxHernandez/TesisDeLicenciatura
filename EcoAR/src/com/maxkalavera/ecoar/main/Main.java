@@ -8,7 +8,8 @@ import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
-import com.maxkalavera.utils.UserSession;
+import com.maxkalavera.utils.database.CacheProductDAO;
+import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.httprequest.InternetStatus;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
@@ -35,7 +36,7 @@ import android.widget.Button;
 
 
 public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle>{
-	UserSession userSession;
+	UserSessionDAO userSession;
 	
 	/************************************************************
 	 * Constructor Method
@@ -44,15 +45,14 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);	
 		
-		this.userSession = new UserSession(this);		
-		getSupportLoaderManager().initLoader(1, null, this);
-		
 		this.initCoockieSyncManager();
 		
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false); 
 		actionBar.setDisplayShowHomeEnabled(false);
 		
+		this.userSession = new UserSessionDAO(this);		
+		getSupportLoaderManager().initLoader(1, null, this);
 	}
 
 	/************************************************************
@@ -70,7 +70,7 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 			case 0:
 				return null;
 			case 1:
-				MainCheckSessionHTTPLoader loader = new MainCheckSessionHTTPLoader(this, null);
+				MainSetUpAndCheckSessionHTTPLoader loader = new MainSetUpAndCheckSessionHTTPLoader(this, null);
 				loader.forceLoad();
 				return loader;
 			default:

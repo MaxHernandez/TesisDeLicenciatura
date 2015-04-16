@@ -52,15 +52,16 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	private Boolean cookiesFlag;
 	private Boolean csrfFlag;
 	private Boolean JsonResponseFlag;  
-	private String prefsSession;
+	private String csrfSharedPreferencesFilename;
+	private String csrfSharedPreferencesKeyword;
 	private String url;
 	private String host;
 	private String method; 
 	private BaseResponseJsonModel responseJSONModel;
 	
-	public static final MediaType JSON
-    = MediaType.parse("application/json; charset=utf-8");
-	public static final String GET = "GET", POST = "POST";
+	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+	public static final String GET = "GET";
+	public static final String POST = "POST";
 	
 	/************************************************************
 	 * Constructor Method
@@ -75,11 +76,11 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		this.cookiesFlag = false;
 		this.csrfFlag = false;
 		this.JsonResponseFlag = false;
-		this.prefsSession = context.getResources().getString(R.string.sessionprefsfile);
+		this.csrfSharedPreferencesFilename = context.getResources().getString(R.string.csrf_filename);
+		this.csrfSharedPreferencesKeyword = context.getResources().getString(R.string.csrf_csrftoken_keyword);
 		this.url = url;
 		this.method = method; 
 		this.host = null;
-		BaseResponseJsonModel responseJSONModel = null;
 		
 		this.uriBuilder = Uri.parse(url).buildUpon();
 		if (this.method != GET )
@@ -116,7 +117,7 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	}
 	
 	public void addJSONParam(String name, String value){
-		if (this.method != this.GET )
+		if (this.method != HttpRequestLoader.GET )
 			this.parametersJson.addProperty(name, value);
 	}
 	
@@ -178,10 +179,10 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	 * CSRF Protection Methods
 	 ************************************************************/
 	private void csrfLoad() {
-		SharedPreferences sessionSharedPreferences = this.context.getSharedPreferences(prefsSession, Context.MODE_PRIVATE);
-		String csrf_token = sessionSharedPreferences.getString("csrf_token", null);
+		SharedPreferences sessionSharedPreferences = this.context.getSharedPreferences(csrfSharedPreferencesFilename, Context.MODE_PRIVATE);
+		String csrf_token = sessionSharedPreferences.getString(this.csrfSharedPreferencesKeyword, null);
 		if (csrf_token != null) {
-			this.addURIParam("csrf_token", csrf_token);
+			this.addURIParam(this.csrfSharedPreferencesKeyword, csrf_token);
 		}
 	}
 	
@@ -190,33 +191,19 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		try {
 			csrfJsonModel = CSRFJsonModel.deserialize(response.body().string());
 			if (csrfJsonModel != null) {
-				SharedPreferences sessionSharedPreferences = this.context.getSharedPreferences(prefsSession, Context.MODE_PRIVATE);
+				SharedPreferences sessionSharedPreferences = this.context.getSharedPreferences(csrfSharedPreferencesFilename, Context.MODE_PRIVATE);
 				SharedPreferences.Editor editor = sessionSharedPreferences.edit();
-				editor.putString("csrf_token", csrfJsonModel.csrf_token);
+				editor.putString(this.csrfSharedPreferencesKeyword, csrfJsonModel.csrf_token);
 				editor.commit();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	/************************************************************
-	 * Json Deserialize 
-	 * @throws IOException 
-	 * @throws JsonSyntaxException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
-	 ************************************************************/
 	
-	/*
-	public BaseResponseJsonModel deserializeJson(Response response, Class className) throws JsonSyntaxException, IOException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException{
-		Class[] cArg = {String.class};
-		Method serializeMethod =  className.getMethod("deserialize", cArg);
-		return serializeMethod.invoke( null, response.body().toString());
-	}
-	*/
-
+	/************************************************************
+	 * 
+	 ************************************************************/
 	public BaseResponseJsonModel deserializeJson(Response response, BaseResponseJsonModel jsonModel) {
 		return jsonModel.deserialize(response.body().toString());
 	}
@@ -249,9 +236,13 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		
 		// This part makes the Request to the server
 		try {						
-			if (this.method == this.GET ) {
+			// Si se utiliza una peticion GET se mandan solamente parametros en el URI
+			// En cambio en una peticion POST se mandan ambios tipos de parametros: se 
+			// serializan los parametros JSON y se mandan en el cuerpo del paquete; y 
+			// se mandan los parametros espcificados en el URI
+			if (this.method == HttpRequestLoader.GET ) {
 				this.builder.url( this.uriBuilder.build().toString());
-				this.builder.method(this.GET, null);
+				this.builder.method(HttpRequestLoader.GET, null);
 			}else{
 				this.builder.url( this.uriBuilder.build().toString());
 				

@@ -2,4 +2,6 @@
 <resources>
     <dimen name="slidemenu_slideoffset">300dp</dimen>
     <item name="slidemenu_fadedegree" format="float" type="dimen">0.35</item>
+    <!-- Home.LastProducts -->
+    <item name="home_lastproducts_numberofproducts" format="integer" type="dimen">15</item>
 </resources>

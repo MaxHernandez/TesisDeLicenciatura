@@ -10,43 +10,27 @@ import android.view.View.OnClickListener;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
 
+import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.main.Main;
-import com.maxkalavera.utils.UserSession;
+import com.maxkalavera.utils.database.UserSessionDAO;
 
-public class LoginIntro extends FragmentActivity implements OnClickListener{
-	UserSession userSession;
+public class LoginIntro extends BaseActivity implements OnClickListener{
+	UserSessionDAO userSession;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		this.userSession = new UserSession(this);
+		super.onCreate(savedInstanceState, R.layout.loginintro);
+		this.userSession = new UserSessionDAO(this);
 		
 		if (this.userSession.checkSessionStatus()){
             Intent intent = new Intent();
             intent.setClass(this, Home.class);
             startActivity(intent);
 		}
-			
-		this.setContentView(R.layout.loginintro);
 		
-		CookieSyncManager.createInstance(this);
-		
-		Button button = (Button) findViewById(R.id.skiploginbutton);
+		Button button = (Button) findViewById(R.id.loginintro_skiplogin);
 		button.setOnClickListener(this);
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		CookieSyncManager.getInstance().startSync();
-	}
-	
-	@Override
-	public void onPause() {
-		super.onPause();
-		 CookieSyncManager.getInstance().stopSync();
-		
 	}
 	
     @Override

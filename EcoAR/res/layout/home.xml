@@ -19,7 +19,7 @@ En la parte inferior muestra una lista de los ultimos productos buscados o escan
     	
         />    	    
 	    <!-- Aqui va en grupo de abajo donde se muestran los ultimos productos buscados o comprados -->
-	<include layout="@layout/someproducts"
+	<include layout="@layout/lastproducts"
 	    android:layout_weight=".45"
     	android:layout_width="fill_parent"
 	    android:layout_height="0dp"

@@ -2,7 +2,7 @@ package com.maxkalavera.ecoar.home;
 
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.main.MainCheckSessionHTTPLoader;
+import com.maxkalavera.ecoar.main.MainSetUpAndCheckSessionHTTPLoader;
 import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
 import com.maxkalavera.utils.httprequest.InternetStatus;
@@ -10,6 +10,7 @@ import com.maxkalavera.utils.httprequest.ResponseBundle;
 import com.squareup.okhttp.Response;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,7 +41,7 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         
-        // Get User Profile data 
+        // Get User Profile data Object 
         Activity tempAct = this.getActivity();
         BaseActivity activity = (BaseActivity) tempAct; 
         this.userDM = activity.getUserDataManager();
@@ -49,8 +50,7 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
         // localmente los carga, de lo contrario los recupera
         // del servidor.
         if (this.userDM.existUserDataProfile()) {
-        	UserDataJsonModel userDataJM = this.userDM.getUserData();
-        	loadInfo(userDataJM);
+        	loadInfo(this.userDM);
         } else {
         	getLoaderManager().initLoader(1, null, this);
         }
@@ -60,9 +60,10 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
 	/*************************************************************
 	 * 
 	 *************************************************************/ 
-    public void loadInfo(UserDataJsonModel userDataJM) {
-    	((TextView) getActivity().findViewById(R.id.home_wellcomeuser_name)). 
-    			setText(userDataJM.firstName);
+    public void loadInfo(UserDataDAO userDataDAO) {
+    	TextView title = ((TextView) getActivity().findViewById(R.id.home_wellcomeuser_title));
+    	title.setText(title.getText() + userDataDAO.getUsername());
+    	
     }
     
 	/*************************************************************
@@ -99,8 +100,11 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
 		if (userDataJM == null) {
 			// Hubo un error al deserializar el objeto JSON
 		}
+		// Esta linea utiliza el objeto administrador de la base de datos
+		// para guardar los datos del usuario en la memoria interna.
 		this.userDM.createUserDataProfile(userDataJM);
-		loadInfo(userDataJM);
+		// Carga los datos necesarios en pantalla
+		this.loadInfo(this.userDM);
 	}
 
 	@Override

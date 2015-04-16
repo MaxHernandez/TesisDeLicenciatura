@@ -10,11 +10,16 @@
     <string name="webservice_userdata">http://192.168.1.73:8080/csession/</string>
     <string name="amazonurl">http://www.amazon.com/s/</string>
     
-    <!-- SharedPreferences preferences -->
-    <string name="userdata_filepath">userdatafile</string>
-    <!-- SharedPreferences preferences -->
-    <string name="sessionprefsfile">Session_prefs</string>
-    <string name="sessionstatuskeyword">sessionAuthenticated</string>
+    <!-- SharedPreferences userdata -->
+    <string name="userdata_filename">userdata</string>
+    
+    <!-- SharedPreferences session -->
+    <string name="session_filename">session_prefs</string>
+    <string name="session_status_keyword">sessionAuthenticated</string>
+    
+    <!-- SharedPreferences CSRF -->
+    <string name="csrf_filename">csrf_prefs</string>
+    <string name="csrf_csrftoken_keyword">csrf_token</string>
     
     <!-- ActionBar -->
     <string name="actionbar_home">Inicio</string>
@@ -27,9 +32,11 @@
     <!-- Home -->
     <string name="home_wellcome_title">Bienvenido </string>
     <string name="home_wellcome_intro">Este es un sistema de bla para bla, para empezar a usarlo haz bla.</string>
-
-    <!-- SomeProducts -->
-    <string name="someproducts_title">Productos recientes</string>
+    
+    <!-- Home.LastProducts -->
+    <string name="lastproducts_title">Productos recientemente vistos</string>
+    <string name="lastproducts_item_defaultname">Nombre del producto</string>
+    <string name="lastproducts_item_defaultdescription">Descripción</string>
     
     <!-- Login -->
     <string name="login_user"><a href="" >Usuario</a></string>
@@ -44,10 +51,6 @@
     <!-- Login login errors -->
     <string name="login_errorsdefault">El nombre de usuario o la contraseña no son validos.</string>
     
-    <!-- Home.SomeProducts -->
-    <string name="someproducts_item_defaultname">Nombre del producto</string>
-    <string name="someproducts_item_defaultdescription">Descripción</string>
-    
     <!-- SearchBar -->
 	<string name="searchbar_sendbutton">Buscar</string>
     <string name="searchbar_results_itemname">Nombre</string>
@@ -59,7 +62,7 @@
     <string name="productinfo_userrating_title">Calificación de usuarios</string>
     <string name="productinfo_userrating_rating">0.0</string>
     <string name="productinfo_userrating_titleuser">Tu calificación:</string>
-      <string name="productinfo_userrating_ratinguser">0/10</string>
+    <string name="productinfo_userrating_ratinguser">0/10</string>
     
     
     

@@ -27,8 +27,12 @@ public class CacheProductDAO {
 	private Context context;
 	private SQLiteDatabase database;
 	private CacheProductsSQLiteHelper dbHelper;
-	private double retainingLapse;
-	private int maxProducts;
+	
+	private static final double RETAINING_LAPSE = 604800;
+	private static final int MAX_PRODUCTS = 300;
+	private static final String TABLE_IMAGE_ABSPATH = 
+			"/."+ CacheProductsSQLiteHelper.TABLE_PRODUCTS +
+			"/."+ CacheProductsSQLiteHelper.PRODUCTS_IMAGE;
 	
 	/********************************************************
 	 * Metodo constructor
@@ -36,8 +40,6 @@ public class CacheProductDAO {
 	public CacheProductDAO (Context context) {
 		this.context = context;
 		this.dbHelper = new CacheProductsSQLiteHelper(context);
-		this.retainingLapse = 604800; // one weeek in seconds
-		this.maxProducts = 300;
 	}
 	
 	/********************************************************
@@ -50,92 +52,26 @@ public class CacheProductDAO {
 	public void close() {
 		dbHelper.close();
 	}
-
-	/********************************************************
-	 * Metodos para guardar y cargar una imagen de la memoria
-	 ********************************************************/
-	public String saveBitmap (Bitmap bitmap, String absolutePath, String filename, long _id) {
-		String rootDirectory = this.context.getExternalFilesDir(null).getAbsolutePath();
-		String filename_extension = ".jpeg";
-		String bitmapPath = rootDirectory+absolutePath+"/"+filename+String.valueOf(_id)+"."+filename_extension;
-		
-		File dir = new File(rootDirectory+absolutePath+absolutePath+"/");
-		if(!dir.exists()) {
-		    dir.mkdirs();
-		}
-		File file = new File(bitmapPath);
-		
-		 try {
-			 OutputStream fileOutputStream = new FileOutputStream(file);
-			 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-			 fileOutputStream.flush();
-	         fileOutputStream.close();
-		 } catch (FileNotFoundException e) {
-			 e.printStackTrace();
-			 return null;
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	            return null;
-	        }
-		
-		return bitmapPath;
-	}
-	
-	public Bitmap loadBitmap (String bitmapPath) {
-		Bitmap bitmap = null;
-		File file = new File(bitmapPath);
-		FileInputStream fileInputStream;
-		try {
-			fileInputStream = new FileInputStream(file);
-			bitmap = BitmapFactory.decodeStream(fileInputStream); //This gets the image
-				fileInputStream.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return bitmap;
-	}
 	
 	/********************************************************
 	 * Metodo para agregar un producto al cache
 	 ********************************************************/
 	public ProductModel addProduct(ProductModel product) {
-		if (product.getID() == -1) {
+		if (product.getID() != -1) {
 			
-			if (getNumberOfProductsInDB() > this.maxProducts) 
+			if (getNumberOfProductsInDB() > CacheProductDAO.MAX_PRODUCTS) 
 				removeOldestProduct();
 			
 			ContentValues contentValues = 
 					this.getContentValuesFromProduct(product);
-			long tempID = this.database.insert(CacheProductsSQLiteHelper.TABLE_PRODUCTS, null,
+			long productID = this.database.insert(CacheProductsSQLiteHelper.TABLE_PRODUCTS, null,
 					contentValues);
-			product.setID(tempID);
+			product.setID(productID);
 			
 			// Guarda las imagenes en la memoria SD del dispositivo, 
 			// utiliza el ID que se genera al insertar la fila por primera vez
 			// para generar el nombre de la imagen.
-			ContentValues updateContentValues = new ContentValues();
-			String absolutePath = "";
-			String bitmapPath = "";
-			
-			// CacheProductsSQLiteHelper.PRODUCTS_IMAGE
-			absolutePath =
-					"/."+ CacheProductsSQLiteHelper.TABLE_PRODUCTS +
-					"/."+ CacheProductsSQLiteHelper.PRODUCTS_IMAGE;
-			bitmapPath = this.saveBitmap(product.image,
-					absolutePath,
-					CacheProductsSQLiteHelper.PRODUCTS_IMAGE,
-					tempID);
-			updateContentValues.put(CacheProductsSQLiteHelper.PRODUCTS_IMAGE, 
-			bitmapPath);
-			
-			this.database.update(CacheProductsSQLiteHelper.TABLE_PRODUCTS, 
-					updateContentValues, 
-					"_id "+"="+tempID, 
-					null);
-			
+			this.addImagesToProductDatabaseRow(product, productID);
 		}
 		
 		return product;
@@ -147,6 +83,7 @@ public class CacheProductDAO {
 				"order by "+ CacheProductsSQLiteHelper.PRODUCTS_TIMESTAMP  +" asc" +
 				"limit 1", null);
 		if (cursor .moveToFirst()) {
+			this.removeImagesInDatabaseFromCursor(cursor);			
     		this.database.delete(CacheProductsSQLiteHelper.TABLE_PRODUCTS,
     				CacheProductsSQLiteHelper.PRODUCTS_ID+
     				"="+String.valueOf(cursor.getLong(0))
@@ -212,7 +149,8 @@ public class CacheProductDAO {
             while (cursor.isAfterLast() == false) {
             	double productInsertionTime = 
             			this.getInsertionTimeFromCursor(cursor);
-            	if (now - productInsertionTime >= this.retainingLapse)
+            	if (now - productInsertionTime >= CacheProductDAO.RETAINING_LAPSE)
+            		this.removeImagesInDatabaseFromCursor(cursor);
             		this.database.delete(CacheProductsSQLiteHelper.TABLE_PRODUCTS,
             				CacheProductsSQLiteHelper.PRODUCTS_ID+
             				"="+String.valueOf(cursor.getLong(0))
@@ -233,7 +171,7 @@ public class CacheProductDAO {
 		product.description = cursor.getString(2);
 		product.shopingService = cursor.getString(3);
 		product.url = cursor.getString(4);
-		product.image = this.loadBitmap(cursor.getString(5));
+		product.image = this.loadBitmapFile(cursor.getString(5));
 		product.imageURL = cursor.getString(6);
 		
 		return product;
@@ -271,8 +209,85 @@ public class CacheProductDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/
+	public void addImagesToProductDatabaseRow (ProductModel product, long productID) {
+		ContentValues updateContentValues = new ContentValues();
+		String bitmapSavedPath = "";
+		
+		bitmapSavedPath = this.saveBitmapFile(product.image,
+				CacheProductDAO.TABLE_IMAGE_ABSPATH,
+				CacheProductsSQLiteHelper.PRODUCTS_IMAGE,
+				productID);
+		updateContentValues.put(CacheProductsSQLiteHelper.PRODUCTS_IMAGE, 
+		bitmapSavedPath);
+		
+		this.database.update(CacheProductsSQLiteHelper.TABLE_PRODUCTS, 
+				updateContentValues, 
+				"_id "+"="+productID, 
+				null);
+	}
+
+	public void removeImagesInDatabaseFromCursor (Cursor cursor) {
+		this.removeBitmapFile(cursor.getString(5));
+	}
+	
+	
+	/********************************************************
+	 * 
+	 ********************************************************/
 	public double unix_timestamp() {
 		return System.currentTimeMillis() / 1000.0;
+	}
+	
+	/********************************************************
+	 * Metodos para guardar y cargar una imagen de la memoria
+	 ********************************************************/
+	public String saveBitmapFile (Bitmap bitmap, String absolutePath, String filename, long _id) {
+		String rootDirectory = this.context.getExternalFilesDir(null).getAbsolutePath();
+		String filename_extension = ".jpeg";
+		String bitmapPath = rootDirectory+absolutePath+"/"+filename+String.valueOf(_id)+"."+filename_extension;
+		
+		File dir = new File(rootDirectory+absolutePath+absolutePath+"/");
+		if(!dir.exists()) {
+		    dir.mkdirs();
+		}
+		File file = new File(bitmapPath);
+		
+		 try {
+			 OutputStream fileOutputStream = new FileOutputStream(file);
+			 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+			 fileOutputStream.flush();
+	         fileOutputStream.close();
+		 } catch (FileNotFoundException e) {
+			 e.printStackTrace();
+			 return null;
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+		
+		return bitmapPath;
+	}
+	
+	public Bitmap loadBitmapFile (String bitmapPath) {
+		Bitmap bitmap = null;
+		File file = new File(bitmapPath);
+		FileInputStream fileInputStream;
+		try {
+			fileInputStream = new FileInputStream(file);
+			bitmap = BitmapFactory.decodeStream(fileInputStream); //This gets the image
+				fileInputStream.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return bitmap;
+	}
+	
+	public Boolean removeBitmapFile (String bitmapPath) {
+		File file = new File(bitmapPath);
+		return file.delete();
 	}
 	
 }

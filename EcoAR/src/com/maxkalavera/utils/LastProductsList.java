@@ -18,7 +18,7 @@ import android.widget.LinearLayout.LayoutParams;
 
 import com.maxkalavera.utils.CircleScore;
 
-public class LastProductsList extends LinearLayout implements OnTouchListener{
+public class LastProductsList {}/*extends LinearLayout implements OnTouchListener{
 	Context context;
 	
 	public LastProductsList(Context context){
@@ -99,4 +99,4 @@ public class LastProductsList extends LinearLayout implements OnTouchListener{
 	}
 	
 
-}
+}*/

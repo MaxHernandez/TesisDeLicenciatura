@@ -16,6 +16,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -33,7 +34,20 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
         this.setListAdapter(this.adapter);
 		getLoaderManager().initLoader(0, null, this);
     }
-	
+    
+	/************************************************************
+	 * 
+	 ************************************************************/
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.lastproducts, container, false);
+    	return view;
+    }
+    
+	/************************************************************
+	 * 
+	 ************************************************************/
     @Override
     public void onListItemClick(ListView l, View v, int position, long id)  {
     	this.showProductInfo(position);
@@ -46,10 +60,10 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
         startActivity(intent);
 	}
     
-	
 	/************************************************************
-	 * Loading HTTP requests Methods
+	 * Loder methods
 	 ************************************************************/
+	
 	@Override
 	public Loader<List<ProductModel>> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {

@@ -127,6 +127,9 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int login_errortext=0x7f050000;
     }
     public static final class dimen {
+        /**  Home.LastProducts 
+         */
+        public static final int home_lastproducts_numberofproducts=0x7f060002;
         public static final int slidemenu_fadedegree=0x7f060001;
         public static final int slidemenu_slideoffset=0x7f060000;
     }
@@ -162,8 +165,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     public static final class id {
         public static final int fullscreen=0x7f040003;
         public static final int groceriesListFragment=0x7f040005;
-        public static final int home_wellcomeuser_name=0x7f040009;
-        public static final int lastProductsFragment=0x7f040031;
+        public static final int home_wellcomeuser_title=0x7f040009;
         public static final int lastproducts_item_info=0x7f04000a;
         public static final int lastproducts_item_righticon=0x7f04000b;
         public static final int lastproducts_itemname=0x7f04000c;
@@ -176,6 +178,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int login_send=0x7f040011;
         public static final int login_singuptext=0x7f040013;
         public static final int login_username=0x7f04000f;
+        public static final int loginintro_skiplogin=0x7f040017;
         public static final int main_loginfragment=0x7f040016;
         public static final int margin=0x7f040002;
         public static final int productinfo_energy=0x7f04001c;
@@ -202,13 +205,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchproduct_searchButton=0x7f040024;
         public static final int searchproduct_searchTextBar=0x7f040023;
         public static final int selected_view=0x7f040004;
-        public static final int skiploginbutton=0x7f040017;
         public static final int slidemenu_itemimage=0x7f04002e;
         public static final int slidemenu_itemname=0x7f04002f;
         public static final int slidemenu_linearlayout=0x7f04002d;
-        public static final int slidemenu_searchbutton=0x7f040033;
+        public static final int slidemenu_searchbutton=0x7f040031;
         public static final int slidingmenumain=0x7f040030;
-        public static final int someproducts_description=0x7f040032;
         public static final int someproducts_itemsocket=0x7f040006;
         public static final int someproducts_name=0x7f040007;
         public static final int wellcomeuserfragment=0x7f040008;
@@ -220,84 +221,85 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int groceries_list_item=0x7f030003;
         public static final int home=0x7f030004;
         public static final int home_wellcome=0x7f030005;
-        public static final int lastproducts_item=0x7f030006;
-        public static final int loading=0x7f030007;
-        public static final int login=0x7f030008;
-        public static final int login_activity=0x7f030009;
-        public static final int loginintro=0x7f03000a;
-        public static final int main=0x7f03000b;
-        public static final int productinfo=0x7f03000c;
-        public static final int productinfo_userrating=0x7f03000d;
-        public static final int searchbar=0x7f03000e;
-        public static final int searchbar_results=0x7f03000f;
-        public static final int searchbar_results_item=0x7f030010;
-        public static final int searchcamera=0x7f030011;
-        public static final int slidemenu=0x7f030012;
-        public static final int slidemenu_item=0x7f030013;
-        public static final int slidingmenumain=0x7f030014;
-        public static final int someproducts=0x7f030015;
-        public static final int someproducts_item=0x7f030016;
+        public static final int lastproducts=0x7f030006;
+        public static final int lastproducts_item=0x7f030007;
+        public static final int loading=0x7f030008;
+        public static final int login=0x7f030009;
+        public static final int login_activity=0x7f03000a;
+        public static final int loginintro=0x7f03000b;
+        public static final int main=0x7f03000c;
+        public static final int productinfo=0x7f03000d;
+        public static final int productinfo_userrating=0x7f03000e;
+        public static final int searchbar=0x7f03000f;
+        public static final int searchbar_results=0x7f030010;
+        public static final int searchbar_results_item=0x7f030011;
+        public static final int searchcamera=0x7f030012;
+        public static final int slidemenu=0x7f030013;
+        public static final int slidemenu_item=0x7f030014;
+        public static final int slidingmenumain=0x7f030015;
     }
     public static final class menu {
         public static final int mainmenu=0x7f090000;
     }
     public static final class string {
-        public static final int actionbar_groceries=0x7f07000f;
+        public static final int actionbar_groceries=0x7f070011;
         /**  ActionBar 
          */
-        public static final int actionbar_home=0x7f07000a;
-        public static final int actionbar_login=0x7f07000b;
-        public static final int actionbar_logout=0x7f07000c;
-        public static final int actionbar_search=0x7f07000d;
-        public static final int actionbar_searchcamera=0x7f07000e;
+        public static final int actionbar_home=0x7f07000c;
+        public static final int actionbar_login=0x7f07000d;
+        public static final int actionbar_logout=0x7f07000e;
+        public static final int actionbar_search=0x7f07000f;
+        public static final int actionbar_searchcamera=0x7f070010;
         public static final int amazonurl=0x7f070006;
         /**  General data 
          */
         public static final int app_name=0x7f070000;
+        public static final int csrf_csrftoken_keyword=0x7f07000b;
+        /**  SharedPreferences CSRF 
+         */
+        public static final int csrf_filename=0x7f07000a;
         /**  Groceries 
          */
-        public static final int grocery_title=0x7f070020;
-        public static final int home_wellcome_intro=0x7f070011;
+        public static final int grocery_title=0x7f070022;
+        public static final int home_wellcome_intro=0x7f070013;
         /**  Home 
          */
-        public static final int home_wellcome_title=0x7f070010;
+        public static final int home_wellcome_title=0x7f070012;
+        public static final int lastproducts_item_defaultdescription=0x7f070016;
+        public static final int lastproducts_item_defaultname=0x7f070015;
+        /**  Home.LastProducts 
+         */
+        public static final int lastproducts_title=0x7f070014;
         /**  Login login errors 
          */
-        public static final int login_errorsdefault=0x7f07001b;
-        public static final int login_password=0x7f070014;
-        public static final int login_recoverpasstext=0x7f070018;
-        public static final int login_recoverpassurl=0x7f070019;
-        public static final int login_send=0x7f070015;
-        public static final int login_singuptext=0x7f070016;
-        public static final int login_singupurl=0x7f070017;
+        public static final int login_errorsdefault=0x7f07001f;
+        public static final int login_password=0x7f070018;
+        public static final int login_recoverpasstext=0x7f07001c;
+        public static final int login_recoverpassurl=0x7f07001d;
+        public static final int login_send=0x7f070019;
+        public static final int login_singuptext=0x7f07001a;
+        public static final int login_singupurl=0x7f07001b;
         /**  Login 
          */
-        public static final int login_user=0x7f070013;
-        public static final int loginintro_skiplogin=0x7f07001a;
-        public static final int productinfo_userrating_rating=0x7f070022;
-        public static final int productinfo_userrating_ratinguser=0x7f070024;
+        public static final int login_user=0x7f070017;
+        public static final int loginintro_skiplogin=0x7f07001e;
+        public static final int productinfo_userrating_rating=0x7f070024;
+        public static final int productinfo_userrating_ratinguser=0x7f070026;
         /**  ProductInfo 
          */
-        public static final int productinfo_userrating_title=0x7f070021;
-        public static final int productinfo_userrating_titleuser=0x7f070023;
-        public static final int searchbar_results_itemname=0x7f07001f;
+        public static final int productinfo_userrating_title=0x7f070023;
+        public static final int productinfo_userrating_titleuser=0x7f070025;
+        public static final int searchbar_results_itemname=0x7f070021;
         /**  SearchBar 
          */
-        public static final int searchbar_sendbutton=0x7f07001e;
-        /**  SharedPreferences preferences 
+        public static final int searchbar_sendbutton=0x7f070020;
+        /**  SharedPreferences session 
          */
-        public static final int sessionprefsfile=0x7f070008;
-        public static final int sessionstatuskeyword=0x7f070009;
-        public static final int someproducts_item_defaultdescription=0x7f07001d;
-        /**  Home.SomeProducts 
+        public static final int session_filename=0x7f070008;
+        public static final int session_status_keyword=0x7f070009;
+        /**  SharedPreferences userdata 
          */
-        public static final int someproducts_item_defaultname=0x7f07001c;
-        /**  SomeProducts 
-         */
-        public static final int someproducts_title=0x7f070012;
-        /**  SharedPreferences preferences 
-         */
-        public static final int userdata_filepath=0x7f070007;
+        public static final int userdata_filename=0x7f070007;
         /**  URL preferences 
          */
         public static final int webservice=0x7f070001;
