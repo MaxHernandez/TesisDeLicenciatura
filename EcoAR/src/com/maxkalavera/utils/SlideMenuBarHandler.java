@@ -57,9 +57,14 @@ public class SlideMenuBarHandler implements OnTouchListener{
 		this.menu.toggle();
 	}
 	
-	public void addButton(SlideMenuBarHandlerButton button) {
+	public void addButton(SlideMenuBarHandlerButton button, OnTouchListener listener) {
 		View item = this.addElement(button);
-		item.setOnTouchListener(this);
+		
+		if (listener != null) 
+			item.setOnTouchListener(listener);
+		else
+			item.setOnTouchListener(this);
+		
 		this.dict.put(item, button.className);
 	}
 	

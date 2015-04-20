@@ -17,19 +17,23 @@ import org.jsoup.select.Elements;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.util.Pair;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.HTTPRequestTemp;
 import com.maxkalavera.utils.database.models.ProductModel;
+import com.maxkalavera.utils.httprequest.HttpRequestLoader;
+import com.maxkalavera.utils.httprequest.ImageDownloader;
+import com.maxkalavera.utils.httprequest.ResponseBundle;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 public class AmazonSearchObtainer {
 	String url;
-	HTTPRequestTemp requestHandler;
 	
 	public AmazonSearchObtainer(Context context) {
-		this.requestHandler = new HTTPRequestTemp(context);
 		this.url = context.getResources().getString(R.string.amazonurl);
 	}
 	
@@ -40,14 +44,23 @@ public class AmazonSearchObtainer {
 	}
 	
 	private String makeRequest(String query, int page){
-		Log.i("EcoAR-Search-URL", url);
-		List<BasicNameValuePair> params = new LinkedList<BasicNameValuePair>();
-		params.add(new BasicNameValuePair("field-keywords", String.valueOf(query)));
-		params.add(new BasicNameValuePair("page", String.valueOf(page)));
+		OkHttpClient client = new OkHttpClient();
+		Request.Builder builder = new Request.Builder();
+		Uri.Builder uriBuilder = Uri.parse(this.url).buildUpon();
 		
-		String data = this.requestHandler.sendGetRequest(this.url, params, null, HttpStatus.SC_OK);
-		Log.i("EcoAR-Search-Data", data);
-		return data;
+		uriBuilder.appendQueryParameter("field-keywords", String.valueOf(query));
+		uriBuilder.appendQueryParameter("page", String.valueOf(page));
+		
+		builder.url( uriBuilder.build().toString());
+		builder.method(HttpRequestLoader.GET, null);
+		try {	
+			Request request = builder.build();
+			Response response = client.newCall(request).execute();
+			return response.body().string();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private ArrayList<ProductModel> parseHTML(String html){
@@ -65,7 +78,7 @@ public class AmazonSearchObtainer {
 				Element productImageURL = product.select("img").first();
 				pdata.imageURL = productImageURL.attr("src");
 			
-				pdata.image = this.requestHandler.downloadImage(pdata.imageURL);
+				pdata.image = ImageDownloader.downloadImage(pdata.imageURL);
 			
 				data.add(pdata);
 			}

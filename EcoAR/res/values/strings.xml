@@ -54,6 +54,7 @@
     <!-- SearchBar -->
 	<string name="searchbar_sendbutton">Buscar</string>
     <string name="searchbar_results_itemname">Nombre</string>
+    <string name="searchbar_results_itemdescription">Descripción del producto.sssssssssssssssssssssssssssssssssssssssssss</string>
     
     <!-- Groceries -->
     <string name="grocery_title">Lista del super</string>
@@ -62,7 +63,7 @@
     <string name="productinfo_userrating_title">Calificación de usuarios</string>
     <string name="productinfo_userrating_rating">0.0</string>
     <string name="productinfo_userrating_titleuser">Tu calificación:</string>
-    <string name="productinfo_userrating_ratinguser">0/10</string>
+    <string name="productinfo_userrating_ratinguser">0/5</string>
     
     
     

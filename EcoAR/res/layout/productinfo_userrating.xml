@@ -15,6 +15,7 @@
 
 	<LinearLayout
     	android:layout_marginTop="5dp"
+    	android:paddingLeft="15dp"
     	android:orientation="horizontal" 
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
@@ -70,7 +71,7 @@
     			<RatingBar
 					android:id="@+id/productinfo_ratingbar"
 					style="?android:attr/ratingBarStyleSmall"
-					android:numStars="10"
+					android:numStars="5"
 					android:isIndicator="false" 
 					android:layout_marginRight="5dp"
 					android:layout_width="wrap_content"

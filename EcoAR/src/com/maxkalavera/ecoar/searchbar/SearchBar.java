@@ -5,7 +5,6 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.utils.CircleScore;
-import com.maxkalavera.utils.LastProductsList;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 
 import android.app.Activity;

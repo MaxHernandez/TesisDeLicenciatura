@@ -1,5 +1,6 @@
 package com.maxkalavera.ecoar;
 
+import com.maxkalavera.ecoar.LogOut.LogOutListener;
 import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.SlideMenuBarHandlerButton;
@@ -70,12 +71,16 @@ public class BaseActivity extends FragmentActivity  {
 							getResources().getString(R.string.actionbar_groceries),
 							"com.maxkalavera.ecoar.groceries.Groceries",
 							R.drawable.groceries),
+					};
+			this.slideMenu.setButtons(slideMenuButtonsDefault);
+			
+			this.slideMenu.addButton(
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_logout),
 							"",
 							R.drawable.logout),
-					};
-			this.slideMenu.setButtons(slideMenuButtonsDefault);			
+					new LogOutListener(this)); 
+			
 		}
 		
 		ActionBar actionBar = this.getActionBar();

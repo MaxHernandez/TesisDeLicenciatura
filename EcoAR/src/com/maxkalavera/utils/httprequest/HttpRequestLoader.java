@@ -70,7 +70,7 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		super(context);
 		this.context = context;
 		this.client = new OkHttpClient();
-		this.builder = new Request.Builder();
+		this.builder = null;
 		this.uriBuilder = null;
 		this.parametersJson = null;
 		this.cookiesFlag = false;
@@ -221,6 +221,7 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	public ResponseBundle sendHTTPRequest(){
 		Response response = null;
 		BaseResponseJsonModel jsonModel = null;
+		this.builder = new Request.Builder();
 		
 		// Module to load up Cookies
 		try {

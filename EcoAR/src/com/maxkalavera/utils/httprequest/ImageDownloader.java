@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 public class ImageDownloader {
-	public Bitmap downloadImage(String imageURL) {
+	public static Bitmap downloadImage(String imageURL) {
 	    try {
 	    	InputStream in = new java.net.URL(imageURL).openStream();
 	    	 return BitmapFactory.decodeStream(in);

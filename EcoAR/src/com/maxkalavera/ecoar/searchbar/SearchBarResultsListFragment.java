@@ -9,7 +9,6 @@ import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
-import com.maxkalavera.utils.HTTPRequestTemp;
 import com.maxkalavera.utils.database.models.ProductModel;
 import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
 
@@ -49,6 +48,9 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	int page = 1;
 	boolean scrollListenFlag = true;
 	
+	/************************************************************
+	 * Constructor Method
+	 ************************************************************/
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -65,18 +67,19 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		getLoaderManager().initLoader(0, null, this);
     }
 	
+	/************************************************************
+	 * 
+	 ************************************************************/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.searchbar_results, container, false);
     	return view;
     }
-    
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        showProductInfo(position);
-    }
 
+	/************************************************************
+	 * Loaders's methods 
+	 ************************************************************/
 	@Override
 	public Loader<ArrayList<ProductModel>> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
@@ -109,6 +112,14 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	public void onLoaderReset(Loader<ArrayList<ProductModel>> arg0) {
 	}
 
+	/************************************************************
+	 * Listener
+	 ************************************************************/
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        showProductInfo(position);
+    }
+	
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 		if ( (this.scrollListenFlag) &&
@@ -124,6 +135,9 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	public void onScrollStateChanged(AbsListView view, int scrollstate) {
 	}
 	
+	/************************************************************
+	 * 
+	 ************************************************************/
 	void newSearch(String query){
 		this.getLoaderManager().destroyLoader(0);
 		this.valuesList.clear();
@@ -133,6 +147,9 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		this.loadData();
 	}
 	
+	/************************************************************
+	 * 
+	 ************************************************************/
 	void showProductInfo(int position) {
         Intent intent = new Intent();
         intent.setClass(getActivity(), ProductInfo.class);
@@ -140,6 +157,9 @@ public class SearchBarResultsListFragment extends ListFragment implements
         startActivity(intent);
 	}
 	
+	/************************************************************
+	 * 
+	 ************************************************************/
 	private void loadData(){
 		this.progressBar.setVisibility(View.VISIBLE);
 		//this.progressBar.invalidateDrawable(this.progressBar.getProgressDrawable());
