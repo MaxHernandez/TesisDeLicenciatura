@@ -8,4 +8,15 @@ Preocupaciones:
   en cada OnResume() y Onpause() de cada activity. 
 
 
-
+# Metas del dia de hoy 16 may 2015
+  -- ProductInfo
+     * Definir los Loaders:
+       - Loader para cargar los datos (Memoria cache o servidor) del ProductInfo al iniciar el activity
+       - Loader para cargar los datos de la calificacion del usuario (calificacion y ID global del producto) al servidor, la memoría cache y que regrese la calificacion de usuarios
+     * Se agregara a la memoria cache los datos de calificacion ecologica, calificacion de usuarios y calificacion propia de cada producto.
+     # ComentariesFragmentList
+       * Construir la clase de Comentaries
+       * Definir los Loaders:
+       	 - Loader para cargar los comentarios a la lista se cargan cada numero de comentarios (Memoria cache o servidor), y se van cargando más si es que es necesario, los comentarios se van cargando por paginacion.
+	 - Loader para publicar un comentario en el servidor.
+       * Se agregara a la memoria cache una tabla para los comentarios

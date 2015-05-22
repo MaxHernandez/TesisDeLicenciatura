@@ -6,9 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.maxkalavera.utils.database.models.ProductModel;
-import com.maxkalavera.utils.database.sqlitehelpers.CacheProductsSQLiteHelper;
+import com.maxkalavera.utils.database.productmodel.ProductModel;
+import com.maxkalavera.utils.database.sqlitehelpers.ProductCacheSQLiteHelper;
 import com.maxkalavera.utils.database.sqlitehelpers.GroceriesListSQLiteHelper;
 
 import android.content.ContentValues;
@@ -22,19 +24,19 @@ import android.graphics.BitmapFactory;
 public class GroceriesListDAO {
 	private Context context;
 	private SQLiteDatabase database;
-	private CacheProductsSQLiteHelper dbHelper;
+	private ProductCacheSQLiteHelper dbHelper;
 	
 	private static final String TABLE_IMAGE_ABSPATH = 
 			"/."+ GroceriesListSQLiteHelper.TABLE_GROSERIESLIST +
-			"/."+ GroceriesListSQLiteHelper.PRODUCTS_IMAGE;
+			"/."+ GroceriesListSQLiteHelper.PRODUCT_IMAGE;
 	
 	
 	/********************************************************
 	 * Metodo constructor
 	 ********************************************************/
-	GroceriesListDAO (Context context) {
+	public GroceriesListDAO (Context context) {
 		this.context = context;
-		this.dbHelper = new CacheProductsSQLiteHelper(context);
+		this.dbHelper = new ProductCacheSQLiteHelper(context);
 	}
 	
 	/********************************************************
@@ -52,14 +54,35 @@ public class GroceriesListDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/
+	public List<ProductModel> getAllProducts() {
+		List<ProductModel> resList = null;
+		
+		// Si se almancenan imagenes del producto se eliminan estas primero
+		Cursor cursor =  this.database.rawQuery("select * from "+ 
+				GroceriesListSQLiteHelper.TABLE_GROSERIESLIST,
+				null);		
+		if (cursor.moveToFirst()) {
+			resList = new ArrayList<ProductModel>();
+			
+			while (cursor.isAfterLast() == false) {
+				resList.add(retrieveProductFromCursor(cursor));
+				cursor.moveToNext();
+			}
+		}
+		
+		return resList;
+	}	
 	
+	/********************************************************
+	 * 
+	 ********************************************************/
 	public ProductModel addProduct(ProductModel product) {			
-		if (product.getID() != -1) {			
+		if (product.getGroceriesID() != -1) {			
 			ContentValues contentValues = 
 					this.getContentValuesFromProduct(product);
 			long productID = this.database.insert(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST, null,
 					contentValues);
-			product.setID(productID);
+			product.setGroceriesID(productID);
 			
 			// Guarda las imagenes en la memoria SD del dispositivo, 
 			// utiliza el ID que se genera al insertar la fila por primera vez
@@ -70,30 +93,57 @@ public class GroceriesListDAO {
 		return product;
 	}
 	
-	public Boolean removeProduct(ProductModel product) {
-		if (product.getID() == -1)
-			return false;
+	/********************************************************
+	 * 
+	 ********************************************************/
+	public ProductModel removeProduct(ProductModel product) {
+		if (product.getGroceriesID() == -1)
+			return product;
 		
-		// Si se almancenan imagenes del producto se eliminan estas primero
-		Cursor cursor =  this.database.rawQuery("select * from "+ 
-				GroceriesListSQLiteHelper.TABLE_GROSERIESLIST + 
-				" where " + GroceriesListSQLiteHelper.PRODUCTS_ID + "=" + product.getID()  ,
-				null);		
-		if (cursor.moveToFirst()) {
-			this.removeImagesInDatabaseFromCursor(cursor);
-		}else {
-			return false;
+		Cursor cursor = this.dbHelper.getReadableDatabase().
+				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
+				" where "+ GroceriesListSQLiteHelper.PRODUCT_ID+" = ?", 
+				new String[] {String.valueOf(product.getGroceriesID())});
+
+		if (!cursor.moveToFirst()) {
+			return null;
 		}
+		this.removeImagesInDatabaseFromCursor(cursor);
 		
 		// Elimina el producto de la base de datos
 		this.database.delete(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST,
-				GroceriesListSQLiteHelper.PRODUCTS_ID+
-				"="+String.valueOf(product.getID())
+				GroceriesListSQLiteHelper.PRODUCT_ID+
+				"="+String.valueOf(product.getGroceriesID())
 				, null);
 		
-		return false;
+		product.setGroceriesID(-1);
+		return product;
 	}
 	
+	/********************************************************
+	 * Metodo para verificar si existe la informacion del 
+	 * producto en el cache
+	 ********************************************************/
+	public ProductModel isProductInGroceries(ProductModel product) {
+		if (product.generalID == "")
+			return product;
+		
+		// Si se almancenan imagenes del producto se eliminan estas primero
+		Cursor cursor = this.dbHelper.getReadableDatabase().
+				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
+				" where "+ GroceriesListSQLiteHelper.PRODUCT_GENERALID +" = ?", 
+				new String[] {product.generalID});
+				
+		if (cursor .moveToFirst()) {
+			this.retrieveProductFromCursor(cursor, product);
+		}
+		
+		return product;		
+	}
+	
+	/********************************************************
+	 * 
+	 ********************************************************/
 	public void removeAllProducts() {
 		this.database.delete(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST,
 				// Enviar null en este argumento hace que se eliminen todas los elemntos de la base de datos
@@ -107,13 +157,14 @@ public class GroceriesListDAO {
 	public ProductModel retrieveProductFromCursor (Cursor cursor, ProductModel product) {
 		if (product == null)
 			product = new ProductModel();
-		product.setID(cursor.getLong(0));
+		product.setGroceriesID(cursor.getLong(0));
 		product.name = cursor.getString(1);
 		product.description = cursor.getString(2);
 		product.shopingService = cursor.getString(3);
 		product.url = cursor.getString(4);
 		product.image = this.loadBitmapFile(cursor.getString(5));
 		product.imageURL = cursor.getString(6);
+		product.generalID = cursor.getString(7);
 		
 		return product;
 	}
@@ -128,11 +179,12 @@ public class GroceriesListDAO {
 	 ********************************************************/
 	public ContentValues getContentValuesFromProduct (ProductModel product) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(GroceriesListSQLiteHelper.PRODUCTS_NAME, product.name);
-		contentValues.put(GroceriesListSQLiteHelper.PRODUCTS_DESCRIPTION, product.description);
-		contentValues.put(GroceriesListSQLiteHelper.PRODUCTS_SHOPINGSERVICE, product.shopingService);
-		contentValues.put(GroceriesListSQLiteHelper.PRODUCTS_URL, product.url);
-		contentValues.put(GroceriesListSQLiteHelper.PRODUCTS_IMAGEURL, product.imageURL);    
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_NAME, product.name);
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_DESCRIPTION, product.description);
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_SHOPINGSERVICE, product.shopingService);
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_URL, product.url);
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_IMAGEURL, product.imageURL);
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_GENERALID, product.generalID);
 		return contentValues;
 	}
 
@@ -145,9 +197,9 @@ public class GroceriesListDAO {
 		
 		bitmapSavedPath = this.saveBitmapFile(product.image,
 				GroceriesListDAO.TABLE_IMAGE_ABSPATH,
-				GroceriesListSQLiteHelper.PRODUCTS_IMAGE,
+				GroceriesListSQLiteHelper.PRODUCT_IMAGE,
 				productID);
-		updateContentValues.put(GroceriesListSQLiteHelper.PRODUCTS_IMAGE, 
+		updateContentValues.put(GroceriesListSQLiteHelper.PRODUCT_IMAGE, 
 		bitmapSavedPath);
 		
 		this.database.update(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST, 

@@ -13,19 +13,15 @@ import android.widget.TextView;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
-import com.maxkalavera.utils.database.models.ProductModel;
+import com.maxkalavera.utils.database.productmodel.ProductModel;
 
 public class HomeLastProductsFragmentAdapter extends ArrayAdapter<List<ProductModel>> {
-	private final List<ProductModel> elementList;
-	private final Activity activity;
 	
 	/************************************************************
 	 * Constructor Method
 	 ************************************************************/
-	public HomeLastProductsFragmentAdapter(Activity activity, List<ProductModel> productList) {
-		super(activity, R.layout.searchbar_results_item, (List)productList);
-		this.activity = activity;
-	    this.elementList = productList;
+	public HomeLastProductsFragmentAdapter(Context context, List<ProductModel> productList) {
+		super(context, R.layout.searchbar_results_item, (List)productList);
 	}
 	
 	/************************************************************
@@ -35,11 +31,11 @@ public class HomeLastProductsFragmentAdapter extends ArrayAdapter<List<ProductMo
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			LayoutInflater inflater = this.activity.getLayoutInflater();
+			LayoutInflater inflater = LayoutInflater.from(this.getContext());
 			convertView = inflater.inflate(R.layout.lastproducts_item, null);
 		}
 		
-		ProductModel pData = (ProductModel) this.elementList.get(position);
+		ProductModel pData = (ProductModel) this.getItem(position);
 		TextView productName = (TextView) convertView.findViewById(R.id.lastproducts_itemname);
 		productName.setText(pData.name);
 		

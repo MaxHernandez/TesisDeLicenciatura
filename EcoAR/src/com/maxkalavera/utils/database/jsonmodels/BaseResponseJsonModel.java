@@ -4,8 +4,16 @@ import java.lang.reflect.Method;
 
 import com.google.gson.Gson;
 
-public abstract class BaseResponseJsonModel {
+public interface BaseResponseJsonModel {
 
-	public abstract BaseResponseJsonModel deserialize( String plainJson);
+	public BaseResponseJsonModel deserialize(String plainJson);
 	
 };
+
+/*
+public abstract class BaseResponseJsonModel {
+
+	public abstract BaseResponseJsonModel deserialize(String plainJson);
+	
+};
+*/

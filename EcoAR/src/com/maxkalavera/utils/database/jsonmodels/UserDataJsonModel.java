@@ -26,7 +26,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 
-public class UserDataJsonModel extends BaseResponseJsonModel {
+public class UserDataJsonModel implements BaseResponseJsonModel {
 	public String username;
 	public String firstName;
 	public String secondName;
@@ -34,7 +34,7 @@ public class UserDataJsonModel extends BaseResponseJsonModel {
 	public String gender;
 	public Date birthdate;
 	public String userPicURL; 
-	public Bitmap userPic; // Aun no existe funcionalidad para guardar este parametro
+	//public Bitmap userPic; // Aun no existe funcionalidad para guardar este parametro
 
 	/*************************************************************
 	 * 
@@ -54,7 +54,7 @@ public class UserDataJsonModel extends BaseResponseJsonModel {
 		GsonBuilder gsonBuilder=new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(Date.class, DateJsonPrimitive.getInstance()); 
 		Gson gson = gsonBuilder.create();
-		return gson.fromJson(plainJson, LoginErrorJsonModel.class);
+		return (BaseResponseJsonModel) gson.fromJson(plainJson, UserDataJsonModel.class);
 	}
 		
 }

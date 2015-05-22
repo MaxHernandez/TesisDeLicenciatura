@@ -41,6 +41,8 @@
 			/>
 
 		<TextView
+			android:id="@+id/productinfo_productdescription"
+			android:text="Descripcion del producto"
    			android:gravity="left"
     		android:maxLines="5"
     		android:lines="5"
@@ -61,7 +63,7 @@
 	    >
 
 		<TextView
-			android:id="@+id/productinfo_shop"
+			android:id="@+id/productinfo_shopingservice"
 			android:text="Amazon"
 			android:textSize="12sp"
 			android:textStyle="bold"
@@ -79,7 +81,7 @@
 			android:layout_height="wrap_content"
 			/> 
 		<TextView
-			android:id="@+id/productinfo_referencelink"
+			android:id="@+id/productinfo_referenceurl"
 			android:text="http://amazon.com/?p=10alklkoiuaosiduaoiudoaiusioa"
 			android:textSize="8sp"
 			android:maxLines="1"

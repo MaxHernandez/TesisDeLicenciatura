@@ -30,20 +30,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
-public class SearchBar extends BaseActivity implements OnClickListener{
+public class SearchBar extends BaseActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.searchbar);
-		
-		Button startSearchButton = (Button) findViewById(R.id.searchproduct_searchButton);
-		startSearchButton.setOnClickListener(this);
 	}
 
-	@Override
-	public void onClick(View arg0) {
-		SearchBarResultsListFragment fragment = 
-				(SearchBarResultsListFragment) getSupportFragmentManager().findFragmentById(R.id.searchProductResultsFragment);
-		EditText queryInputEditText = (EditText) findViewById(R.id.searchproduct_searchTextBar);
-		fragment.newSearch(queryInputEditText.getText().toString());
-	}
 }

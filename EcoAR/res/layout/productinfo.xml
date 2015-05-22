@@ -15,13 +15,13 @@
     		android:layout_height="wrap_content"
         	/>
 	
-		<include layout="@layout/productinfo_ambientalrating"
+		<include layout="@layout/productinfo_ecologicalscore"
 		    android:layout_marginTop="15dp"
         	android:layout_width="match_parent"
     		android:layout_height="wrap_content"
         	/>
 	    
-    	<include layout="@layout/productinfo_userrating"
+    	<include layout="@layout/productinfo_usersscore"
     	    android:layout_marginTop="15dp"
 			android:layout_width="fill_parent"
     		android:layout_height="wrap_content"

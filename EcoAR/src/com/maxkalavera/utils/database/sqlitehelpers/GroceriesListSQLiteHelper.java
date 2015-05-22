@@ -15,13 +15,14 @@ public class GroceriesListSQLiteHelper extends SQLiteOpenHelper {
 	 ********************************************************/
 	
 	public static final String TABLE_GROSERIESLIST = "groserieslisttable";
-	public static final String PRODUCTS_ID = "_id";
-	public static final String PRODUCTS_NAME = "name";
-	public static final String PRODUCTS_DESCRIPTION = "description";
-	public static final String PRODUCTS_SHOPINGSERVICE = "shopingService";
-	public static final String PRODUCTS_URL = "url";
-	public static final String PRODUCTS_IMAGE = "image";
-	public static final String PRODUCTS_IMAGEURL = "imageURL";
+	public static final String PRODUCT_ID = "_id";
+	public static final String PRODUCT_NAME = "name";
+	public static final String PRODUCT_DESCRIPTION = "description";
+	public static final String PRODUCT_SHOPINGSERVICE = "shopingService";
+	public static final String PRODUCT_URL = "url";
+	public static final String PRODUCT_IMAGE = "image";
+	public static final String PRODUCT_IMAGEURL = "imageURL";
+	public static final String PRODUCT_GENERALID = "generalid";
 	
 	
 	// La instrucción de SQL para crear la tabla se define en 
@@ -30,13 +31,14 @@ public class GroceriesListSQLiteHelper extends SQLiteOpenHelper {
 	// una coma despues del campo generara un error al crear la tabla.  
 	private static final String DATABASE_CREATE = 
 			"create table " + TABLE_GROSERIESLIST + "(" 
-			+ PRODUCTS_ID + " integer primary key autoincrement, " 
-			+ PRODUCTS_NAME + "text not null, "
-			+ PRODUCTS_DESCRIPTION + "text not null, "
-			+ PRODUCTS_SHOPINGSERVICE + "text not null, "
-			+ PRODUCTS_URL + "text not null, "
-			+ PRODUCTS_IMAGE + "text, "
-			+ PRODUCTS_IMAGEURL + " text,"
+			+ PRODUCT_ID + " integer primary key autoincrement, " 
+			+ PRODUCT_NAME + "text not null, "
+			+ PRODUCT_DESCRIPTION + "text not null, "
+			+ PRODUCT_SHOPINGSERVICE + "text not null, "
+			+ PRODUCT_URL + "text not null, "
+			+ PRODUCT_IMAGE + "text, "
+			+ PRODUCT_IMAGEURL + " text,"
+			+ PRODUCT_GENERALID + "text not null"
 			+ ");";   
 
 	/********************************************************
@@ -56,7 +58,7 @@ public class GroceriesListSQLiteHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(CacheProductsSQLiteHelper.class.getName(),
+		Log.w(ProductCacheSQLiteHelper.class.getName(),
 			"Upgrading database from version " + oldVersion + " to "
 			+ newVersion + ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_GROSERIESLIST);

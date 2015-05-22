@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+    
 <!-- Este view sirve como pattern de cada item que se agregue a la lista de someproducts en el home -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/someproducts_item"
@@ -11,7 +12,6 @@
     >
     
     <LinearLayout
-        android:id="@+id/someproducts_itemsocket"
     	android:orientation="horizontal"
     	android:gravity="center_vertical"
     	android:padding="0dp"
@@ -20,15 +20,23 @@
     	android:layout_width="match_parent"
     	android:layout_height="match_parent"
         >
+        <!--
         <ImageView 
+            android:id="@+id/groceries_item_image"
             android:src="@drawable/ic_launcher"
             android:background="#000000"
             android:layout_marginLeft="5dp"
 			android:layout_width="52dp"
     		android:layout_height="52dp"
             />
+        -->
+		<CheckBox
+			android:src="@+id/groceries_item_checkbox" 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			/>
 	    <TextView
-	        android:id="@+id/someproducts_name"
+	        android:id="@+id/groceries_item_name"
 	        android:text = "Nombre del producto"
 	       	android:textSize="16sp"
 	        android:textStyle="bold"
@@ -38,10 +46,24 @@
     		android:layout_height="wrap_content"
 	        />
     </LinearLayout>
+    <!-- 
 	<CheckBox
+		android:src="@+id/groceries_item_checkbox"
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"    
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		/>
+	-->
+	<Button 
+	    android:id="@+id/groceries_item_menu"
+	    android:background="@drawable/displaymenu"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentBottom="true" 
+		android:layout_marginBottom="5dp"
+		android:layout_marginRight="5dp"
+		android:layout_width="18dp"
+		android:layout_height="18dp"
+	    />
+	
 </RelativeLayout>

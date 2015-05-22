@@ -8,7 +8,7 @@ import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
-import com.maxkalavera.utils.database.CacheProductDAO;
+import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.httprequest.InternetStatus;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;

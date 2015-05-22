@@ -31,13 +31,15 @@
     	android:layout_height="36dp"
     	>
 		<EditText 
-    		android:inputType=""
+		    android:id="@+id/productinfo_commentarieslist_comment"
+    		android:inputType="text"
     		android:hint="Escribe un comentario..."
 		    android:layout_weight="1"
 			android:layout_width="0dp"
     		android:layout_height="match_parent"
 		    />
 		<Button 
+		    android:id="@+id/productinfo_commentarieslist_sendcomment"
 		    android:text="Enviar"
 		    android:textSize="16sp"
 			android:layout_width="wrap_content"

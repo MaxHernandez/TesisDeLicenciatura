@@ -3,6 +3,8 @@ package com.maxkalavera.utils.database.jsonprimitives;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+//import android.text.format.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.google.gson.JsonDeserializationContext;
@@ -14,7 +16,7 @@ import com.google.gson.JsonSerializer;
 
 public final class DateJsonPrimitive implements JsonSerializer<Date>, JsonDeserializer<Date> {
 	private static DateJsonPrimitive instance = null;
-	 static final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	public static final DateFormat DATEFORMAT = DateFormat.getDateTimeInstance();
 
 	private DateJsonPrimitive(){}
 	public static DateJsonPrimitive getInstance() {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.database.CacheProductDAO;
+import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
@@ -22,10 +22,10 @@ public class MainSetUpAndCheckSessionHTTPLoader extends HttpRequestLoader {
 	@Override
 	public ResponseBundle loadInBackground(){
 		// Codigo para eliminar los productos caducos en la memoria cache
-		CacheProductDAO cacheProductDAO = new CacheProductDAO(super.getContext());
-		cacheProductDAO.open();
-		cacheProductDAO.removeOldProducts();
-		cacheProductDAO.close();
+		ProductCacheDAO productCacheDAO = new ProductCacheDAO(super.getContext());
+		productCacheDAO.open();
+		productCacheDAO.removeOldProducts();
+		productCacheDAO.close();
 		
 		return sendHTTPRequest();
 	}

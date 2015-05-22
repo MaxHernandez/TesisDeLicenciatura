@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+	<item
+		android:id="@+id/searchbar_list_floatingmenu_addtogroceries"
+		android:title="Agregar a lista"
+		/>
+	<item
+		android:id="@+id/searchbar_list_floatingmenu_removefromgroceries"
+		android:title="Eliminar de lista"
+		/>
+	
+</menu>

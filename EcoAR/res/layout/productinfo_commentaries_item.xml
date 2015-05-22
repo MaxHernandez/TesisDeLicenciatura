@@ -17,6 +17,7 @@
     		android:layout_height="wrap_content" 
             >
             <TextView 
+			    android:id="@+id/productinfo_commentaries_item_username"
                 android:text="Max"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -32,6 +33,7 @@
     			android:layout_height="wrap_content" 
                 />
             <TextView 
+			    android:id="@+id/productinfo_commentaries_item_postingdate"
                 android:text="24/abril/2009, 23:30"
                 android:textSize="12sp"
                 android:layout_marginLeft="5dp"
@@ -57,10 +59,8 @@
     </LinearLayout>
 
 	<TextView 
-		android:text="Retweeted Puchencia ™ (@FalsaPrincesas):
-—¿Cuántos años tienes?
-—Dieciocho, pero bien vividos jejeje...
-—Te pregunté tu edad, no que si eras bien puta."
+	    android:id="@+id/productinfo_commentaries_item_text"
+		android:text="Comentario"
 		android:textSize="16sp"
 		android:layout_marginTop="5dp"
 		android:layout_marginRight="10dp"

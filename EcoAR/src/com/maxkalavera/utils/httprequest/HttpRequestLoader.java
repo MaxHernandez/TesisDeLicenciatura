@@ -210,14 +210,16 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 
 	
 	/************************************************************
-	 * Main Method
+	 * Metodo para hacer Override
 	 ************************************************************/
 	@Override
 	public ResponseBundle loadInBackground(){
 		return sendHTTPRequest();
 	}
 	
-	
+	/************************************************************
+	 * Main Method
+	 ************************************************************/	
 	public ResponseBundle sendHTTPRequest(){
 		Response response = null;
 		BaseResponseJsonModel jsonModel = null;

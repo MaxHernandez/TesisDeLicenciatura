@@ -22,7 +22,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.database.models.ProductModel;
+import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.ImageDownloader;
 import com.maxkalavera.utils.httprequest.ResponseBundle;

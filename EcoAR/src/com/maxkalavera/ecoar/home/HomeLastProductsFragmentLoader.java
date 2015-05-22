@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.utils.database.CacheProductDAO;
-import com.maxkalavera.utils.database.models.ProductModel;
+import com.maxkalavera.utils.database.ProductCacheDAO;
+import com.maxkalavera.utils.database.productmodel.ProductModel;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -24,11 +24,11 @@ public class HomeLastProductsFragmentLoader extends AsyncTaskLoader<List<Product
 
 	@Override
 	public List<ProductModel> loadInBackground() {
-		CacheProductDAO cacheProductDAO = new CacheProductDAO(this.getContext());
+		ProductCacheDAO productCacheDAO = new ProductCacheDAO(this.getContext());
 		// ERROR: Esta variable debe ser movida a la lista de valores en los archivos de recursos
-		cacheProductDAO.open();
-		List<ProductModel> temp = cacheProductDAO.getLastProducts(this.numberOfProducts);
-		cacheProductDAO.close();
+		productCacheDAO.open();
+		List<ProductModel> temp = productCacheDAO.getLastProducts(this.numberOfProducts);
+		productCacheDAO.close();
 		return temp;
 	}
 	
