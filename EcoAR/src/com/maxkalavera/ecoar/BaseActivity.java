@@ -1,6 +1,6 @@
 package com.maxkalavera.ecoar;
 
-import com.maxkalavera.ecoar.LogOut.LogOutListener;
+import com.maxkalavera.ecoar.Logout.LogOutListener;
 import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.SlideMenuBarHandlerButton;

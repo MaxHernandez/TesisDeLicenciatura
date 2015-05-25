@@ -68,11 +68,11 @@ public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonMode
 	/*************************************************************
 	 * 
 	 *************************************************************/
-    public String serialize() {
+    public Gson serialize() {
 		GsonBuilder gsonBuilder=new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(Date.class, DateJsonPrimitive.getInstance()); 
 		Gson gson = gsonBuilder.create();
-        return gson.toJson(this);
+        return gson;
     }
 	
 	/*************************************************************

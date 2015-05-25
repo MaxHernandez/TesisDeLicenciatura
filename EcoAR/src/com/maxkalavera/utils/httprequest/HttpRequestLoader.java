@@ -1,8 +1,10 @@
 package com.maxkalavera.utils.httprequest;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,12 +23,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.jsonmodels.BaseRequestJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.BaseResponseJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.CSRFJsonModel;
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
@@ -42,16 +47,17 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 
-
 public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	private Context context;
 	private OkHttpClient client;
 	private Request.Builder builder;
 	private JsonObject parametersJson;
 	private Uri.Builder uriBuilder;
+	private MultipartBuilder multipartBuilder;
 	private Boolean cookiesFlag;
 	private Boolean csrfFlag;
-	private Boolean JsonResponseFlag;  
+	private Boolean JsonResponseFlag;
+	private Boolean multipartFlag;
 	private String csrfSharedPreferencesFilename;
 	private String csrfSharedPreferencesKeyword;
 	private String url;
@@ -76,6 +82,7 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		this.cookiesFlag = false;
 		this.csrfFlag = false;
 		this.JsonResponseFlag = false;
+		this.multipartFlag = false;
 		this.csrfSharedPreferencesFilename = context.getResources().getString(R.string.csrf_filename);
 		this.csrfSharedPreferencesKeyword = context.getResources().getString(R.string.csrf_csrftoken_keyword);
 		this.url = url;
@@ -105,6 +112,14 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	public void setJsonResponseOn(BaseResponseJsonModel responseJSONModel){this.JsonResponseFlag = true; 
 		this.responseJSONModel = responseJSONModel;}
 	public void setJsonResponseOff(){this.JsonResponseFlag = false;}
+	public void setMultipartOn(){
+		this.multipartFlag = true;
+		this.multipartBuilder = new MultipartBuilder();
+	}
+	public void setMultipartOff() {
+		this.multipartFlag = false;
+		this.multipartBuilder = null;
+	}
 	
 	public void setURL(String url){this.url = url;} //this.builder.url(url);};
 	public void addHeader(String name, String value){this.builder.addHeader(name, value);}
@@ -122,7 +137,31 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	}
 	
 	public void addJSONObject(String name, BaseRequestJsonModel value){
-		this.addJSONParam(name, value.serialize());
+		if (this.method != HttpRequestLoader.GET ) {
+			//this.addJSONParam(name, value.serialize());
+			Gson gson = value.serialize();
+			for (Field field : value.getClass().getFields()) {
+				String fieldName = field.getName();
+				
+				try { 
+					Class c = field.getClass();
+					String fieldValue = gson.toJson(field.get(value), field.getType());
+					this.parametersJson.addProperty(fieldName, fieldValue);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+		}
+	}
+	
+	public void addPart(byte[] data, String mediatype, String name, String filename) {
+		if (this.multipartFlag)
+			this.multipartBuilder.addPart(
+					Headers.of("Content-Disposition", 
+							"form-data; name=\""+ name +"\"; filename=\""+filename+"\";"),
+							RequestBody.create(MediaType.parse(mediatype), data));
 	}
 	
 	public void addRequestParamsBundle(RequestParamsBundle bundle) {		
@@ -148,6 +187,13 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 			for (Entry<String, BaseRequestJsonModel> entry : jsonModelSet) {
 				this.addJSONObject(entry.getKey(), entry.getValue());
 			}
+		}
+		
+		List<RawDataModel> rawDataList = bundle.getRawDataList();
+		Iterator<RawDataModel> rawDataIterator = rawDataList.iterator();
+		while(rawDataIterator.hasNext()) {
+			RawDataModel rawData = rawDataIterator.next();
+			this.addPart(rawData.data, rawData.mediatype, rawData.name, rawData.filename);
 		}
 		
 	}
@@ -252,7 +298,14 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 				Gson gson = new Gson();
 				String json = gson.toJson(this.parametersJson);
 				this.builder.url(this.url);
-				this.builder.method(this.method, RequestBody.create(JSON, json));
+
+				if (this.multipartFlag) {					
+					this.builder.method(this.method, this.multipartBuilder.build());
+					
+				} else {
+					this.builder.method(this.method, RequestBody.create(JSON, json));
+				}		  
+				
 			}			
 			Request request = this.builder.build();
 			response = client.newCall(request).execute();
@@ -273,11 +326,6 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 			}
 		}
 		
-		
-		// Check if the request has been successful
-		if (!response.isSuccessful())
-			return new ResponseBundle(null, jsonModel); 
-		
 		// Save the response's cookies
 		try{
 			if (this.cookiesFlag) this.saveCookies(response);
@@ -289,6 +337,10 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		// Save de CSRF Token
 		if (this.csrfFlag)
 			this.csrfSave(response);
+		
+		// Check if the request has been successful
+		//if (!response.isSuccessful())
+		//	return new ResponseBundle(null, jsonModel); 
 		
 		return new ResponseBundle(response, jsonModel); 	
 	}

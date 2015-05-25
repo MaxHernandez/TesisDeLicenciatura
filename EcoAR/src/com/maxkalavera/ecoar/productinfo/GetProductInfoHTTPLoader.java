@@ -3,7 +3,7 @@ package com.maxkalavera.ecoar.productinfo;
 import android.content.Context;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorJsonModel;
+import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.database.ProductInfoCacheDAO;
 import com.maxkalavera.utils.database.productmodel.ProductInfoModel;

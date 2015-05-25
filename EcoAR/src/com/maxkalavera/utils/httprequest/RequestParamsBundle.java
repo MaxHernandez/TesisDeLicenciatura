@@ -1,5 +1,6 @@
 package com.maxkalavera.utils.httprequest;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ public class RequestParamsBundle {
 	private HashMap<String, String> uriParamsMap;
 	private HashMap<String, String> jsonParamsMap;
 	private HashMap<String, BaseRequestJsonModel> jsonModelMap;
+	private List<RawDataModel> rawDataParamsList;
 	
 	/************************************************************
 	 * Constructor
@@ -18,6 +20,7 @@ public class RequestParamsBundle {
 		this.uriParamsMap = null;
 		this.jsonParamsMap = null;
 		this.jsonModelMap = null;
+		this.rawDataParamsList = null;
 	}	
 
 	/************************************************************
@@ -59,4 +62,18 @@ public class RequestParamsBundle {
 			this.jsonModelMap = new HashMap<String, BaseRequestJsonModel>();
 		this.jsonModelMap.put(name, value);
 	}
-}
+	
+	/************************************************************
+	 * Raw data
+	 ************************************************************/
+	public List<RawDataModel> getRawDataList() {
+		return this.rawDataParamsList;
+	}
+	
+	public void addPart(byte[] data, String mediatype, String name, String filename) {
+		if (this.rawDataParamsList == null)
+			this.rawDataParamsList = new ArrayList<RawDataModel>();
+		this.rawDataParamsList.add(new RawDataModel(data, mediatype, name, filename));
+		
+	}
+};

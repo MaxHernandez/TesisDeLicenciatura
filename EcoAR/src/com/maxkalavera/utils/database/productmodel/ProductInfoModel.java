@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorJsonModel;
+import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.BaseRequestJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.BaseResponseJsonModel;
 import com.maxkalavera.utils.database.jsonprimitives.DateJsonPrimitive;

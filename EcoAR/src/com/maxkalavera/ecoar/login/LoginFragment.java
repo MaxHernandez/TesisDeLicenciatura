@@ -2,7 +2,9 @@ package com.maxkalavera.ecoar.login;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorJsonModel;
+import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
+import com.maxkalavera.ecoar.productinfo.ProductInfo;
+import com.maxkalavera.ecoar.signup.SignUp;
 import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
@@ -69,61 +71,6 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
     private void saveLogin() {
     	this.userSession.setSessionStatus(true);
     }
-    
-	/************************************************************
-	 * HTTP Request methods
-	 ************************************************************/
-	@Override
-	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle args) {
-		switch (loaderID) {
-			case 0:
-				return null;
-			case 1:
-				LoginFragmentHTTPLoader loader = 
-					new LoginFragmentHTTPLoader(getActivity(), this.paramsBundle);
-				loader.forceLoad();
-				return loader;
-			default:
-				return null;
-		}
-	}
-
-	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
-		this.usernameEditText.setEnabled(true);
-		this.passwordEditText.setEnabled(true);	
-		this.progressBar.setVisibility(View.GONE);
-        this.sendButton.setVisibility(View.VISIBLE);
-        
-        if (responseBundle.getResponse() != null) {
-        	if (responseBundle.getResponse().isSuccessful()) {
-        		
-        		this.saveLogin();
-        		
-        		Intent intent = new Intent();
-        		intent.setClass(getActivity(), Home.class);
-        		startActivity(intent);
-        	}else{
-        		LoginErrorJsonModel loginErrorJsonModel = 
-        				(LoginErrorJsonModel) responseBundle.getResponseJsonObject();
-        		if (loginErrorJsonModel != null) {
-        			if (loginErrorJsonModel.username != null) {
-        				this.errorText.setVisibility(View.VISIBLE);
-        				this.errorText.setText(loginErrorJsonModel.username);
-        			} else if (loginErrorJsonModel.password != null) {
-        				this.errorText.setVisibility(View.VISIBLE);
-        			} else if (loginErrorJsonModel.non_field_errors != null) {
-        				this.errorText.setVisibility(View.VISIBLE);
-        			}        			
-        		}
-        	}
-        } else {
-        	// Error sending HTTP request
-        }
-	}
-
-	@Override
-	public void onLoaderReset(Loader<ResponseBundle> loader) {		
-	}
 
 	/************************************************************
 	 * Method that reacts when the send button is pressed
@@ -159,9 +106,13 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 				send();
 				break;
 			case R.id.login_singuptext:
-				final Intent intentSingUp = new Intent(Intent.ACTION_VIEW).setData(
-						Uri.parse( getResources().getString(R.string.login_singupurl) ));
-				startActivity(intentSingUp);
+				//final Intent intentSingUp = new Intent(Intent.ACTION_VIEW).setData(
+				//		Uri.parse( getResources().getString(R.string.login_singupurl) ));
+				//startActivity(intentSingUp);
+		        Intent intent = new Intent();
+		        intent.setClass(this.getActivity(), SignUp.class);
+		        this.getActivity().startActivity(intent);
+		        
 				break;
 			case R.id.login_recoverpasstext:
 				final Intent intentRecoverPass = new Intent(Intent.ACTION_VIEW).setData(
@@ -171,6 +122,61 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 			default:
 				break;
 		}		
+	}
+	
+	/************************************************************
+	 * HTTP Request methods
+	 ************************************************************/
+	@Override
+	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle args) {
+		switch (loaderID) {
+			case 0:
+				return null;
+			case 1:
+				LoginFragmentHTTPLoader loader = 
+					new LoginFragmentHTTPLoader(getActivity(), this.paramsBundle);
+				loader.forceLoad();
+				return loader;
+			default:
+				return null;
+		}
+	}
+
+	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
+		this.usernameEditText.setEnabled(true);
+		this.passwordEditText.setEnabled(true);	
+		this.progressBar.setVisibility(View.GONE);
+        this.sendButton.setVisibility(View.VISIBLE);
+        
+        if (responseBundle.getResponse() != null) {
+        	if (responseBundle.getResponse().isSuccessful()) {
+        		
+        		this.saveLogin();
+        		
+        		Intent intent = new Intent();
+        		intent.setClass(getActivity(), Home.class);
+        		startActivity(intent);
+        	}else{
+        		LoginErrorsJsonModel loginErrorsJsonModel = 
+        				(LoginErrorsJsonModel) responseBundle.getResponseJsonObject();
+        		if (loginErrorsJsonModel != null) {
+        			if (loginErrorsJsonModel.username != null) {
+        				this.errorText.setVisibility(View.VISIBLE);
+        				this.errorText.setText(loginErrorsJsonModel.username);
+        			} else if (loginErrorsJsonModel.password != null) {
+        				this.errorText.setVisibility(View.VISIBLE);
+        			} else if (loginErrorsJsonModel.non_field_errors != null) {
+        				this.errorText.setVisibility(View.VISIBLE);
+        			}        			
+        		}
+        	}
+        } else {
+        	// Error sending HTTP request
+        }
+	}
+
+	@Override
+	public void onLoaderReset(Loader<ResponseBundle> loader) {		
 	}
 	
 };

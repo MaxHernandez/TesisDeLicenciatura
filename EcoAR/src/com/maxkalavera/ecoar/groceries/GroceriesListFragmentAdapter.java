@@ -78,7 +78,14 @@ class ProductNameClickListener implements View.OnClickListener {
 	
 	@Override
 	public void onClick(View view) {
-		groceriesListFragmentAdapter.getItem((Integer)view.getTag());
+		ProductModel pModel = groceriesListFragmentAdapter.getItem((Integer)view.getTag());
+		
+        Intent intent = new Intent();
+        intent.setClass(groceriesListFragmentAdapter.getContext(), ProductInfo.class);
+        intent.putExtra("product", pModel);
+        groceriesListFragmentAdapter.getContext().startActivity(intent);
+        
+		
 	}
 	
 };

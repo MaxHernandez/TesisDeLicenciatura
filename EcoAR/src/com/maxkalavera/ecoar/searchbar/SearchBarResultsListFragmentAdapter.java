@@ -160,6 +160,7 @@ class ProductNameClickListener implements View.OnClickListener {
 	@Override
 	public void onClick(View view) {
 		ProductModel pModel = searchBarResultsListFragmentAdapter.getItem((Integer)view.getTag());
+		showProductInfo(pModel);
 	}
 	
 	

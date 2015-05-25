@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 
-import com.maxkalavera.utils.BitmapStringConverter;
+import com.maxkalavera.utils.ImageStringConverter;
 
 public class ProductModel implements Parcelable {//implements Serializable {
 	public String name            = "";
@@ -46,7 +46,7 @@ public class ProductModel implements Parcelable {//implements Serializable {
 		this.description     = in.readString(); 
 		this.shopingService  = in.readString();
 		this.url             = in.readString();
-		this.image           = BitmapStringConverter.StringToBitMap(in.readString());
+		this.image           = ImageStringConverter.StringToBitMap(in.readString());
 		this.imageURL 	      = in.readString();
 		this.generalID       = in.readString();
 		
@@ -66,7 +66,7 @@ public class ProductModel implements Parcelable {//implements Serializable {
 						this.description, 
 						this.shopingService,
 						this.url,
-						BitmapStringConverter.BitMapToString(this.image),
+						ImageStringConverter.BitMapToString(this.image),
 						this.imageURL,
 						this.generalID,
 						String.valueOf(this.cache_id),

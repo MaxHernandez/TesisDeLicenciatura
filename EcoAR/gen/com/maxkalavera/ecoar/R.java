@@ -169,7 +169,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int groceries_item_checkbox=0x7f040009;
         public static final int groceries_item_menu=0x7f04000b;
         public static final int groceries_item_name=0x7f04000a;
-        public static final int groceries_list_floatingmenu_delete=0x7f04003c;
+        public static final int groceries_list_floatingmenu_delete=0x7f040051;
         public static final int groseries_clear=0x7f040008;
         public static final int groseries_keepsearching=0x7f040007;
         public static final int home_wellcomeuser_title=0x7f04000d;
@@ -215,18 +215,39 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchbar_item_image=0x7f040033;
         public static final int searchbar_item_menu=0x7f040032;
         public static final int searchbar_item_name=0x7f040034;
-        public static final int searchbar_list_floatingmenu_addtogroceries=0x7f04003e;
-        public static final int searchbar_list_floatingmenu_removefromgroceries=0x7f04003f;
+        public static final int searchbar_list_floatingmenu_addtogroceries=0x7f040053;
+        public static final int searchbar_list_floatingmenu_removefromgroceries=0x7f040054;
         public static final int searchcamera_surface=0x7f040036;
         public static final int searchcamera_takepicture=0x7f040037;
         public static final int searchproduct_searchButton=0x7f040030;
         public static final int searchproduct_searchTextBar=0x7f04002f;
         public static final int selected_view=0x7f040004;
-        public static final int slidemenu_itemimage=0x7f040039;
-        public static final int slidemenu_itemname=0x7f04003a;
-        public static final int slidemenu_linearlayout=0x7f040038;
-        public static final int slidemenu_searchbutton=0x7f04003d;
-        public static final int slidingmenumain=0x7f04003b;
+        public static final int signup_birthday=0x7f040049;
+        public static final int signup_birthday_message=0x7f040048;
+        public static final int signup_email=0x7f040043;
+        public static final int signup_email_message=0x7f040042;
+        public static final int signup_first_name=0x7f040040;
+        public static final int signup_first_name_message=0x7f04003e;
+        public static final int signup_gender=0x7f040045;
+        public static final int signup_gender_female=0x7f040047;
+        public static final int signup_gender_male=0x7f040046;
+        public static final int signup_gender_message=0x7f040044;
+        public static final int signup_last_name=0x7f040041;
+        public static final int signup_last_name_message=0x7f04003f;
+        public static final int signup_password=0x7f04003b;
+        public static final int signup_password_confirmation=0x7f04003d;
+        public static final int signup_password_confirmation_message=0x7f04003c;
+        public static final int signup_password_message=0x7f04003a;
+        public static final int signup_send_button=0x7f04004c;
+        public static final int signup_send_progressbar=0x7f04004b;
+        public static final int signup_send_text=0x7f04004a;
+        public static final int signup_username=0x7f040039;
+        public static final int signup_username_message=0x7f040038;
+        public static final int slidemenu_itemimage=0x7f04004e;
+        public static final int slidemenu_itemname=0x7f04004f;
+        public static final int slidemenu_linearlayout=0x7f04004d;
+        public static final int slidemenu_searchbutton=0x7f040052;
+        public static final int slidingmenumain=0x7f040050;
         public static final int wellcomeuserfragment=0x7f04000c;
     }
     public static final class layout {
@@ -253,9 +274,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchbar_results=0x7f030014;
         public static final int searchbar_results_item=0x7f030015;
         public static final int searchcamera=0x7f030016;
-        public static final int slidemenu=0x7f030017;
-        public static final int slidemenu_item=0x7f030018;
-        public static final int slidingmenumain=0x7f030019;
+        public static final int signup=0x7f030017;
+        public static final int slidemenu=0x7f030018;
+        public static final int slidemenu_item=0x7f030019;
+        public static final int slidingmenumain=0x7f03001a;
     }
     public static final class menu {
         public static final int groceries_list_floatingmenu=0x7f090000;

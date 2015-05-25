@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +18,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
+import com.maxkalavera.utils.database.jsonprimitives.CalendarJsonPrimitive;
 import com.maxkalavera.utils.database.jsonprimitives.DateJsonPrimitive;
 
 public class UserDataDAO {
@@ -28,8 +30,8 @@ public class UserDataDAO {
 	private static final String EXISTENCE = "exist";
 	
 	public static final String USERNAME = "username";
-	public static final String FIRSTNAME = "firstname";
-	public static final String SECONDNAME = "secondname";
+	public static final String FIRST_NAME = "first_name";
+	public static final String LAST_NAME = "last_name";
 	public static final String EMAIL = "email";
 	public static final String GENDER = "gender";
 	public static final String BIRTHDATE = "birthdate";
@@ -44,12 +46,12 @@ public class UserDataDAO {
 
 	public String getFirstName() {
 		return this.getUserDataSharedPreferences().
-				getString(UserDataDAO.FIRSTNAME , "");
+				getString(UserDataDAO.FIRST_NAME , "");
 	}
 
-	public String getSecondName() {
+	public String getLastName() {
 		return this.getUserDataSharedPreferences().
-				getString(UserDataDAO.SECONDNAME , "");
+				getString(UserDataDAO.LAST_NAME , "");
 	}
 
 	public String getEmail() {
@@ -62,16 +64,16 @@ public class UserDataDAO {
 				getString(UserDataDAO.GENDER , "");
 	}
 
-	public Date getBirthDate() {
-		DateJsonPrimitive dateJsonPrimitive = DateJsonPrimitive.getInstance();
+	public Calendar getBirthday() {
+		CalendarJsonPrimitive calendarJsonPrimitive = CalendarJsonPrimitive.getInstance();
 		String temp = this.getUserDataSharedPreferences().
 			getString(UserDataDAO.BIRTHDATE , "");
-		return dateJsonPrimitive.deserialize(new JsonPrimitive(temp), null, null);
+		return calendarJsonPrimitive.deserialize(new JsonPrimitive(temp), null, null);
 	}
 	
-	public String serializeBirthDate(Date in) {
-		DateJsonPrimitive dateJsonPrimitive = DateJsonPrimitive.getInstance();
-		return dateJsonPrimitive.serialize(in, null, null).getAsString();
+	public String serializeBirthday(Calendar in) {
+		CalendarJsonPrimitive calendarJsonPrimitive = CalendarJsonPrimitive.getInstance();
+		return calendarJsonPrimitive.serialize(in, null, null).getAsString();
 	}
 	
 	/*************************************************************
@@ -127,12 +129,12 @@ public class UserDataDAO {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		
 		editor.putString(UserDataDAO.USERNAME, userDataJsonModel.username);
-		editor.putString(UserDataDAO.FIRSTNAME, userDataJsonModel.firstName);
-		editor.putString(UserDataDAO.SECONDNAME, userDataJsonModel.secondName);
+		editor.putString(UserDataDAO.FIRST_NAME, userDataJsonModel.first_name);
+		editor.putString(UserDataDAO.LAST_NAME, userDataJsonModel.last_name);
 		editor.putString(UserDataDAO.EMAIL, userDataJsonModel.email);
 		editor.putString(UserDataDAO.GENDER, userDataJsonModel.gender);
 		editor.putString(UserDataDAO.BIRTHDATE, 
-				this.serializeBirthDate(userDataJsonModel.birthdate));
+				this.serializeBirthday(userDataJsonModel.birthdate));
 
 		editor.commit();
 	}
@@ -141,11 +143,11 @@ public class UserDataDAO {
 		UserDataJsonModel userDataJsonModel = new UserDataJsonModel();
 		
 		userDataJsonModel.username = this.getUsername();
-		userDataJsonModel.firstName = this.getFirstName();
-		userDataJsonModel.secondName = this.getSecondName();
+		userDataJsonModel.first_name = this.getFirstName();
+		userDataJsonModel.last_name = this.getLastName();
 		userDataJsonModel.email = this.getEmail();
 		userDataJsonModel.gender = this.getGender();
-		userDataJsonModel.birthdate = this.getBirthDate();
+		userDataJsonModel.birthdate = this.getBirthday();
 		
 		return userDataJsonModel;
 	}

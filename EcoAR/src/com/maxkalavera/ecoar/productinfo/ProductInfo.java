@@ -53,7 +53,8 @@ public class ProductInfo extends BaseActivity implements
 			Log.e("ProductInfo_create:", e.toString());
 		}
 		
-		getSupportLoaderManager().initLoader(GET_PRODUCT_INFO, null, this);
+		if (this.product != null)
+			getSupportLoaderManager().initLoader(GET_PRODUCT_INFO, null, this);
 	}
 	
 	/************************************************************
@@ -126,7 +127,7 @@ public class ProductInfo extends BaseActivity implements
 				RequestParamsBundle paramsBundlePostUserScore = new RequestParamsBundle();
 				paramsBundlePostUserScore.addJSONParam("general_id", this.product.generalID);
 				paramsBundlePostUserScore.addJSONParam("own_score", this.productInfo.usersScore.ownScore.toString());
-				PostUserScoreHTTPLoader postUserScoreHTTPLoader = new PostUserScoreHTTPLoader(this, paramsBundlePostUserScore);
+				PostUserScoreHTTPLoader postUserScoreHTTPLoader = new PostUserScoreHTTPLoader(this, paramsBundlePostUserScore, this.product);
 				postUserScoreHTTPLoader.forceLoad();
 				return postUserScoreHTTPLoader;
 				

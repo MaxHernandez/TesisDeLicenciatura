@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,15 @@ public class CommentariesListFragment extends ListFragment implements
 		this.adapter = new CommentariesListFragmentAdapter(this.getActivity(), this.valuesList);
         this.setListAdapter(this.adapter);
         
-        getLoaderManager().initLoader(GET_COMMENTLIST, null, this);
+		try{
+			this.product =  
+					(ProductModel) this.getActivity().getIntent().getParcelableExtra("product");
+		} catch(Exception e){
+			Log.e("ProductInfo_create:", e.toString());
+		}
+		
+        if (this.product != null)
+        	getLoaderManager().initLoader(GET_COMMENTLIST, null, this);
     }
 
 	/************************************************************
@@ -132,7 +141,7 @@ public class CommentariesListFragment extends ListFragment implements
 				paramsBundlePostUserScore.AddJsonModel("comment", newComennt);
 				
 				PostCommentHTTPLoader postCommentHTTPLoader = 
-						new PostCommentHTTPLoader(this.getActivity(), paramsBundlePostUserScore);
+						new PostCommentHTTPLoader(this.getActivity(), paramsBundlePostUserScore, this.product);
 				postCommentHTTPLoader.forceLoad();
 				return postCommentHTTPLoader;
 				

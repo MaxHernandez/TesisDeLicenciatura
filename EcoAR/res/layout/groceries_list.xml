@@ -37,10 +37,10 @@
 	    	>
 	    	<Button
 	    	    android:id="@+id/groseries_keepsearching"
+	    	    android:onClick="keepSearching"
 	        	android:text="Buscar"
 				android:layout_width="wrap_content"
         		android:layout_height="wrap_content" 
-        		android:onClick="keepSearching"
 	        	/>
 	    	<Button
 	    	    android:id="@+id/groseries_clear"

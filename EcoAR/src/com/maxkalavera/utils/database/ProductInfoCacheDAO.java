@@ -73,6 +73,25 @@ public class ProductInfoCacheDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/	
+	public void updateScoreOnProduct(long product_reference, UsersScoreModel usersScore) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_USERS_SCORE, usersScore.usersScore);
+		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_OWN_SCORE, usersScore.ownScore);
+
+		this.database.update(ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO,
+				contentValues,
+				ProductInfoCacheSQLiteHelper.PRODUCTINFO_PRODUCT_REFERENCE +
+				"="+String.valueOf(product_reference)
+				, null);
+	}
+	
+	public void updateScoreOnProduct(ProductModel product, UsersScoreModel usersScore) {
+		updateScoreOnProduct(product.getCacheID(), usersScore);
+	}
+	
+	/********************************************************
+	 * 
+	 ********************************************************/	
 	public boolean removeProductInfo(long product_reference) {
 		// Elimina el producto de la base de datos
 		int temp = this.database.delete(ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO,

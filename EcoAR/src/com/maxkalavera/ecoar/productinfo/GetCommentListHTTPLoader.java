@@ -1,11 +1,12 @@
 package com.maxkalavera.ecoar.productinfo;
 
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorJsonModel;
+import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.CommentariesCacheDAO;
 import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.database.ProductInfoCacheDAO;
@@ -20,6 +21,8 @@ import com.maxkalavera.utils.httprequest.ResponseBundle;
 public class GetCommentListHTTPLoader extends HttpRequestLoader  {
 	ProductModel product;
 	int page;
+	
+	private static final int PAGE_SIZE = 6;
 	
 	public GetCommentListHTTPLoader(Context context, RequestParamsBundle requestBundle, ProductModel product, int page) {
 		super(context, 
@@ -47,22 +50,44 @@ public class GetCommentListHTTPLoader extends HttpRequestLoader  {
 		List<CommentModel> commentaries = commentariesCache.getCommentariesFromCache(this.product, this.page);
 		
 		if (commentaries != null) {
-			CommentariesListModel commentariesListModel = new CommentariesListModel();
-			commentariesListModel.commentaries = commentaries;
-			return new ResponseBundle(null, commentariesListModel);
+			if (commentaries.size() < PAGE_SIZE) {
+				return send(commentaries.size());
+			} else {
+				CommentariesListModel commentariesListModel = new CommentariesListModel();
+				commentariesListModel.commentaries = commentaries;
+				return new ResponseBundle(null, commentariesListModel);
+			}
 		} else {
 			return send();
 		}
 	}
 	
-	public ResponseBundle send() {
-		ProductInfoCacheDAO productInfoCache = new ProductInfoCacheDAO(this.getContext());
+	public ResponseBundle send(int offset) {
+		CommentariesCacheDAO commentariesCache = new CommentariesCacheDAO(this.getContext());
 		ResponseBundle response = sendHTTPRequest();
+		
 		if (response.getResponseJsonObject() != null) {
-			ProductInfoModel productInfo = (ProductInfoModel) response.getResponseJsonObject();
-			productInfo.setProductReference(this.product);
-			productInfoCache.addProductInfo(productInfo);
-		 }
+			CommentariesListModel commentariesListModel  = (CommentariesListModel) response.getResponseJsonObject();
+			
+			Iterator<CommentModel> it = commentariesListModel.commentaries.iterator();
+			
+			if (offset > 0 || offset < PAGE_SIZE)
+				commentariesListModel.commentaries = 
+						commentariesListModel.commentaries.
+							subList(offset, commentariesListModel.commentaries.size());
+			
+			while (it.hasNext()) {
+				CommentModel comment = it.next();
+				comment.setProductReference(this.product);
+				commentariesCache.addComment(comment);
+			}
+			
+		}
 		 return response;
 	}
+	
+	public ResponseBundle send() {
+		return send(0);
+	}
+	
 };

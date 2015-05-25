@@ -48,6 +48,8 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	SearchBarResultsListFragmentAdapter adapter;
 	ProgressBar progressBar;
 	View progressBarView;
+	String query;
+	Button startSearchButton;
 	
 	int page = 1;
 	boolean scrollListenFlag = true;
@@ -76,7 +78,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
     }
     
     public void setUp() {
-		Button startSearchButton = (Button) getView().findViewById(R.id.searchproduct_searchButton);
+		this.startSearchButton = (Button) getView().findViewById(R.id.searchproduct_searchButton);
 		startSearchButton.setOnClickListener(this);
     }
     
@@ -115,10 +117,18 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	
 	@Override
 	public void onClick(View arg0) {
-		newSearch();
+		startSearchButton.setOnClickListener(null);
+		newSearch(null);
 	}
 	
-	void newSearch(){
+	void newSearch(String query){
+		if (query == null) {
+			EditText queryInputEditText = 
+					(EditText) getView().findViewById(R.id.searchproduct_searchTextBar);
+			this.query = queryInputEditText.getText().toString();
+		} else {
+			this.query = query;
+		}
 		this.getLoaderManager().destroyLoader(0);
 		this.valuesList.clear();
 		this.adapter.notifyDataSetChanged();
@@ -139,13 +149,9 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		switch (loaderID) {
 			case 0:
 				return null;
-			case 1:
-				EditText queryInputEditText = 
-				(EditText) getView().findViewById(R.id.searchproduct_searchTextBar);
-				String query = queryInputEditText.getText().toString();
-				
+			case 1:				
 				SearchBarResultsListFragmentLoader loader = 
-						new SearchBarResultsListFragmentLoader(this.getActivity(), query, this.page);
+						new SearchBarResultsListFragmentLoader(this.getActivity(), this.query, this.page);
 				loader.forceLoad();
 				return loader;
 			default:
@@ -165,6 +171,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
 			this.adapter.notifyDataSetChanged();
 		}
 		this.progressBar.setVisibility(View.GONE);
+		startSearchButton.setOnClickListener(this);
 	}
 
 	@Override

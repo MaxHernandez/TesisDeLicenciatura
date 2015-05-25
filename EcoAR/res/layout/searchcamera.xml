@@ -11,6 +11,7 @@
     	/>
 	<Button
     	android:id="@+id/searchcamera_takepicture"
+    	android:onClick="takePicture"
     	style="@style/ButtonTheme"
     	android:textSize="28sp"
     	android:text="Enviar"
