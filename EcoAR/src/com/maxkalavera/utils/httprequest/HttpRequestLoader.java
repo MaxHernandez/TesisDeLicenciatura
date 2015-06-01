@@ -68,6 +68,7 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 	public static final String GET = "GET";
 	public static final String POST = "POST";
+	public static final String DELETE = "DELETE";
 	
 	/************************************************************
 	 * Constructor Method
@@ -289,7 +290,7 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 			// En cambio en una peticion POST se mandan ambios tipos de parametros: se 
 			// serializan los parametros JSON y se mandan en el cuerpo del paquete; y 
 			// se mandan los parametros espcificados en el URI
-			if (this.method == HttpRequestLoader.GET ) {
+			if (this.method == HttpRequestLoader.GET) {
 				this.builder.url( this.uriBuilder.build().toString());
 				this.builder.method(HttpRequestLoader.GET, null);
 			}else{

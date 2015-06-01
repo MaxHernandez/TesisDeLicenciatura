@@ -6,7 +6,7 @@ import java.util.List;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentAdapter;
-import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentLoader;
+import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentHTTPLoader;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 
 import android.content.Intent;
@@ -32,6 +32,7 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
 	public static final int LOADER_GET = 1;
 	public static final int LOADER_REMOVE = 2;
 	public static final int LOADER_CLEAR = 3;
+	public static final int LOADER_MODIFY_ELEMENT = 4;
 	
 	/************************************************************
 	 * Constructor Method
@@ -59,6 +60,7 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.groceries_list, container, false);
     	return view;
     }
@@ -97,6 +99,16 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
     	this.getLoaderManager().initLoader(GroceriesListFragment.LOADER_REMOVE, params, this);
     }
     
+    public void modifyElement(int position, boolean checkboxValue) {
+    	ProductModel product = this.valuesList.get(position);
+    	product.setChecked(checkboxValue);
+    	
+    	Bundle params = new Bundle();
+    	params.putInt(GroceriesListFragmentModifyElementLoader.POSITION,
+    			position);
+    	this.getLoaderManager().initLoader(GroceriesListFragment.LOADER_REMOVE, params, this);
+    }
+    
 	/************************************************************
 	 *  
 	 ************************************************************/ 
@@ -122,7 +134,6 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
     			.initLoader(GroceriesListFragment.LOADER_CLEAR, null, this);
     	}
     }
-
     
 	/************************************************************
 	 * Loaders's methods 
@@ -147,6 +158,11 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
 					new GroceriesListFragmentClearListLoader(this.getActivity());
 				loaderClean.forceLoad();
 				return loaderClean;
+			case GroceriesListFragment.LOADER_MODIFY_ELEMENT:
+				GroceriesListFragmentModifyElementLoader loaderModifyElement = 
+				new GroceriesListFragmentModifyElementLoader(this.getActivity(), this.valuesList, args);
+				loaderModifyElement.forceLoad();
+				return loaderModifyElement;
 			default:
 				return null;
 		}

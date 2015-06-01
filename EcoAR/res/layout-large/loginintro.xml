@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    
+    <LinearLayout
+		android:orientation="vertical"
+		android:gravity="center_horizontal"
+		android:layout_centerVertical="true"
+    	android:layout_centerHorizontal="true"
+   	 	android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	>
+    	<include layout="@layout/logo"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content" 	
+        	/>  
+        
+        <!--
+    	<include layout="@layout/login"
+    	    android:id="@+id/main_loginfragment"
+    		android:layout_width="match_parent"
+    		android:layout_height="match_parent"    	
+        	/>    
+		
+		-->
+    	<fragment 
+        	class="com.maxkalavera.ecoar.login.LoginFragment"
+        	android:id="@+id/main_loginfragment"
+    		android:layout_width="match_parent"
+    		android:layout_height="match_parent"    	
+        	/>
+        
+    </LinearLayout>
+
+	<Button
+	    android:id="@+id/loginintro_skiplogin"
+	    style="@style/ButtonTheme"
+	    android:text="@string/loginintro_skiplogin"
+	    android:textSize="18sp"
+    	android:layout_alignParentBottom="true"
+    	android:layout_marginRight="15dp"
+    	android:layout_marginLeft="15dp"    	
+    	android:layout_marginBottom="10dp"	    
+		android:layout_width="match_parent"
+    	android:layout_height="60dp"	    
+	    />
+</RelativeLayout>

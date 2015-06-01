@@ -73,6 +73,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.searchbar_results, container, false);
     	return view;
     }
@@ -89,7 +90,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
     public void setUpLoadingView() {
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		this.progressBarView = inflater.inflate(R.layout.loading, null);
-		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.progressbar);
+		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.loading_progressbar);
 		this.getListView().addFooterView(this.progressBarView);
     }
     
@@ -150,8 +151,8 @@ public class SearchBarResultsListFragment extends ListFragment implements
 			case 0:
 				return null;
 			case 1:				
-				SearchBarResultsListFragmentLoader loader = 
-						new SearchBarResultsListFragmentLoader(this.getActivity(), this.query, this.page);
+				SearchBarResultsListFragmentHTTPLoader loader = 
+						new SearchBarResultsListFragmentHTTPLoader(this.getActivity(), this.query, this.page);
 				loader.forceLoad();
 				return loader;
 			default:

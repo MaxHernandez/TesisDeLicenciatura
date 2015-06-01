@@ -53,9 +53,22 @@ class AmazonParser(WebParser):
 
 class AmazonParser(WebParser):
 
+    SHOPING_SERVICE_INDEX = "AMZN"
+    GENERAL_ID_NUMBER_CHARS = 16
+
     def __init__(self, query):
         super(AmazonParser, self).__init__('http://www.amazon.com/s/', GET, {'field-keywords':query})
         self.parse_data()
+
+    def build_general_id(self, string):
+        if len(string) > self.GENERAL_ID_NUMBER_CHARS:
+            print "Error, id no soportado"
+            return ''
+
+        output = ''
+        for i in range(self.GENERAL_ID_NUMBER_CHARS - len(string)):
+            output += '0'
+        return self.SHOPING_SERVICE_INDEX + output + string
 
     def parse_data(self):
         data = list()
@@ -64,20 +77,36 @@ class AmazonParser(WebParser):
         print len(product_name_list)
 
         for product in product_name_list:
+            #print "Product:"
             #print product 
-            print product.find('a', class_='a-link-normal s-access-detail-page a-text-normal').find('h2').get_text()
-            print product.find('img', alt='Product Details')
- 
+            #print product.find('a', class_='a-link-normal s-access-detail-page a-text-normal').find('h2').get_text()
+            #print product.find('img', alt='Product Details')
+            pdata = dict()
+            # name
+            aTags = product.findAll('a')
+            for a in aTags:
+                if a.has_attr('title'):
+                    pdata['name'] = a.get_text()
+                    pdata['url'] = a['href']
+                    # 15 Caracteres - Mas tres de un identificador de la tienda
+                    pdata['general_id'] = self.build_general_id( pdata['url'].split('/')[-1] )
+            pdata['shoping_service'] = "Amazon"
+            pdata['img'] = product.find('img')['src']
 
-            #pdata = dict()
-            #pdata['product_name'] = product.find('span', class_='lrg bold').get_text()
-            #pdata['description'] = ""
-            #pdata['img_url'] = product.find('img')['src']
-            #pdata['shoping_service'] = "Amazon"
-            #pdata['product_url'] = product.find('div', class_='image imageContainer').find('a')['href']
-            #data.append(pdata)
-            #print pdata
 
+            try:
+                description = product.find('span', text='Product Features')
+                description_parent = description.find_parent()
+                pdata['description'] = description_parent.find_all('span')[-1].get_text()
+            except:
+                pdata['description'] = None
+            #print description_parent
+
+            data.append(pdata)
+                
+        for d in data:
+            print d
+        
 
 def main():
     #url = 'http://elisa.dyndns-web.com/'

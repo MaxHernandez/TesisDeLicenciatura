@@ -86,7 +86,7 @@ public class ProductInfoCacheDAO {
 	}
 	
 	public void updateScoreOnProduct(ProductModel product, UsersScoreModel usersScore) {
-		updateScoreOnProduct(product.getCacheID(), usersScore);
+		updateScoreOnProduct(product.getCacheId(), usersScore);
 	}
 	
 	/********************************************************
@@ -106,7 +106,7 @@ public class ProductInfoCacheDAO {
 	}
 	
 	public boolean removeProductInfo(ProductModel product) {
-		return removeProductInfo(product.getCacheID());
+		return removeProductInfo(product.getCacheId());
 	}
 	
 	/********************************************************
@@ -130,7 +130,7 @@ public class ProductInfoCacheDAO {
 	}
 	
 	public ProductInfoModel getProductInfoFromCache(ProductModel product) {
-		return getProductInfoFromCache(product.getCacheID());
+		return getProductInfoFromCache(product.getCacheId());
 	}
 	
 	/********************************************************

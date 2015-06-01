@@ -7,9 +7,9 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.BaseRequestJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.BaseResponseJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonprimitives.DateJsonPrimitive;
 
 public class ProductInfoModel implements BaseResponseJsonModel {
@@ -28,7 +28,7 @@ public class ProductInfoModel implements BaseResponseJsonModel {
 	}
 	
 	public void setProductReference(ProductModel product) {
-		this.product_id = product.getCacheID();
+		this.product_id = product.getCacheId();
 }
 	
 	

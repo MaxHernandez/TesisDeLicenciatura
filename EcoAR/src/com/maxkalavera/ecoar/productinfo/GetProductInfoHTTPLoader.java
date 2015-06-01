@@ -3,9 +3,9 @@ package com.maxkalavera.ecoar.productinfo;
 import android.content.Context;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.database.ProductInfoCacheDAO;
+import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
@@ -19,7 +19,8 @@ public class GetProductInfoHTTPLoader extends HttpRequestLoader  {
 			RequestParamsBundle requestBundle,
 			ProductModel product) {
 		super(context, 
-				context.getResources().getString(R.string.webservice_login),// ERROR MODIFICAR
+				context.getResources().getString(R.string.webservice) +
+				context.getResources().getString(R.string.webservice_product_info_get),
 				GET,
 				requestBundle); 
 		this.setCookiesOn();
@@ -33,7 +34,7 @@ public class GetProductInfoHTTPLoader extends HttpRequestLoader  {
 		ProductCacheDAO productCache = new ProductCacheDAO(this.getContext());
 		this.product = productCache.searchProductInCache(this.product);
 		
-		if (this.product.getCacheID() == -1 ) {
+		if (this.product.getCacheId() == -1 ) {
 			productCache.addProduct(this.product);
 			return send();
 		}

@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+<!-- General -->   
+<color name="link_textcolor">#0645AD</color>
+    
 <!-- Login -->   
 <color name="login_errortext">#CC0000</color>
+
+<!-- ProductInfo -->
+<color name="productinfo_basicinfo_productimage_background">#CCA</color>
+<color name="productinfo_ecologicalscore_subtitle">#555</color>
+<color name="productinfo_usersscore_icontext">#FFF</color>
+
+<!-- SearchBar -->
+<color name="searchbar_item_description">#CCA</color>
+
+
+<!-- SingUp -->
+<color name="signup_error_message">#FF0000</color>
+<color name="signup_success_message">#44A044</color>
 
 </resources>

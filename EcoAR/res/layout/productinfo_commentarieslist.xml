@@ -5,10 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    
 	<TextView
-		android:text="Comentarios"
-		android:textSize="18sp"
+		android:text="@string/productinfo_commentarielist_title"
+		android:textSize="20sp"
 		android:textStyle="bold"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -16,15 +15,12 @@
 		
 	<ListView
         android:id="@android:id/list"
-        android:paddingLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp" 
-		android:layout_weight="1"
         >
     </ListView>   
-
-	
 	<LinearLayout     
 	    android:orientation="horizontal"
     	android:layout_width="match_parent"
@@ -32,20 +28,20 @@
     	>
 		<EditText 
 		    android:id="@+id/productinfo_commentarieslist_comment"
+		    android:textSize="18sp"
     		android:inputType="text"
-    		android:hint="Escribe un comentario..."
+    		android:hint="@string/productinfo_commentarieslist_post_hint"
 		    android:layout_weight="1"
 			android:layout_width="0dp"
     		android:layout_height="match_parent"
 		    />
 		<Button 
 		    android:id="@+id/productinfo_commentarieslist_sendcomment"
-		    android:text="Enviar"
+		    style="@style/ButtonTheme"
+		    android:text="@string/productinfo_commentarielist_send"
 		    android:textSize="16sp"
 			android:layout_width="wrap_content"
     		android:layout_height="match_parent"
 		    />
-	    
 	</LinearLayout>	
-	
 </LinearLayout>

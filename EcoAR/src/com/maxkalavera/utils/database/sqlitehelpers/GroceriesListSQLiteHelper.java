@@ -23,6 +23,7 @@ public class GroceriesListSQLiteHelper extends SQLiteOpenHelper {
 	public static final String PRODUCT_IMAGE = "image";
 	public static final String PRODUCT_IMAGEURL = "imageURL";
 	public static final String PRODUCT_GENERALID = "generalid";
+	public static final String PRODUCT_CHECK = "groceries_check";
 	
 	
 	// La instrucción de SQL para crear la tabla se define en 
@@ -38,7 +39,8 @@ public class GroceriesListSQLiteHelper extends SQLiteOpenHelper {
 			+ PRODUCT_URL + "text not null, "
 			+ PRODUCT_IMAGE + "text, "
 			+ PRODUCT_IMAGEURL + " text,"
-			+ PRODUCT_GENERALID + "text not null"
+			+ PRODUCT_GENERALID + "text not null, "
+			+ PRODUCT_CHECK  + "integer not null "
 			+ ");";   
 
 	/********************************************************

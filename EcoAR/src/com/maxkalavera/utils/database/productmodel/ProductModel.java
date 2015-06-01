@@ -10,30 +10,39 @@ import com.maxkalavera.utils.ImageStringConverter;
 
 public class ProductModel implements Parcelable {//implements Serializable {
 	public String name            = "";
-	public String description     = ""; 
+	public String description     = "";
 	public String shopingService  = "";
 	public String url             = "";
 	public Bitmap image           = null;
 	public String imageURL 	       = "";
-	public String generalID       = "";
+	public String generalId       = "";
 	
 	private long cache_id        = -1;
-	private long groceries_id    = -1;  
+	private long groceries_id    = -1;
+	private boolean groceries_checked = false;
 	
-	public long getCacheID() {
+	public long getCacheId() {
 		return this.cache_id;
 	}
 	
-	public void setCacheID(long id) {
+	public void setCacheId(long id) {
 		this.cache_id = id;
 	}
 	
-	public long getGroceriesID() {
+	public long getGroceriesId() {
 		return this.groceries_id;
 	}
 	
-	public void setGroceriesID(long id) {
+	public void setGroceriesId(long id) {
 		this.groceries_id = id;
+	}
+
+	public boolean isChecked() {
+		return this.groceries_checked;
+	}
+	
+	public void setChecked(boolean checked) {
+		this.groceries_checked = checked;
 	}
 	
 	public ProductModel() {
@@ -48,7 +57,7 @@ public class ProductModel implements Parcelable {//implements Serializable {
 		this.url             = in.readString();
 		this.image           = ImageStringConverter.StringToBitMap(in.readString());
 		this.imageURL 	      = in.readString();
-		this.generalID       = in.readString();
+		this.generalId       = in.readString();
 		
 		this.cache_id        = in.readLong();
 		this.groceries_id    = in.readLong();  
@@ -68,7 +77,7 @@ public class ProductModel implements Parcelable {//implements Serializable {
 						this.url,
 						ImageStringConverter.BitMapToString(this.image),
 						this.imageURL,
-						this.generalID,
+						this.generalId,
 						String.valueOf(this.cache_id),
 						String.valueOf(this.groceries_id)
 						}

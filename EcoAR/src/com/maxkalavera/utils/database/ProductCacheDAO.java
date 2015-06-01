@@ -61,7 +61,7 @@ public class ProductCacheDAO {
 	 * Metodo para agregar un producto al cache
 	 ********************************************************/
 	public ProductModel addProduct(ProductModel product) {
-		if (product.getCacheID() != -1) {
+		if (product.getCacheId() != -1) {
 			if (getNumberOfProductsInDB() > ProductCacheDAO.MAX_PRODUCTS) 
 				removeOldestProduct();
 			
@@ -69,7 +69,7 @@ public class ProductCacheDAO {
 					this.getContentValuesFromProduct(product);
 			long productID = this.database.insert(ProductCacheSQLiteHelper.TABLE_PRODUCTS, null,
 					contentValues);
-			product.setCacheID(productID);
+			product.setCacheId(productID);
 			
 			// Guarda las imagenes en la memoria SD del dispositivo, 
 			// utiliza el ID que se genera al insertar la fila por primera vez
@@ -85,13 +85,13 @@ public class ProductCacheDAO {
 	 * producto en el cache
 	 ********************************************************/
 	public ProductModel searchProductInCache(ProductModel product) {
-		if (product.generalID == "")
+		if (product.generalId == "")
 			return product;
 		
 		Cursor cursor = this.dbHelper.getReadableDatabase().
 				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
 				" where "+ ProductCacheSQLiteHelper.PRODUCT_GENERALID +" = ?", 
-				new String[] {product.generalID});
+				new String[] {product.generalId});
 		
 		if (cursor .moveToFirst()) {
 			this.retrieveProductFromCursor(cursor, product);
@@ -181,14 +181,14 @@ public class ProductCacheDAO {
 	private ProductModel retrieveProductFromCursor (Cursor cursor, ProductModel product) {
 		if (product == null)
 			product = new ProductModel();
-		product.setCacheID(cursor.getLong(0));
+		product.setCacheId(cursor.getLong(0));
 		product.name = cursor.getString(1);
 		product.description = cursor.getString(2);
 		product.shopingService = cursor.getString(3);
 		product.url = cursor.getString(4);
 		product.image = this.loadBitmapFile(cursor.getString(5));
 		product.imageURL = cursor.getString(6);
-		product.generalID = cursor.getString(7);
+		product.generalId = cursor.getString(7);
 		
 		return product;
 	}
@@ -213,7 +213,7 @@ public class ProductCacheDAO {
 		contentValues.put(ProductCacheSQLiteHelper.PRODUCT_SHOPINGSERVICE, product.shopingService);
 		contentValues.put(ProductCacheSQLiteHelper.PRODUCT_URL, product.url);
 		contentValues.put(ProductCacheSQLiteHelper.PRODUCT_IMAGEURL, product.imageURL);
-		contentValues.put(ProductCacheSQLiteHelper.PRODUCT_GENERALID, product.generalID);
+		contentValues.put(ProductCacheSQLiteHelper.PRODUCT_GENERALID, product.generalId);
 		contentValues.put(
 				ProductCacheSQLiteHelper.PRODUCT_TIMESTAMP, 
 				unix_timestamp());

@@ -14,7 +14,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonprimitives.CalendarJsonPrimitive;
 import com.maxkalavera.utils.database.jsonprimitives.DateJsonPrimitive;
 

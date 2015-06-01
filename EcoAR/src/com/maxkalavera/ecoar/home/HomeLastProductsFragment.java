@@ -6,7 +6,7 @@ import java.util.List;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentAdapter;
-import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentLoader;
+import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentHTTPLoader;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 
 import android.content.Intent;
@@ -41,7 +41,8 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.lastproducts, container, false);
+    	super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.home_lastproducts, container, false);
     	return view;
     }
     

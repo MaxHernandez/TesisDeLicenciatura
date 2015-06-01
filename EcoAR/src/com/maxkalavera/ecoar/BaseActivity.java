@@ -1,6 +1,6 @@
 package com.maxkalavera.ecoar;
 
-import com.maxkalavera.ecoar.Logout.LogOutListener;
+import com.maxkalavera.ecoar.logout.LogOutListener;
 import com.maxkalavera.ecoar.searchbar.SearchBar;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.SlideMenuBarHandlerButton;
@@ -19,6 +19,7 @@ import android.webkit.CookieSyncManager;
 
 public class BaseActivity extends FragmentActivity  {
 	private SlideMenuBarHandler slideMenu;
+	private boolean optionsMenuFlag = true;
 	
 	public void onCreate(Bundle savedInstanceState, int contentViewLayout) {
 		super.onCreate(savedInstanceState);
@@ -86,8 +87,7 @@ public class BaseActivity extends FragmentActivity  {
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
-	}
-	
+	}	
 	
 	/*************************************************************
 	 *  Configuracion de Cookies
@@ -114,6 +114,14 @@ public class BaseActivity extends FragmentActivity  {
 	 * Configuracion del SlideMenu
 	 *************************************************************/
 	
+	final public void setOptionsMenuFlagOn() {
+		this.optionsMenuFlag = true;
+	}
+	
+	final public void setOptionsMenuFlagOff() {
+		this.optionsMenuFlag = false;
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -132,9 +140,13 @@ public class BaseActivity extends FragmentActivity  {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.mainmenu, menu);
-	    return true;
+		if (optionsMenuFlag) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.mainmenu, menu);
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	/*************************************************************

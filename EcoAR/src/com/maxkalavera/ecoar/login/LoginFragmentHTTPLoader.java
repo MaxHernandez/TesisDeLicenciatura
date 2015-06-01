@@ -20,8 +20,8 @@ import android.webkit.CookieSyncManager;
 import android.widget.ProgressBar;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.CSRFJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
@@ -30,7 +30,8 @@ public class LoginFragmentHTTPLoader extends HttpRequestLoader  {
 
 	public LoginFragmentHTTPLoader(Context context, RequestParamsBundle requestBundle) {
 		super(context, 
-				context.getResources().getString(R.string.webservice_login),
+				context.getResources().getString(R.string.webservice) +
+				context.getResources().getString(R.string.webservice_login_post),
 				POST,
 				requestBundle); 
 		this.setCookiesOn();

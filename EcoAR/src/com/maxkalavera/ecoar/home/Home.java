@@ -11,7 +11,7 @@ import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
 
 
-public class Home extends BaseActivity{
+public class Home extends BaseActivity {
 	
 	/************************************************************
 	 * Constructor Method

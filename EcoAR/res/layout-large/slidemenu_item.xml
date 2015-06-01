@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Este view sirve como pattern de cada item que se agregue a la lista de someproducts en el home -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/someproducts_item"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    >    
+    <LinearLayout
+    	android:orientation="horizontal"
+    	android:gravity="center_vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+        >
+    	<ImageView
+        	android:id="@+id/slidemenu_item_image"
+        	android:scaleType="fitEnd"
+        	android:contentDescription="@string/null_content"
+        	android:layout_marginLeft="30dp"
+    		android:layout_width="52dp"
+        	android:layout_height="52dp"
+        	/>
+		<TextView
+	   		android:id="@+id/slidemenu_item_name"
+	   		android:text="@string/slidemenu_item_name"
+    		android:textSize="22sp"
+    		android:textStyle="bold"
+    		android:layout_marginLeft="15dp"
+    		android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+        	/>
+    </LinearLayout>
+    <ImageView
+        android:src="@drawable/arrow"
+        android:contentDescription="@string/null_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content" 
+        />
+</RelativeLayout>

@@ -1,13 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<!-- General data -->
     <string name="app_name">EcoAR</string>
     
     <!-- URL preferences -->
-    <string name="webservice">http://192.168.1.73:8080/</string>
-    <string name="webservice_login">http://192.168.1.73:8080/login/</string>
-    <string name="webservice_logout">http://192.168.1.73:8080/logout/</string>
-    <string name="webservice_csession">http://192.168.1.73:8080/csession/</string>
-    <string name="webservice_userdata">http://192.168.1.73:8080/csession/</string>
+    <string name="webservice">http://192.168.15.2:8080</string><!-- Al final del hipervinculo NO DEBE LLEVAR '/'-->
+    
+    <string name="webservice_session_get">/csession/</string><!-- Main -->
+    <string name="webservice_userdata_get">/session/</string><!-- Home -->
+    <string name="webservice_singup_post">/singup/</string><!-- SingUp -->
+    <string name="webservice_login_post">/login/</string><!-- Login -->
+    <string name="webservice_logout_delete">/logout/</string><!-- Logout -->
+    
+    <string name="webservice_searchcam_post">/searchcam/</string><!-- SearchCamera -->
+    
+     <!-- URL preferences - ProductInfo -->
+    <string name="webservice_product_info_get">/products/info/</string> 
+    <string name="webservice_product_info_post">/products/info/</string>
+    <string name="webservice_product_commentaries_get">/products/commentaries/</string>
+    <string name="webservice_product_commentaries_post">/products/commentaries/</string>
+    <string name="webservice_product_commentaries_delete">/products/commentaries/</string>
+    
+    <!-- URL Preferences parsers -->
     <string name="amazonurl">http://www.amazon.com/s/</string>
     
     <!-- SharedPreferences userdata -->
@@ -39,7 +53,7 @@
     <string name="lastproducts_item_defaultdescription">Descripción</string>
     
     <!-- Login -->
-    <string name="login_user"><a href="" >Usuario</a></string>
+    <string name="login_user">Usuario</string>
     <string name="login_password">Contraseña</string>
    	<string name="login_send">Enviar</string>
     <string name="login_singuptext"><a href="" >Registrarse</a></string>
@@ -53,19 +67,73 @@
     
     <!-- SearchBar -->
 	<string name="searchbar_sendbutton">Buscar</string>
-    <string name="searchbar_results_itemname">Nombre</string>
-    <string name="searchbar_results_itemdescription">Descripción del producto.sssssssssssssssssssssssssssssssssssssssssss</string>
+    <string name="searchbar_results_item_name">Nombre del producto</string>
+    <string name="searchbar_results_item_description"></string>
+    <string name="searchproduct_searchtextbar_hint">Buscar producto&#8230;</string>
     
     <!-- Groceries -->
-    <string name="grocery_title">Lista del super</string>
+    <string name="groceries_title">Lista del super</string>
+    <string name="groceries_list_keepsearching">Buscar</string>
+	<string name="groceries_list_clear">Limpiar lista</string>
+	<string name="groceries_list_item_defaultname"> Ejemplo de nombre de producto</string>
     
     <!-- ProductInfo -->
     <string name="productinfo_userrating_title">Calificación de usuarios</string>
     <string name="productinfo_userrating_rating">0.0</string>
-    <string name="productinfo_userrating_titleuser">Tu calificación:</string>
+    <string name="productinfo_userrating_titleuser">Tu calificación</string>
     <string name="productinfo_userrating_ratinguser">0/5</string>
     
-    
-    
+    <string name="productinfo_basicinfo_name">Nombre del producto</string>
+    <string name="productinfo_basicinfo_description"></string>
+	<string name="productinfo_basicinfo_shopingservice">Amazon</string>
+	<string name="productinfo_basicinfo_dash">-</string>
+	<string name="productinfo_basicinfo_referenceurl">http://amazon.com/?p=10alklkoiuaos</string>
+
+	<string name="productinfo_commentaries_item_username">Usuario</string>
+	<string name="productinfo_commentaries_item_dash">-</string>
+	<string name="productinfo_commentaries_item_postingdate">24/abril/2009, 23:30</string>
+	<string name="productinfo_commentaries_item_delete">X</string>
+	<string name="productinfo_commentaries_item_body"></string>
+
+	<string name="productinfo_commentarielist_title">Comentarios</string>
+	<string name="productinfo_commentarieslist_post_hint">Escribe un comentario</string>
+	<string name="productinfo_commentarielist_send">Publicar</string>
+	
+	<string name="productinfo_ecologicalscore_title">Calificación ambiental</string>
+	<string name="productinfo_ecologicalscore_subtitle">Escala del 1 al 10</string>
+	<string name="productinfo_ecologicalscore_defaultscore">0.0</string>
+	<string name="productinfo_ecologicalscore_criterions_title">Criterios de análisis </string>
+	<string name="productinfo_ecologicalscore_transport">Gastos de transportación</string>
+	<string name="productinfo_ecologicalscore_energy">Ahorro de energía</string>
+	<string name="productinfo_ecologicalscore_water">Ahorro de agua</string>
+	<string name="productinfo_ecologicalscore_society">Ayuda en la sociedad</string>
+	<string name="productinfo_ecologicalscore_recyclable">Es un producto recicable</string>
+	
+	<!-- LastProducts -->
+	<string name="lastproducts_itemname"></string>
+	
+	<!-- SearchCamera -->
+	<string name="searchcamera_send">Capturar</string>
+	
+	<!-- SlideMenu -->
+	<string name="slidemenu_item_name">Item name</string>	
+	
+	<!-- SingUp -->
+	<string name="singup_title">Registro</string>
+	<string name="signup_username">Nombre de usuario</string>
+	<string name="signup_password">Contraseña</string>
+	<string name="signup_password_confirmation">Confirmar contraseña</string>
+	<string name="signup_first_name">Nombre</string>
+	<string name="signup_last_name">Apellido(s)</string>
+	<string name="signup_email">Correo</string>
+	<string name="signup_gender">Sexo:</string>
+	<string name="signup_gender_male">Masculino</string>
+	<string name="signup_gender_female">Femenino</string>
+	<string name="signup_birthday">Fecha de nacimiento:</string>
+	<string name="signup_send_success">El usuario ha sido registrado con éxito</string>
+	<string name="signup_send_button">Enviar</string>
+	
+    <!-- Others -->
+    <string name="null_content"></string>
     
 </resources>

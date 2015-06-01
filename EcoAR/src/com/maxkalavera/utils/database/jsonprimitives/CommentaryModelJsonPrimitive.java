@@ -21,10 +21,6 @@ public final class CommentaryModelJsonPrimitive implements JsonDeserializer<Comm
 		return instance;
 	}
 	
-	public JsonElement serialize(Date date, Type typeOfSrc, JsonSerializationContext context) {
-		return new JsonPrimitive(DateJsonPrimitive.DATEFORMAT.format(date));
-	}
-
 	public CommentModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         try {  
             return (CommentModel) new CommentModel().deserialize(json.getAsString());

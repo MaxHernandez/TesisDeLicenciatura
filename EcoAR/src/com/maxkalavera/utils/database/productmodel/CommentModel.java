@@ -19,7 +19,33 @@ public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonMode
 	public Date postingDate;	
 	
 	private long product_id = -1;
+	private long _id = -1;
+	private long server_id = -1;
+
+	/*************************************************************
+	 * Inner ID
+	 *************************************************************/	
+	public long getId(){
+		return this._id;
+	}
 	
+	public void setId(long id) {
+		this._id = id;
+	}
+	
+	/*************************************************************
+	 * Server ID 
+	 *************************************************************/	
+	public long getServerId(){
+		return this.server_id; 
+	}
+	
+	public void setServerId(long id) {
+		this.server_id = id;
+	}
+	/*************************************************************
+	 * Product reference ID
+	 *************************************************************/	
 	public long getProductReference() {
 		return this.product_id;
 	}
@@ -29,7 +55,7 @@ public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonMode
 	}
 	
 	public void setProductReference(ProductModel product) {
-		this.product_id = product.getCacheID();
+		this.product_id = product.getCacheId();
 	}
 	
 	/*************************************************************
@@ -53,12 +79,17 @@ public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonMode
 	}
 	
 	public String getDateAsString() {
-		return DateJsonPrimitive.DATEFORMAT.format(this.postingDate);
+		return DateJsonPrimitive.getDateFormat().format(this.postingDate);
 	}	
+	
+	public String getDateAsToShow() {
+		return DateJsonPrimitive.DATEFORMAT_SHOW.format(this.postingDate);
+	}	
+	
 	
 	public void setDateFromString(String dateStr) {
 		try {
-			this.postingDate = DateJsonPrimitive.DATEFORMAT.parse(dateStr);
+			this.postingDate = DateJsonPrimitive.getDateFormat().parse(dateStr);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

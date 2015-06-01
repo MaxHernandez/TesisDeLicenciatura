@@ -32,7 +32,7 @@ public class HomeLastProductsFragmentAdapter extends ArrayAdapter<List<ProductMo
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			LayoutInflater inflater = LayoutInflater.from(this.getContext());
-			convertView = inflater.inflate(R.layout.lastproducts_item, null);
+			convertView = inflater.inflate(R.layout.home_lastproducts_item, null);
 		}
 		
 		ProductModel pData = (ProductModel) this.getItem(position);

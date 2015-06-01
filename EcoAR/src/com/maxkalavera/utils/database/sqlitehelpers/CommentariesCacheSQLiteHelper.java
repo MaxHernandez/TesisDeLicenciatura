@@ -21,6 +21,7 @@ public class CommentariesCacheSQLiteHelper extends SQLiteOpenHelper {
 	public static final String COMMENT_BODY = "body";
 	public static final String COMMENT_USERNAME = "username";
 	public static final String COMMENT_POSTING_DATE = "posting_date";	
+	public static final String COMMENT_SERVER_ID = "server_id";
 	
 	// La instrucción de SQL para crear la tabla se define en 
 	// la siguiente variable.
@@ -32,7 +33,8 @@ public class CommentariesCacheSQLiteHelper extends SQLiteOpenHelper {
 			+ COMMENT_PRODUCT_REFERENCE + "integer not null, "
 			+ COMMENT_BODY + "text not null, "
 			+ COMMENT_USERNAME + "text not null, "
-			+ COMMENT_POSTING_DATE + "text not null "
+			+ COMMENT_POSTING_DATE + "text not null, "
+			+ COMMENT_SERVER_ID + "integer not null "
 			+ ");";   
 
 	/********************************************************

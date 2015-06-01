@@ -84,11 +84,11 @@ public class SlideMenuBarHandler implements OnTouchListener{
 		View itemPattern = inflater.inflate(R.layout.slidemenu_item, null);
 		
 		// Se cambia el nombre del producto en la plantilla
-		TextView name = (TextView)itemPattern.findViewById(R.id.slidemenu_itemname);
+		TextView name = (TextView)itemPattern.findViewById(R.id.slidemenu_item_name);
 		name.setText(button.text);
 		
 		if (button.iconID != null) {
-			ImageView icon = (ImageView)itemPattern.findViewById(R.id.slidemenu_itemimage);
+			ImageView icon = (ImageView)itemPattern.findViewById(R.id.slidemenu_item_image);
 			icon.setImageResource(button.iconID.intValue());
 		}
 		

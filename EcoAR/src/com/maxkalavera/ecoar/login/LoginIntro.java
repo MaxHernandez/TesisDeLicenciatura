@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieSyncManager;
@@ -22,13 +23,13 @@ public class LoginIntro extends BaseActivity implements OnClickListener{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.loginintro);
 		this.userSession = new UserSessionDAO(this);
+		this.setOptionsMenuFlagOff();
 		
 		if (this.userSession.checkSessionStatus()){
             Intent intent = new Intent();
             intent.setClass(this, Home.class);
             startActivity(intent);
 		}
-		
 		Button button = (Button) findViewById(R.id.loginintro_skiplogin);
 		button.setOnClickListener(this);
 	}

@@ -15,12 +15,13 @@ import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
 
-public class PostCommentHTTPLoader extends HttpRequestLoader  {
+public class PostCommentHTTPLoader extends HttpRequestLoader {
 	ProductModel product;
 	
 	public PostCommentHTTPLoader(Context context, RequestParamsBundle requestBundle, ProductModel product) {
 		super(context, 
-				context.getResources().getString(R.string.webservice_login),// ERROR MODIFICAR
+				context.getResources().getString(R.string.webservice) +
+				context.getResources().getString(R.string.webservice_product_commentaries_post),// ERROR MODIFICAR
 				POST,
 				requestBundle); 
 		this.setCookiesOn();

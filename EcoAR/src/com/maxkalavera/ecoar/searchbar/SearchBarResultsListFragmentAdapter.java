@@ -74,7 +74,7 @@ class FloatingMenuListener 	implements View.OnClickListener,
 
 		Menu menu = popup.getMenu();
 	
-		if (pModel.getGroceriesID() == -1)
+		if (pModel.getGroceriesId() == -1)
 			menu.removeItem(R.id.searchbar_list_floatingmenu_addtogroceries);
 		else
 			menu.removeItem(R.id.searchbar_list_floatingmenu_removefromgroceries);

@@ -17,6 +17,7 @@
         <ImageView 
     		android:id="@+id/searchbar_item_image"
     		android:src="@drawable/ic_launcher"
+    		android:contentDescription="@string/null_content"
 			android:layout_width="52dp"
     		android:layout_height="52dp"
             />
@@ -28,7 +29,7 @@
         	>
 	    	<TextView
 	        	android:id="@+id/searchbar_item_name"
-	        	android:text="Nombre del producto"
+	        	android:text="@string/searchbar_results_item_name"
 	        	android:textSize="18sp"
 	        	android:textStyle="bold"
 	        	android:layout_marginLeft="10dp"
@@ -37,11 +38,11 @@
 	        	/>
 			<TextView
 	        	android:id="@+id/searchbar_item_description"
-	        	android:text="Descripcion del producto"
+	        	android:text="@string/searchbar_results_item_description"
 	        	android:textSize="14sp"
-	        	android:textColor="#888"
+	        	android:textColor="@color/searchbar_item_description"
 	        	android:layout_marginLeft="10dp"
-	        	android:layout_width="wrap_content"
+	        	android:layout_width="match_parent"
     			android:layout_height="wrap_content"
 	        	/>
 	    </LinearLayout>
@@ -53,7 +54,7 @@
 		android:layout_alignParentBottom="true" 
 		android:layout_marginRight="0dp"
 		android:layout_marginLeft="5dp"
-		android:layout_width="18dp"
-		android:layout_height="18dp" 
+		android:layout_width="20dp"
+		android:layout_height="20dp" 
 		/>
 </RelativeLayout>

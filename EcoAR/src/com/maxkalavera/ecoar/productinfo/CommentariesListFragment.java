@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.HomeLastProductsFragmentAdapter;
+import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.jsonmodels.CommentariesListModel;
 import com.maxkalavera.utils.database.productmodel.CommentModel;
@@ -33,32 +34,42 @@ public class CommentariesListFragment extends ListFragment implements
 	View.OnClickListener {
 	
 	CommentariesListFragmentAdapter adapter;
-	ArrayList<CommentModel> valuesList = new ArrayList<CommentModel>();
+	ArrayList<CommentModel> valuesList;
 	ProductModel product;
-	int page = 1; 
+	int page; 
+	CommentModel deleteComment;
 	
 	
 	public static final int GET_COMMENTLIST = 1;
 	public static final int POST_COMMENT = 2;
+	public static final int DELETE_COMMENT = 3;
 	
 	/************************************************************
 	 * Constructor Method
 	 ************************************************************/
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);        
-		this.adapter = new CommentariesListFragmentAdapter(this.getActivity(), this.valuesList);
+        super.onActivityCreated(savedInstanceState);
+        
+    	this.valuesList = new ArrayList<CommentModel>();
+    	this.page = 1;
+    	this.deleteComment = null;
+        
+        BaseActivity baseActivity = (BaseActivity) this.getActivity();
+        String username = baseActivity.getUserDataManager().getUsername();
+		this.adapter = new CommentariesListFragmentAdapter(this, this.valuesList, username);
         this.setListAdapter(this.adapter);
         
-		try{
-			this.product =  
-					(ProductModel) this.getActivity().getIntent().getParcelableExtra("product");
-		} catch(Exception e){
-			Log.e("ProductInfo_create:", e.toString());
-		}
-		
-        if (this.product != null)
-        	getLoaderManager().initLoader(GET_COMMENTLIST, null, this);
+    }
+    
+    public void setUp(ProductModel product) {
+    	if (product != null) {
+    		this.product = product;
+    		getLoaderManager().initLoader(GET_COMMENTLIST, null, this);
+    		
+    		Button sendCommentButton = (Button) getView().findViewById(R.id.productinfo_commentarieslist_sendcomment);
+    		sendCommentButton.setOnClickListener(this);
+    	}
     }
 
 	/************************************************************
@@ -67,15 +78,18 @@ public class CommentariesListFragment extends ListFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.productinfo_commentarieslist, container, false);
     	return view;
     }
     
-    public void setUp() {    	
-		Button sendCommentButton = (Button) getView().findViewById(R.id.productinfo_commentarieslist_sendcomment);
-		sendCommentButton.setOnClickListener(this);
+	/************************************************************
+	 * 
+	 ************************************************************/    
+    public void deleteComment(int position) {
+    	this.deleteComment = this.valuesList.get(position);
     }
-
+    
 	/************************************************************
 	 * Listener del boton para enviar comentario 
 	 ************************************************************/    
@@ -85,6 +99,9 @@ public class CommentariesListFragment extends ListFragment implements
     	getLoaderManager().initLoader(GET_COMMENTLIST, null, this);
 	}
 	
+	/************************************************************
+	 * 
+	 ************************************************************/    
 	public void enableCommentaryCapability(boolean option) {
 		EditText commentEditText = 
 				(EditText) getView().findViewById(
@@ -118,9 +135,11 @@ public class CommentariesListFragment extends ListFragment implements
 	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
 			case GET_COMMENTLIST:
-				//ERROR: Aun hace falta agregar paginacion a los parametros
+				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
+					return null;
+				
 				RequestParamsBundle paramsBundleGetProductInfo = new RequestParamsBundle();
-				paramsBundleGetProductInfo.addURIParam("general_id", this.product.generalID);
+				paramsBundleGetProductInfo.addURIParam("general_id", this.product.generalId);
 				paramsBundleGetProductInfo.addURIParam("page", String.valueOf(this.page));
 				
 				GetCommentListHTTPLoader getCommentListHTTPLoader = 
@@ -129,6 +148,9 @@ public class CommentariesListFragment extends ListFragment implements
 				return getCommentListHTTPLoader;
 				
 			case POST_COMMENT:
+				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
+					return null;
+				
 				BaseActivity baseActivity = (BaseActivity)this.getActivity();
 				UserDataDAO userDataDAO = baseActivity.getUserDataManager();
 				
@@ -137,13 +159,25 @@ public class CommentariesListFragment extends ListFragment implements
 						new CommentModel(commentEditText.getText().toString(), userDataDAO.getUsername());
 				
 				RequestParamsBundle paramsBundlePostUserScore = new RequestParamsBundle();
-				paramsBundlePostUserScore.addJSONParam("general_id", this.product.generalID);
+				paramsBundlePostUserScore.addJSONParam("general_id", this.product.generalId);
 				paramsBundlePostUserScore.AddJsonModel("comment", newComennt);
 				
 				PostCommentHTTPLoader postCommentHTTPLoader = 
 						new PostCommentHTTPLoader(this.getActivity(), paramsBundlePostUserScore, this.product);
 				postCommentHTTPLoader.forceLoad();
 				return postCommentHTTPLoader;
+				
+			case DELETE_COMMENT:
+				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
+					return null;
+				
+				RequestParamsBundle paramsBundleDeleteComment = new RequestParamsBundle();
+				paramsBundleDeleteComment.addJSONParam("id", String.valueOf(this.deleteComment.getServerId()));
+				
+				DeleteCommentHTTPLoader deleteCommentHTTPLoader = 
+				new DeleteCommentHTTPLoader(this.getActivity(), paramsBundleDeleteComment, this.deleteComment);
+				deleteCommentHTTPLoader.forceLoad();
+				return deleteCommentHTTPLoader;
 				
 			default:
 				return null;
@@ -172,6 +206,16 @@ public class CommentariesListFragment extends ListFragment implements
 					this.valuesList.add(newComennt);
 					this.adapter.notifyDataSetChanged();
 					enableCommentaryCapability(true);
+				}
+				break;
+			
+			case DELETE_COMMENT:
+				if(loaderRes.getResponse().isSuccessful()) {
+					CommentModel comment = (CommentModel) loaderRes.getResponseJsonObject();
+					for(int i = 0; i < this.valuesList.size(); i++){
+						if (comment.getId() == this.valuesList.get(i).getId())
+							this.valuesList.remove(i);
+					}
 				}
 				break;
 				

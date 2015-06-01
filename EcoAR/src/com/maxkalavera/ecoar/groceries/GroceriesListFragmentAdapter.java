@@ -17,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -26,10 +27,11 @@ import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 
 /************************************************************
- * 
+ * Listener para el menu flotante del producto
  ************************************************************/
 class FloatingMenuListener 	implements View.OnClickListener,
-PopupMenu.OnMenuItemClickListener {
+	PopupMenu.OnMenuItemClickListener {
+	
 	private Context context;
 	private GroceriesListFragment groceriesListFragment;
 	private int elementListPosition;
@@ -66,7 +68,7 @@ PopupMenu.OnMenuItemClickListener {
 };
 
 /************************************************************
- * 
+ * Listener para el nombre del producto
  ************************************************************/
 
 class ProductNameClickListener implements View.OnClickListener {
@@ -91,26 +93,46 @@ class ProductNameClickListener implements View.OnClickListener {
 };
 
 /************************************************************
+ * Listener para el checkbox del producto
+ ************************************************************/
+
+class CheckboListener implements CompoundButton.OnCheckedChangeListener {
+	private GroceriesListFragment groceriesListFragment;
+
+	public CheckboListener(GroceriesListFragment groceriesListFragment) {
+		this.groceriesListFragment = groceriesListFragment;
+	}
+	
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		int elementListPosition = (Integer) buttonView.getTag();
+		this.groceriesListFragment.modifyElement(elementListPosition, 
+				isChecked);		
+	}
+	
+};
+
+/************************************************************
  * 
  ************************************************************/
 public class GroceriesListFragmentAdapter extends ArrayAdapter<ProductModel> {
 	
-	private GroceriesListFragment groceriesListFragment;
 	private ProductNameClickListener productNameClickListener;
 	private FloatingMenuListener floatingMenuListener;
+	private CheckboListener checkboListener;
 		
 	/************************************************************
 	 * Constructor Method
 	 ************************************************************/
 	public GroceriesListFragmentAdapter(GroceriesListFragment groceriesListFragment, ArrayList<ProductModel> productList) {
-		super(groceriesListFragment.getActivity().getApplicationContext(),
+		super(groceriesListFragment.getActivity(),
 				R.layout.searchbar_results_item,
 				productList);
-		this.groceriesListFragment = groceriesListFragment;
 		
 		// Listeners
 		this.productNameClickListener = new ProductNameClickListener(this);
 		this.floatingMenuListener = new FloatingMenuListener(groceriesListFragment);
+		this.checkboListener = new CheckboListener(groceriesListFragment);
 	}
 	
 	/************************************************************
@@ -125,15 +147,15 @@ public class GroceriesListFragmentAdapter extends ArrayAdapter<ProductModel> {
 		
 		ProductModel pdata = this.getItem(position);
 		
-		//ImageView image = (ImageView) convertView.findViewById(R.id.groceries_item_image);
-		//image.setImageBitmap(pdata.image);
-		
 		TextView productName = (TextView) convertView.findViewById(R.id.groceries_item_name);
 		productName.setText(pdata.name);
 		productName.setTag(Integer.valueOf(position));
 		productName.setOnClickListener(this.productNameClickListener);
 		
 		CheckBox checkbox = (CheckBox) convertView.findViewById(R.id.groceries_item_checkbox);
+		checkbox.setChecked(pdata.isChecked());
+		productName.setTag(Integer.valueOf(position));
+		checkbox.setOnCheckedChangeListener(checkboListener);
 		
 		Button menuButton = (Button) convertView.findViewById(R.id.groceries_item_menu);
 		menuButton.setTag(Integer.valueOf(position));

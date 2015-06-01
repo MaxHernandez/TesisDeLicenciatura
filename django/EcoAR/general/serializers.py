@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from models import UserData
+
+from django.contrib.auth import authenticate
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
 class UserSignUpSerializer(serializers.ModelSerializer):
@@ -9,18 +12,19 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     email        = serializers.EmailField(required = True)
     first_name   = serializers.CharField(required = True)
     last_name    = serializers.CharField(required = True)
+    
 
     class Meta:
         model    = User
         fields   = ('id', 'username', 'password', 'email', 'first_name', 'last_name')
 
-    #def validate_username(self, attrs, source):
-    #    value = attrs[source]
-    #    try:
-    #        user = User.objects.get(username=value)
-    #    except User.DoesNotExist:
-    #        return attrs
-    #    raise serializers.ValidationError("Ya existe el nombre de usuario")
+    def validate_username(self, attrs, source):
+        value = attrs[source]
+        try:
+            user = User.objects.get(username=value)
+        except User.DoesNotExist:
+            return attrs
+        raise serializers.ValidationError("Ya existe el nombre de usuario")
 
     def validate_password(self, attrs, source):
         if not self.init_data.has_key("password_confirmation"):
@@ -43,7 +47,7 @@ class UserDataSignUpCheckerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model    = UserData
-        fields   = ('location', 'birthdate', 'gender')
+        fields   = ('birthdate', 'gender')
 
 
 class UserDataSignUpSerializer(serializers.ModelSerializer):
@@ -52,10 +56,11 @@ class UserDataSignUpSerializer(serializers.ModelSerializer):
 
     class Meta:
         model    = UserData
-        fields   = ('location', 'birthdate', 'gender', 'user')
+        fields   = ('birthdate', 'gender', 'user')
 
 
 class UserDataAdmin:
+    """Esta clase junta todas las clases anteriores, verifica y guarda los datos recibidos."""
 
     def __init__(self, data=None):
         self.data = data
@@ -72,21 +77,24 @@ class UserDataAdmin:
         self.userData_serializer = UserDataSignUpCheckerSerializer(data=self.data)
 
         if self.user_serializer.is_valid() and self.userData_serializer.is_valid():
+
             self.user_serializer.save()
             self.data['user'] = self.user_serializer.data['id']
             self.userData_serializer = UserDataSignUpSerializer(data = self.data)
+
             if self.userData_serializer.is_valid():
                 self.userData_serializer.save()
                 return True
         return False
 
 
-class UserLogInSerializer(serializers.ModelSerializer):
-    """ Esta clase solo sirve para mostrar la informacion de todos los usuarios registrados """
+class UserDataSerializer(serializers.ModelSerializer):
+    """ Esta clase sirve para mandar al cliente la informacion de usuario."""
     userdata  = UserDataSignUpSerializer()
 
     def __init__ (self, *args, **kwargs):
          super(serializers.ModelSerializer, self).__init__(*args, **kwargs)
+
          if type(self.data) == type(list()):
              for i in range(len(self.data)):
                  temp = self.data[i].pop('userdata')
@@ -102,3 +110,29 @@ class UserLogInSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email', 'first_name', 'last_name', 'userdata')
         userdata_fields = ('birthdate', 'gender')
+
+
+class AuthSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        password = attrs.get('password')
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+
+            if user:
+                if not user.is_active:
+                    msg = _('User account is disabled.')
+                    raise serializers.ValidationError(msg)
+                attrs['user'] = user
+                return attrs
+            else:
+                msg = _('Unable to login with provided credentials.')
+                raise serializers.ValidationError(msg)
+        else:
+            msg = _('Must include "username" and "password"')
+            raise serializers.ValidationError(msg)
+

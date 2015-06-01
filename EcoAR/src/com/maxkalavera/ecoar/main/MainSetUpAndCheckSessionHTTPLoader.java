@@ -12,7 +12,11 @@ import com.maxkalavera.utils.httprequest.ResponseBundle;
 public class MainSetUpAndCheckSessionHTTPLoader extends HttpRequestLoader {
 	
 	public MainSetUpAndCheckSessionHTTPLoader(Context context, RequestParamsBundle bundle) {
-		super(context, context.getResources().getString(R.string.webservice_csession), GET, bundle);
+		super(context, 
+				context.getResources().getString(R.string.webservice) +
+				context.getResources().getString(R.string.webservice_session_get),
+				GET,
+				bundle);
 		this.setCookiesOn();
 		this.setCSRFOn();
 	}

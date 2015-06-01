@@ -77,6 +77,26 @@ public class CommentariesCacheDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/	
+	public boolean removeComment(long _id) {
+		// Elimina el producto de la base de datos
+		int temp = this.database.delete(CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES,
+				CommentariesCacheSQLiteHelper.COMMENT_ID +
+				"="+String.valueOf(_id)
+				, null);
+		
+		if (temp > 0) 
+			return true;
+		return false;
+		
+	}
+	
+	public boolean removeComment(CommentModel comment) {
+		return removeComment(comment.getId());
+	}
+	
+	/********************************************************
+	 * 
+	 ********************************************************/	
 	public boolean removeCoommentariesOf(long product_reference) {
 		// Elimina el producto de la base de datos
 		int temp = this.database.delete(CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES,
@@ -91,7 +111,7 @@ public class CommentariesCacheDAO {
 	}
 	
 	public boolean removeCoommentariesOf(ProductModel product) {
-		return removeCoommentariesOf(product.getCacheID());
+		return removeCoommentariesOf(product.getCacheId());
 	}
 	
 	/********************************************************
@@ -122,7 +142,7 @@ public class CommentariesCacheDAO {
 	}
 	
 	public List<CommentModel> getCommentariesFromCache(ProductModel product, int offset) {
-		return getCommentariesFromCache(product.getCacheID(), offset);
+		return getCommentariesFromCache(product.getCacheId(), offset);
 	}
 	
 	/********************************************************
@@ -141,12 +161,12 @@ public class CommentariesCacheDAO {
 	public CommentModel retrieveProductFromCursor (Cursor cursor, CommentModel comment) {
 		if (comment == null)
 			comment = new CommentModel();
-
+		comment.setId(cursor.getLong(0));
 		comment.setProductReference(cursor.getLong(1));
 		comment.body = cursor.getString(2);
 		comment.username = cursor.getString(3);
 		comment.setDateFromString(cursor.getString(4));
-		
+		comment.setServerId(cursor.getLong(5));
 		return comment;
 	}
 	
@@ -156,10 +176,13 @@ public class CommentariesCacheDAO {
 	
 	public ContentValues getContentValuesFromProduct (CommentModel comment) {
 		ContentValues contentValues = new ContentValues();
+		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_ID, comment.getId());
 		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_PRODUCT_REFERENCE, comment.getProductReference());
 		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_BODY, comment.body);
 		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_USERNAME, comment.username);
 		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_POSTING_DATE, comment.getDateAsString());
+		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_SERVER_ID, comment.getServerId());
+		
 		return contentValues;
 	}
 }

@@ -137,11 +137,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # My apps
-    'searchProduct',
+    'products',
     'general',
     # Third party apps
     'rest_framework',
-    'rest_framework.authtoken',
+    #'rest_framework.authtoken',
     #'haystack',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',

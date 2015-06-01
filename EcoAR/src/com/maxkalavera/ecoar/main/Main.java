@@ -8,6 +8,7 @@ import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
+import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.httprequest.InternetStatus;
@@ -45,6 +46,7 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);	
 		
+		this.setOptionsMenuFlagOff();		
 		this.initCoockieSyncManager();
 		
 		ActionBar actionBar = this.getActionBar();
@@ -70,6 +72,8 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 			case 0:
 				return null;
 			case 1:
+				if(!InternetStatusChecker.checkInternetStauts(this))
+					return null;
 				MainSetUpAndCheckSessionHTTPLoader loader = new MainSetUpAndCheckSessionHTTPLoader(this, null);
 				loader.forceLoad();
 				return loader;
@@ -102,16 +106,26 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 	 ************************************************************/
 	public void checkSessionInResponse(ResponseBundle responseBundle) {
 		if (responseBundle.getResponse() != null) {
-			this.userSession.setSessionStatus(true);
-			Intent intent = new Intent();
-			intent.setClass(this, Home.class);
-			startActivity(intent);
+			if (responseBundle.getResponse().isSuccessful()) {
+				this.userSession.setSessionStatus(true);
+				Intent intent = new Intent();
+				intent.setClass(this, Home.class);
+				startActivity(intent);
+			}else{
+				this.userSession.setSessionStatus(false);
+				Intent intent = new Intent();
+				intent.setClass(this, LoginIntro.class);
+				startActivity(intent);
+			}
 		}else{
+			//Error al recuperar los datos de usuario del servidor
 			this.userSession.setSessionStatus(false);
 			Intent intent = new Intent();
 			intent.setClass(this, LoginIntro.class);
-			startActivity(intent);		
+			startActivity(intent);
+			
 		}
+		
 	}
 	
-}
+};

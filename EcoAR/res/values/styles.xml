@@ -25,9 +25,14 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">#44A044</item>
     </style>
-    
+    <style name="groceries_button" parent="android:Widget.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">#44A044</item>
+    </style>
     <style name="Theme.mainTheme" parent="android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/mainThemeActionBarStyle</item>
 	</style>
+    
+
     
 </resources>

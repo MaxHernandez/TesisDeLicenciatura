@@ -3,6 +3,7 @@ package com.maxkalavera.ecoar.home;
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.main.MainSetUpAndCheckSessionHTTPLoader;
+import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
 import com.maxkalavera.utils.httprequest.InternetStatus;
@@ -22,18 +23,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<ResponseBundle>{
+public class HomeWellcomeFragment extends Fragment implements 
+LoaderCallbacks<ResponseBundle> {
 
 	UserDataDAO userDM;
-	
-	/*************************************************************
-	 * 
-	 *************************************************************/
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-    	return inflater.inflate(R.layout.home_wellcome, container, false);
-    }
-    
+	    
 	/*************************************************************
 	 * 
 	 *************************************************************/    
@@ -59,6 +53,16 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
     
 	/*************************************************************
 	 * 
+	 *************************************************************/
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
+    	return inflater.inflate(R.layout.home_wellcome, container, false);
+    }
+
+    
+	/*************************************************************
+	 * 
 	 *************************************************************/ 
     public void loadInfo(UserDataDAO userDataDAO) {
     	TextView title = ((TextView) getActivity().findViewById(R.id.home_wellcomeuser_title));
@@ -72,17 +76,16 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
 	 *************************************************************/ 
 	@Override
 	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle arg1) {
-		InternetStatus internetStatus = new InternetStatus(this.getActivity());
-		if (!internetStatus.isOnline()){
-			// Aqui hay que imprimir un aviso en la pantalla de que es necesaria conexion a internet
-			return null;
-		}
+		
 		
 		switch (loaderID) {
 			case 0:
 				return null;
 			case 1:
-				HomeUserDataLoader loader = new HomeUserDataLoader(this.getActivity());
+				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
+					return null;
+				
+				HomeUserDataHTTPLoader loader = new HomeUserDataHTTPLoader(this.getActivity());
 				loader.forceLoad();
 				return loader;
 			default:
@@ -94,17 +97,19 @@ public class HomeWellcomeFragment extends Fragment implements LoaderCallbacks<Re
 	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
 		Response response = responseBundle.getResponse();
 		UserDataJsonModel userDataJM = (UserDataJsonModel)responseBundle.getResponseJsonObject();
-		if (response == null){
-			// Hubo un error al mandar la petición al servidor
+		if (response != null && response.isSuccessful()){
+			if (userDataJM != null) {
+				// Esta linea utiliza el objeto administrador de la base de datos
+				// para guardar los datos del usuario en la memoria interna.
+				this.userDM.createUserDataProfile(userDataJM);
+				// Carga los datos necesarios en pantalla
+				this.loadInfo(this.userDM);
+			}else {
+				// Error al parsear la respuesta del servidor
+			}
+		} else {
+			// Error al mandar la peticion 
 		}
-		if (userDataJM == null) {
-			// Hubo un error al deserializar el objeto JSON
-		}
-		// Esta linea utiliza el objeto administrador de la base de datos
-		// para guardar los datos del usuario en la memoria interna.
-		this.userDM.createUserDataProfile(userDataJM);
-		// Carga los datos necesarios en pantalla
-		this.loadInfo(this.userDM);
 	}
 
 	@Override

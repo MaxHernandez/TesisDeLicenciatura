@@ -3,7 +3,6 @@ package com.maxkalavera.utils.database.jsonmodels;
 import java.util.Calendar;
 
 import com.google.gson.Gson;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 
 public class SignUpErrorsJsonModel implements BaseResponseJsonModel {
 	public String username;

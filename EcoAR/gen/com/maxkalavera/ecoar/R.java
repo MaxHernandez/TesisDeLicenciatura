@@ -122,9 +122,24 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int viewBehind=0x7f010002;
     }
     public static final class color {
+        /**  General 
+         */
+        public static final int link_textcolor=0x7f050000;
         /**  Login 
          */
-        public static final int login_errortext=0x7f050000;
+        public static final int login_errortext=0x7f050001;
+        /**  ProductInfo 
+         */
+        public static final int productinfo_basicinfo_productimage_background=0x7f050002;
+        public static final int productinfo_ecologicalscore_subtitle=0x7f050003;
+        public static final int productinfo_usersscore_icontext=0x7f050004;
+        /**  SearchBar 
+         */
+        public static final int searchbar_item_description=0x7f050005;
+        /**  SingUp 
+         */
+        public static final int signup_error_message=0x7f050006;
+        public static final int signup_success_message=0x7f050007;
     }
     public static final class dimen {
         /**  Home.LastProducts 
@@ -167,49 +182,50 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int fullscreen=0x7f040003;
         public static final int groceriesListFragment=0x7f040005;
         public static final int groceries_item_checkbox=0x7f040009;
-        public static final int groceries_item_menu=0x7f04000b;
+        public static final int groceries_item_menu=0x7f040008;
         public static final int groceries_item_name=0x7f04000a;
         public static final int groceries_list_floatingmenu_delete=0x7f040051;
-        public static final int groseries_clear=0x7f040008;
-        public static final int groseries_keepsearching=0x7f040007;
-        public static final int home_wellcomeuser_title=0x7f04000d;
-        public static final int lastproducts_item_info=0x7f04000e;
-        public static final int lastproducts_item_righticon=0x7f04000f;
-        public static final int lastproducts_itemname=0x7f040010;
+        public static final int groseries_clear=0x7f040007;
+        public static final int groseries_keepsearching=0x7f040006;
+        public static final int home_lastproducts=0x7f04000c;
+        public static final int home_wellcomeuser_title=0x7f04000f;
+        public static final int home_wellcomeuserfragment=0x7f04000b;
+        public static final int lastproducts_item_righticon=0x7f04000e;
+        public static final int lastproducts_itemname=0x7f04000d;
         public static final int left=0x7f040000;
-        public static final int login_errortext=0x7f040012;
-        public static final int login_loginfragment=0x7f040019;
-        public static final int login_password=0x7f040014;
-        public static final int login_progressbar=0x7f040016;
-        public static final int login_recoverpasstext=0x7f040018;
-        public static final int login_send=0x7f040015;
-        public static final int login_singuptext=0x7f040017;
-        public static final int login_username=0x7f040013;
-        public static final int loginintro_skiplogin=0x7f04001b;
-        public static final int main_loginfragment=0x7f04001a;
+        public static final int loading_progressbar=0x7f040010;
+        public static final int login_errortext=0x7f040011;
+        public static final int login_loginfragment=0x7f040018;
+        public static final int login_password=0x7f040013;
+        public static final int login_progressbar=0x7f040015;
+        public static final int login_recoverpasstext=0x7f040017;
+        public static final int login_send=0x7f040014;
+        public static final int login_singuptext=0x7f040016;
+        public static final int login_username=0x7f040012;
+        public static final int loginintro_skiplogin=0x7f04001a;
+        public static final int main_loginfragment=0x7f040019;
         public static final int margin=0x7f040002;
+        public static final int productinfo_commentaries=0x7f04001b;
+        public static final int productinfo_commentaries_item_delete=0x7f040023;
         public static final int productinfo_commentaries_item_postingdate=0x7f040022;
-        public static final int productinfo_commentaries_item_text=0x7f040023;
+        public static final int productinfo_commentaries_item_text=0x7f040024;
         public static final int productinfo_commentaries_item_username=0x7f040021;
-        public static final int productinfo_commentarieslist_comment=0x7f040024;
-        public static final int productinfo_commentarieslist_sendcomment=0x7f040025;
-        public static final int productinfo_ecologicalscore=0x7f040026;
-        public static final int productinfo_energy=0x7f040028;
+        public static final int productinfo_commentarieslist_comment=0x7f040025;
+        public static final int productinfo_commentarieslist_sendcomment=0x7f040026;
+        public static final int productinfo_ecologicalscore=0x7f040027;
+        public static final int productinfo_energy=0x7f040029;
         public static final int productinfo_productdescription=0x7f04001e;
         public static final int productinfo_productimage=0x7f04001c;
         public static final int productinfo_productname=0x7f04001d;
-        public static final int productinfo_ratingbar=0x7f04002d;
-        public static final int productinfo_ratingbartext=0x7f04002e;
-        public static final int productinfo_recyclable=0x7f04002b;
+        public static final int productinfo_ratingbar=0x7f04002e;
+        public static final int productinfo_recyclable=0x7f04002c;
         public static final int productinfo_referenceurl=0x7f040020;
         public static final int productinfo_shopingservice=0x7f04001f;
-        public static final int productinfo_society=0x7f04002a;
-        public static final int productinfo_transport=0x7f040027;
-        public static final int productinfo_usersscore=0x7f04002c;
-        public static final int productinfo_water=0x7f040029;
-        public static final int progressbar=0x7f040011;
+        public static final int productinfo_society=0x7f04002b;
+        public static final int productinfo_transport=0x7f040028;
+        public static final int productinfo_usersscore=0x7f04002d;
+        public static final int productinfo_water=0x7f04002a;
         public static final int right=0x7f040001;
-        public static final int scroller=0x7f040006;
         public static final int searchProductResultsFragment=0x7f040031;
         public static final int searchbar_item_description=0x7f040035;
         public static final int searchbar_item_image=0x7f040033;
@@ -243,26 +259,25 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int signup_send_text=0x7f04004a;
         public static final int signup_username=0x7f040039;
         public static final int signup_username_message=0x7f040038;
-        public static final int slidemenu_itemimage=0x7f04004e;
-        public static final int slidemenu_itemname=0x7f04004f;
+        public static final int slidemenu_item_image=0x7f04004e;
+        public static final int slidemenu_item_name=0x7f04004f;
         public static final int slidemenu_linearlayout=0x7f04004d;
         public static final int slidemenu_searchbutton=0x7f040052;
         public static final int slidingmenumain=0x7f040050;
-        public static final int wellcomeuserfragment=0x7f04000c;
     }
     public static final class layout {
-        public static final int applogo=0x7f030000;
-        public static final int groceries=0x7f030001;
-        public static final int groceries_list=0x7f030002;
-        public static final int groceries_list_item=0x7f030003;
-        public static final int home=0x7f030004;
-        public static final int home_wellcome=0x7f030005;
-        public static final int lastproducts=0x7f030006;
-        public static final int lastproducts_item=0x7f030007;
-        public static final int loading=0x7f030008;
-        public static final int login=0x7f030009;
-        public static final int login_activity=0x7f03000a;
-        public static final int loginintro=0x7f03000b;
+        public static final int groceries=0x7f030000;
+        public static final int groceries_list=0x7f030001;
+        public static final int groceries_list_item=0x7f030002;
+        public static final int home=0x7f030003;
+        public static final int home_lastproducts=0x7f030004;
+        public static final int home_lastproducts_item=0x7f030005;
+        public static final int home_wellcome=0x7f030006;
+        public static final int loading=0x7f030007;
+        public static final int login=0x7f030008;
+        public static final int login_activity=0x7f030009;
+        public static final int loginintro=0x7f03000a;
+        public static final int logo=0x7f03000b;
         public static final int main=0x7f03000c;
         public static final int productinfo=0x7f03000d;
         public static final int productinfo_basicinfo=0x7f03000e;
@@ -285,72 +300,149 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int searchbar_list_floatingmenu=0x7f090002;
     }
     public static final class string {
-        public static final int actionbar_groceries=0x7f070011;
+        public static final int actionbar_groceries=0x7f070018;
         /**  ActionBar 
          */
-        public static final int actionbar_home=0x7f07000c;
-        public static final int actionbar_login=0x7f07000d;
-        public static final int actionbar_logout=0x7f07000e;
-        public static final int actionbar_search=0x7f07000f;
-        public static final int actionbar_searchcamera=0x7f070010;
-        public static final int amazonurl=0x7f070006;
+        public static final int actionbar_home=0x7f070013;
+        public static final int actionbar_login=0x7f070014;
+        public static final int actionbar_logout=0x7f070015;
+        public static final int actionbar_search=0x7f070016;
+        public static final int actionbar_searchcamera=0x7f070017;
+        /**  URL Preferences parsers 
+         */
+        public static final int amazonurl=0x7f07000d;
         /**  General data 
          */
         public static final int app_name=0x7f070000;
-        public static final int csrf_csrftoken_keyword=0x7f07000b;
+        public static final int csrf_csrftoken_keyword=0x7f070012;
         /**  SharedPreferences CSRF 
          */
-        public static final int csrf_filename=0x7f07000a;
+        public static final int csrf_filename=0x7f070011;
+        public static final int groceries_list_clear=0x7f07002d;
+        public static final int groceries_list_item_defaultname=0x7f07002e;
+        public static final int groceries_list_keepsearching=0x7f07002c;
         /**  Groceries 
          */
-        public static final int grocery_title=0x7f070023;
-        public static final int home_wellcome_intro=0x7f070013;
+        public static final int groceries_title=0x7f07002b;
+        public static final int home_wellcome_intro=0x7f07001a;
         /**  Home 
          */
-        public static final int home_wellcome_title=0x7f070012;
-        public static final int lastproducts_item_defaultdescription=0x7f070016;
-        public static final int lastproducts_item_defaultname=0x7f070015;
+        public static final int home_wellcome_title=0x7f070019;
+        public static final int lastproducts_item_defaultdescription=0x7f07001d;
+        public static final int lastproducts_item_defaultname=0x7f07001c;
+        /**  LastProducts 
+         */
+        public static final int lastproducts_itemname=0x7f070049;
         /**  Home.LastProducts 
          */
-        public static final int lastproducts_title=0x7f070014;
+        public static final int lastproducts_title=0x7f07001b;
         /**  Login login errors 
          */
-        public static final int login_errorsdefault=0x7f07001f;
-        public static final int login_password=0x7f070018;
-        public static final int login_recoverpasstext=0x7f07001c;
-        public static final int login_recoverpassurl=0x7f07001d;
-        public static final int login_send=0x7f070019;
-        public static final int login_singuptext=0x7f07001a;
-        public static final int login_singupurl=0x7f07001b;
+        public static final int login_errorsdefault=0x7f070026;
+        public static final int login_password=0x7f07001f;
+        public static final int login_recoverpasstext=0x7f070023;
+        public static final int login_recoverpassurl=0x7f070024;
+        public static final int login_send=0x7f070020;
+        public static final int login_singuptext=0x7f070021;
+        public static final int login_singupurl=0x7f070022;
         /**  Login 
          */
-        public static final int login_user=0x7f070017;
-        public static final int loginintro_skiplogin=0x7f07001e;
-        public static final int productinfo_userrating_rating=0x7f070025;
-        public static final int productinfo_userrating_ratinguser=0x7f070027;
+        public static final int login_user=0x7f07001e;
+        public static final int loginintro_skiplogin=0x7f070025;
+        /**  Others 
+         */
+        public static final int null_content=0x7f070059;
+        public static final int productinfo_basicinfo_dash=0x7f070036;
+        public static final int productinfo_basicinfo_description=0x7f070034;
+        public static final int productinfo_basicinfo_name=0x7f070033;
+        public static final int productinfo_basicinfo_referenceurl=0x7f070037;
+        public static final int productinfo_basicinfo_shopingservice=0x7f070035;
+        public static final int productinfo_commentarielist_send=0x7f07003f;
+        public static final int productinfo_commentarielist_title=0x7f07003d;
+        public static final int productinfo_commentaries_item_body=0x7f07003c;
+        public static final int productinfo_commentaries_item_dash=0x7f070039;
+        public static final int productinfo_commentaries_item_delete=0x7f07003b;
+        public static final int productinfo_commentaries_item_postingdate=0x7f07003a;
+        public static final int productinfo_commentaries_item_username=0x7f070038;
+        public static final int productinfo_commentarieslist_post_hint=0x7f07003e;
+        public static final int productinfo_ecologicalscore_criterions_title=0x7f070043;
+        public static final int productinfo_ecologicalscore_defaultscore=0x7f070042;
+        public static final int productinfo_ecologicalscore_energy=0x7f070045;
+        public static final int productinfo_ecologicalscore_recyclable=0x7f070048;
+        public static final int productinfo_ecologicalscore_society=0x7f070047;
+        public static final int productinfo_ecologicalscore_subtitle=0x7f070041;
+        public static final int productinfo_ecologicalscore_title=0x7f070040;
+        public static final int productinfo_ecologicalscore_transport=0x7f070044;
+        public static final int productinfo_ecologicalscore_water=0x7f070046;
+        public static final int productinfo_userrating_rating=0x7f070030;
+        public static final int productinfo_userrating_ratinguser=0x7f070032;
         /**  ProductInfo 
          */
-        public static final int productinfo_userrating_title=0x7f070024;
-        public static final int productinfo_userrating_titleuser=0x7f070026;
-        public static final int searchbar_results_itemdescription=0x7f070022;
-        public static final int searchbar_results_itemname=0x7f070021;
+        public static final int productinfo_userrating_title=0x7f07002f;
+        public static final int productinfo_userrating_titleuser=0x7f070031;
+        public static final int searchbar_results_item_description=0x7f070029;
+        public static final int searchbar_results_item_name=0x7f070028;
         /**  SearchBar 
          */
-        public static final int searchbar_sendbutton=0x7f070020;
+        public static final int searchbar_sendbutton=0x7f070027;
+        /**  SearchCamera 
+         */
+        public static final int searchcamera_send=0x7f07004a;
+        public static final int searchproduct_searchtextbar_hint=0x7f07002a;
         /**  SharedPreferences session 
          */
-        public static final int session_filename=0x7f070008;
-        public static final int session_status_keyword=0x7f070009;
+        public static final int session_filename=0x7f07000f;
+        public static final int session_status_keyword=0x7f070010;
+        public static final int signup_birthday=0x7f070056;
+        public static final int signup_email=0x7f070052;
+        public static final int signup_first_name=0x7f070050;
+        public static final int signup_gender=0x7f070053;
+        public static final int signup_gender_female=0x7f070055;
+        public static final int signup_gender_male=0x7f070054;
+        public static final int signup_last_name=0x7f070051;
+        public static final int signup_password=0x7f07004e;
+        public static final int signup_password_confirmation=0x7f07004f;
+        public static final int signup_send_button=0x7f070058;
+        public static final int signup_send_success=0x7f070057;
+        public static final int signup_username=0x7f07004d;
+        /**  SingUp 
+         */
+        public static final int singup_title=0x7f07004c;
+        /**  SlideMenu 
+         */
+        public static final int slidemenu_item_name=0x7f07004b;
         /**  SharedPreferences userdata 
          */
-        public static final int userdata_filename=0x7f070007;
+        public static final int userdata_filename=0x7f07000e;
         /**  URL preferences 
          */
         public static final int webservice=0x7f070001;
-        public static final int webservice_csession=0x7f070004;
-        public static final int webservice_login=0x7f070002;
-        public static final int webservice_logout=0x7f070003;
-        public static final int webservice_userdata=0x7f070005;
+        /**  SingUp 
+         */
+        public static final int webservice_login_post=0x7f070005;
+        /**  Login 
+         */
+        public static final int webservice_logout_delete=0x7f070006;
+        public static final int webservice_product_commentaries_delete=0x7f07000c;
+        public static final int webservice_product_commentaries_get=0x7f07000a;
+        public static final int webservice_product_commentaries_post=0x7f07000b;
+        /**  SearchCamera 
+ URL preferences - ProductInfo 
+         */
+        public static final int webservice_product_info_get=0x7f070008;
+        public static final int webservice_product_info_post=0x7f070009;
+        /**  Logout 
+         */
+        public static final int webservice_searchcam_post=0x7f070007;
+        /**  Al final del hipervinculo NO DEBE LLEVAR '/'
+         */
+        public static final int webservice_session_get=0x7f070002;
+        /**  Home 
+         */
+        public static final int webservice_singup_post=0x7f070004;
+        /**  Main 
+         */
+        public static final int webservice_userdata_get=0x7f070003;
     }
     public static final class style {
         /** 
@@ -380,7 +472,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
          */
         public static final int AppTheme=0x7f080001;
         public static final int ButtonTheme=0x7f080003;
-        public static final int Theme_mainTheme=0x7f080004;
+        public static final int Theme_mainTheme=0x7f080005;
+        public static final int groceries_button=0x7f080004;
         public static final int mainThemeActionBarStyle=0x7f080002;
     }
     public static final class styleable {

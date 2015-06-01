@@ -1,7 +1,7 @@
 package com.maxkalavera.ecoar.searchcamera;
 
 import com.maxkalavera.ecoar.R;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.SearchCameraResponseJsonModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
@@ -14,8 +14,8 @@ public class SendImageHTTPLoader extends HttpRequestLoader {
 
 	public SendImageHTTPLoader(Context context, RequestParamsBundle requestBundle) {
 		super(context, 
-				// ERROR: Modificar el resource correcto
-				context.getResources().getString(R.string.webservice_login),
+				context.getResources().getString(R.string.webservice) +
+				context.getResources().getString(R.string.webservice_searchcam_post),
 				POST,
 				requestBundle);
 		this.setMultipartOn();

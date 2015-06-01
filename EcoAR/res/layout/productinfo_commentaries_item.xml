@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/someproducts_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    >
 
     <LinearLayout
         android:padding="5dp"
@@ -18,23 +20,23 @@
             >
             <TextView 
 			    android:id="@+id/productinfo_commentaries_item_username"
-                android:text="Max"
-                android:textSize="16sp"
+                android:text="@string/productinfo_commentaries_item_username"
+                android:textSize="18sp"
                 android:textStyle="bold"
 				android:layout_width="wrap_content"
     			android:layout_height="wrap_content" 
                 />
             <TextView 
-                android:text="-"
+                android:text="@string/productinfo_commentaries_item_dash"
                 android:textSize="16sp"
-                android:textStyle="bold"
+
                 android:layout_marginLeft="5dp"
 				android:layout_width="wrap_content"
     			android:layout_height="wrap_content" 
                 />
             <TextView 
 			    android:id="@+id/productinfo_commentaries_item_postingdate"
-                android:text="24/abril/2009, 23:30"
+                android:text="@string/productinfo_commentaries_item_postingdate"
                 android:textSize="12sp"
                 android:layout_marginLeft="5dp"
 				android:layout_width="wrap_content"
@@ -43,24 +45,26 @@
         </LinearLayout>
         
 		<Button 
-			android:text="X"
+		    android:id="@+id/productinfo_commentaries_item_delete"
+			android:text="@string/productinfo_commentaries_item_delete"
 			android:textSize="16sp"
 			android:padding="0dp"
     		android:minWidth="0dp"
     		android:minHeight="0dp"
-    		android:background="#FFF"
+    		android:background="@null"
     		android:layout_marginTop="0dp"
     		android:layout_marginBottom="0dp"
 			android:layout_marginRight="5dp"
 			android:layout_marginLeft="5dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content" 
- 			/>       
+ 			/>
+		
     </LinearLayout>
 
 	<TextView 
 	    android:id="@+id/productinfo_commentaries_item_text"
-		android:text="Comentario"
+		android:text="@string/productinfo_commentaries_item_body"
 		android:textSize="16sp"
 		android:layout_marginTop="5dp"
 		android:layout_marginRight="10dp"

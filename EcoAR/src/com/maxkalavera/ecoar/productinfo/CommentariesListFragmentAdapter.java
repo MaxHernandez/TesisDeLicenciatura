@@ -13,15 +13,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+
+class DeleteElementListener implements View.OnClickListener {
+	CommentariesListFragment commentariesListFragment;
+	
+	public DeleteElementListener(CommentariesListFragment commentariesListFragment) {
+		this.commentariesListFragment = commentariesListFragment;
+	}
+	
+	public void onClick(View view) {
+		Integer position = (Integer) view.getTag();
+		
+		this.commentariesListFragment.deleteComment(position);
+	}
+}
 
 public class CommentariesListFragmentAdapter extends ArrayAdapter<List<CommentModel>> {
 
+	private String username;
+	
 	/************************************************************
 	 *
 	 ************************************************************/
-	CommentariesListFragmentAdapter(Context context, List<CommentModel> commentariesList) {
-		super(context, R.layout.productinfo_commentaries_item, (List)commentariesList);
+	CommentariesListFragmentAdapter(CommentariesListFragment commentariesListFragment,
+			List<CommentModel> commentariesList,
+			String username) {
+		super(commentariesListFragment.getActivity(), R.layout.productinfo_commentaries_item, (List)commentariesList);
+		this.username = username;
 	}
 	
 	
@@ -41,8 +61,13 @@ public class CommentariesListFragmentAdapter extends ArrayAdapter<List<CommentMo
 		TextView text = (TextView) convertView.findViewById(R.id.productinfo_commentaries_item_text);
 		
 		username.setText(commentary.username);
-		postingDate.setText(commentary.getDateAsString());
+		postingDate.setText(commentary.getDateAsToShow());
 		text.setText(commentary.body);
+		
+		if (commentary.username.equals(this.username)) {
+			Button deleteButton = (Button) convertView.findViewById(R.id.productinfo_commentaries_item_delete);
+			deleteButton.setTag( Integer.valueOf(position));
+		}
 		
 		return convertView;
 	}

@@ -1,31 +1,19 @@
 package com.maxkalavera.utils.searchobtainers;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Log;
-import android.util.Pair;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.ImageDownloader;
-import com.maxkalavera.utils.httprequest.ResponseBundle;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -33,8 +21,26 @@ import com.squareup.okhttp.Response;
 public class AmazonSearchObtainer {
 	String url;
 	
+	private static final String SHOPING_SERVICE = "AMAZON";
+	private static final String SHOPING_SERVICE_INDEX = "AMZN";
+	private static final int GENERAL_ID_NUMBER_CHARS = 16;
+	
 	public AmazonSearchObtainer(Context context) {
 		this.url = context.getResources().getString(R.string.amazonurl);
+	}
+	
+	public String buildGeneralId(String strId) {
+		String output = "";
+		if (strId.length() > AmazonSearchObtainer.GENERAL_ID_NUMBER_CHARS) {
+			return null;
+		}
+		
+		for (int i=0; i < (AmazonSearchObtainer.GENERAL_ID_NUMBER_CHARS - strId.length()) ;i++){
+			output = output + "0";
+		}
+		output = AmazonSearchObtainer.SHOPING_SERVICE_INDEX + output + strId;
+		
+		return output;
 	}
 	
 	public ArrayList<ProductModel> getData(String query, int page){
@@ -66,26 +72,34 @@ public class AmazonSearchObtainer {
 	private ArrayList<ProductModel> parseHTML(String html){
 		ArrayList<ProductModel> data = new ArrayList<ProductModel>();
 		Document doc = Jsoup.parse(html);
+		
 		Elements products = doc.select("div[class=s-item-container]");
 		for (Element product : products) {
 			ProductModel pdata = new ProductModel();
+			pdata.shopingService = AmazonSearchObtainer.SHOPING_SERVICE;
 			
 			Element productNameElementContainer = product.select("a[class=a-link-normal s-access-detail-page a-text-normal]").first();
 			if (productNameElementContainer != null) {
-				Element productNameElement = productNameElementContainer .select("h2").first();
-				pdata.name = productNameElement.text();
-			
+				Element aElement = productNameElementContainer.select("a[title]").first();
+				pdata.name = aElement.text();
+				pdata.url = aElement.attr("href");
+				
+				String[] urlParts = pdata.url.split("/");
+				String shopingServiceId = urlParts[urlParts.length-1];
+				pdata.generalId = this.buildGeneralId(shopingServiceId);
+				
+				Element spanBrother = productNameElementContainer.select("span:contains(Product Features)").first();
+				Element spanParent = spanBrother.parent();
+				pdata.description = spanParent.children().last().text();
+				
 				Element productImageURL = product.select("img").first();
 				pdata.imageURL = productImageURL.attr("src");
-			
 				pdata.image = ImageDownloader.downloadImage(pdata.imageURL);
-			
+				
 				data.add(pdata);
 			}
-			Log.i("EcoAR-Search-Data", pdata.name);
-			Log.i("EcoAR-Search-Data", pdata.imageURL);
 		}
 		return data;
 	}
 	
-}
+};

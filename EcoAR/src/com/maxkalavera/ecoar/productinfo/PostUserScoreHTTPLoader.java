@@ -21,7 +21,8 @@ public class PostUserScoreHTTPLoader extends HttpRequestLoader  {
 	
 	public PostUserScoreHTTPLoader(Context context, RequestParamsBundle requestBundle, ProductModel product) {
 		super(context, 
-				context.getResources().getString(R.string.webservice_login),// ERROR MODIFICAR
+				context.getResources().getString(R.string.webservice) +
+				context.getResources().getString(R.string.webservice_product_info_post),// ERROR MODIFICAR
 				POST,
 				requestBundle); 
 		this.setCookiesOn();

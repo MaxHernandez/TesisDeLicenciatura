@@ -2,10 +2,11 @@ package com.maxkalavera.ecoar.login;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.ecoar.signup.SignUp;
+import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.UserSessionDAO;
+import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
 
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +36,8 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 	TextView errorText;
 	UserSessionDAO userSession;
 	
+	static final int SEND_REQUEST = 1;
+	
 	/************************************************************
 	 * Constructor Method
 	 ************************************************************/
@@ -41,14 +45,13 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         
-        RequestParamsBundle paramsBundle = null;
-        
         this.userSession = new UserSessionDAO(getActivity());
 		this.usernameEditText = (EditText) getActivity().findViewById(R.id.login_username);
 		this.passwordEditText = (EditText) getActivity().findViewById(R.id.login_password);
 		
 		this.sendButton = (Button) getActivity().findViewById(R.id.login_send);
 		this.sendButton.setOnClickListener(this);
+		
 		this.progressBar = (ProgressBar) getActivity().findViewById(R.id.login_progressbar);
 		this.errorText = (TextView) getActivity().findViewById(R.id.login_errortext);
 		
@@ -59,8 +62,10 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
     }
 	
     // Method to set inner layout of the fragment
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	super.onCreateView(inflater, container, savedInstanceState);
     	return inflater.inflate(R.layout.login, container, false);
     }
     
@@ -76,23 +81,21 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 	 * Method that reacts when the send button is pressed
 	 ************************************************************/	
 	private void send() {
+		Log.i("LOGIN_FRAGMENT", "Send");
 		this.usernameEditText.setEnabled(false);
 		this.passwordEditText.setEnabled(false);
 		this.progressBar.setVisibility(View.VISIBLE);
         this.sendButton.setVisibility(View.GONE);
-        this.errorText.setVisibility(View.INVISIBLE);
+        this.errorText.setVisibility(View.GONE);
         
-		if (this.paramsBundle == null) {
-			this.paramsBundle = new RequestParamsBundle();
-			this.paramsBundle.addJSONParam("username", this.usernameEditText.getText().toString());
-			this.paramsBundle.addJSONParam("password", this.passwordEditText.getText().toString());
-			getLoaderManager().initLoader(1, null, this);
-		} else {
-			this.paramsBundle = new RequestParamsBundle();
-			this.paramsBundle.addJSONParam("username", this.usernameEditText.getText().toString());
-			this.paramsBundle.addJSONParam("password", this.passwordEditText.getText().toString());
-			getLoaderManager().restartLoader(1, null, this);			
-		}
+		this.paramsBundle = new RequestParamsBundle();
+		this.paramsBundle.addJSONParam("username", this.usernameEditText.getText().toString());
+		this.paramsBundle.addJSONParam("password", this.passwordEditText.getText().toString());
+		
+		Log.i("LOGIN_FRAGMENT-Username", this.usernameEditText.getText().toString());
+		Log.i("LOGIN_FRAGMENT-Password", this.passwordEditText.getText().toString());
+		
+		getLoaderManager().restartLoader(SEND_REQUEST, null, this);			
 		
 	}
 	
@@ -103,7 +106,8 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 	public void onClick(View v) {
 		switch(v.getId()) {
 			case R.id.login_send:
-				send();
+				Log.i("LOGIN_FRAGMENT", "Send Called");
+				this.send();
 				break;
 			case R.id.login_singuptext:
 				//final Intent intentSingUp = new Intent(Intent.ACTION_VIEW).setData(
@@ -133,6 +137,9 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 			case 0:
 				return null;
 			case 1:
+				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
+					return null;
+				Log.i("LOGIN_FRAGMENT", "Loader On");
 				LoginFragmentHTTPLoader loader = 
 					new LoginFragmentHTTPLoader(getActivity(), this.paramsBundle);
 				loader.forceLoad();

@@ -1,7 +1,6 @@
 package com.maxkalavera.utils.database.jsonmodels;
 
 import com.google.gson.Gson;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
 
 public class SearchCameraResponseJsonModel implements BaseResponseJsonModel  {
 	

@@ -23,22 +23,34 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.mainTheme" 
-        >
+        >        
+        <activity
+            android:name="com.maxkalavera.ecoar.groceries.Groceries"
+            android:label="@string/app_name" 
+            >
+        </activity>
         
         <activity
             android:name="com.maxkalavera.ecoar.home.Home"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+             >
         </activity>
         
         <activity
             android:name="com.maxkalavera.ecoar.login.Login"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            >
+        </activity>
+        
+        <activity
+            android:name="com.maxkalavera.ecoar.login.LoginIntro"
+            android:label="@string/app_name" 
             >
         </activity>
         
         <activity
             android:name="com.maxkalavera.ecoar.main.Main"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,7 +59,7 @@
         </activity>
 
         <activity
-            android:name="com.maxkalavera.ecoar.ShowProductInfo"
+            android:name="com.maxkalavera.ecoar.productinfo.ProductInfo"
             android:label="@string/app_name" >
             >
         </activity>
@@ -60,6 +72,12 @@
         
         <activity
             android:name="com.maxkalavera.ecoar.searchcamera.SearchCamera"
+            android:label="@string/app_name" >
+            >
+        </activity>
+        
+        <activity
+            android:name="com.maxkalavera.ecoar.signup.SignUp"
             android:label="@string/app_name" >
             >
         </activity>

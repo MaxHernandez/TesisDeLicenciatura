@@ -19,8 +19,9 @@ import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
-import com.maxkalavera.ecoar.login.jsonmodels.LoginErrorsJsonModel;
+import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.UserSessionDAO;
+import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.SignUpErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
@@ -32,12 +33,18 @@ public class SignUp extends BaseActivity implements LoaderCallbacks<ResponseBund
 	private static final String Male = "male";
 	private static final String Female = "female";
 	private static final int SEND_DATA = 0;
+	private static final int ELDERST_AGE = 115;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState, R.layout.signup);
+		
+		DatePicker birthday = (DatePicker) findViewById(R.id.signup_birthday);
+		Calendar calendar = Calendar.getInstance(); 
+		birthday.setMinDate(calendar.get(Calendar.YEAR)-ELDERST_AGE);
+	    birthday.setMaxDate(calendar.get(Calendar.YEAR));
 	}
 	
-	public void sendData() {
+	public void sendData() {		
 		this.getSupportLoaderManager().initLoader(SEND_DATA, null, this);
 	}
 	
@@ -125,8 +132,12 @@ public class SignUp extends BaseActivity implements LoaderCallbacks<ResponseBund
 	 ************************************************************/
 	@Override
 	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle args) {
+		
 		switch (loaderID) {
 			case 0:
+				if(!InternetStatusChecker.checkInternetStauts(this))
+					return null;
+				
 				clearCorretions();
 				
 				UserDataJsonModel userData = new UserDataJsonModel();
@@ -178,10 +189,9 @@ public class SignUp extends BaseActivity implements LoaderCallbacks<ResponseBund
 				Button sendButton = (Button) findViewById(R.id.signup_send_button);
 				sendButton.setVisibility(View.GONE);
 				
-				//LoginFragmentHTTPLoader loader = 
-				//	new LoginFragmentHTTPLoader(getActivity(), this.paramsBundle);
-				//loader.forceLoad();
-				//return loader;
+				PostFormHTTPLoader postFormHTTPLoader = 
+					new PostFormHTTPLoader(this, paramsBundle);
+				postFormHTTPLoader.forceLoad();
 				return null;
 			default:
 				return null;
