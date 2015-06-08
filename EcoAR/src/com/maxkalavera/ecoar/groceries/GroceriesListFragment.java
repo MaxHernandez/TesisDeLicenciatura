@@ -14,17 +14,21 @@ import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 public class GroceriesListFragment extends ListFragment implements 
-LoaderManager.LoaderCallbacks<List<ProductModel>> {
+	LoaderManager.LoaderCallbacks<List<ProductModel>>,
+	OnClickListener {
 	
 	List<ProductModel> valuesList;
 	GroceriesListFragmentAdapter adapter;
@@ -40,19 +44,42 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        this.setUp();
+    }
+    
+    public void setUp(){
         this.valuesList = new ArrayList<ProductModel>();
         
 		this.adapter = new GroceriesListFragmentAdapter(this,
 				(ArrayList<ProductModel>) this.valuesList);
         this.setListAdapter(this.adapter);
         
+        getView().findViewById(R.id.groseries_keepsearching).setOnClickListener(this);
+        getView().findViewById(R.id.groseries_clear).setOnClickListener(this);
+        
         // recupera los productos de la base de datos 
         this.getProducts();
-        
-        //registerForContextMenu(this.getListView());
+    	
     }
 
-    
+	/************************************************************
+	 * OnClickListener
+	 ************************************************************/
+	@Override
+	public void onClick(View view) {
+		switch(view.getId()) {
+			case R.id.groseries_keepsearching:
+				this.keepSearching();
+				break;
+			
+			case R.id.groseries_clear:
+				this.clearList();
+				break;
+				
+			default:
+				break;
+		}
+	}
 	/************************************************************
 	 * OnCreateView 
 	 ************************************************************/
@@ -66,28 +93,13 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
     }
     
 	/************************************************************
-	 *  Option Menu in elements of the list
-	 ************************************************************/ 
-    /*
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		
-		this.getActivity().getMenuInflater().
-		inflate(R.menu.groceries_list_floatingmenu , menu);
-	}
- 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-    	AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-    	switch(item.getItemId()){
-    		case R.id.groceries_list_floatingmenu_delete:
-    			this.removeProduct(info.position);
-    			break;
-    	}
-    	return true;
-	}
-	*/
+	 *  
+	 ************************************************************/    
+    public void keepSearching() {
+    	Intent intent = new Intent();
+    	intent.setClass(this.getActivity(), SearchBar.class);
+    	this.startActivity(intent);
+    }
     
 	/************************************************************
 	 *  
@@ -96,43 +108,36 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
     	Bundle params = new Bundle();
     	params.putInt(GroceriesListFragmentRemoveElementLoader.POSITION,
     			position);
-    	this.getLoaderManager().initLoader(GroceriesListFragment.LOADER_REMOVE, params, this);
+    	this.getLoaderManager()
+    		.restartLoader(GroceriesListFragment.LOADER_REMOVE, params, this);
     }
     
-    public void modifyElement(int position, boolean checkboxValue) {
-    	ProductModel product = this.valuesList.get(position);
-    	product.setChecked(checkboxValue);
-    	
+	/************************************************************
+	 *  
+	 ************************************************************/
+    public void modifyElement(int position) {    	
     	Bundle params = new Bundle();
     	params.putInt(GroceriesListFragmentModifyElementLoader.POSITION,
     			position);
-    	this.getLoaderManager().initLoader(GroceriesListFragment.LOADER_REMOVE, params, this);
+    	this.getLoaderManager()
+    		.restartLoader(GroceriesListFragment.LOADER_MODIFY_ELEMENT, params, this);
     }
     
 	/************************************************************
 	 *  
 	 ************************************************************/ 
     public void getProducts() {
-    	this.getLoaderManager().initLoader(GroceriesListFragment.LOADER_GET, null, this);
-    }
-    
-	/************************************************************
-	 *  
-	 ************************************************************/    
-    public void keepSearching(View v) {
-    	Intent intent = new Intent();
-    	intent.setClass(this.getActivity(), SearchBar.class);
-    	this.startActivity(intent);
+    	this.getLoaderManager()
+    		.restartLoader(GroceriesListFragment.LOADER_GET, null, this);
     }
 
 	/************************************************************
 	 *  
 	 ************************************************************/    
-    public void clearList(View v) {
-    	if (this.valuesList != null){
-    		this.getLoaderManager()
-    			.initLoader(GroceriesListFragment.LOADER_CLEAR, null, this);
-    	}
+    public void clearList() {
+    	getView().findViewById(R.id.groseries_clear).setOnClickListener(null);
+    	this.getLoaderManager()
+    		.restartLoader(GroceriesListFragment.LOADER_CLEAR, null, this);
     }
     
 	/************************************************************
@@ -155,7 +160,7 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
 				return loaderRemove;
 			case GroceriesListFragment.LOADER_CLEAR:
 				GroceriesListFragmentClearListLoader loaderClean = 
-					new GroceriesListFragmentClearListLoader(this.getActivity());
+					new GroceriesListFragmentClearListLoader(this.getActivity(), this.valuesList);
 				loaderClean.forceLoad();
 				return loaderClean;
 			case GroceriesListFragment.LOADER_MODIFY_ELEMENT:
@@ -170,24 +175,31 @@ LoaderManager.LoaderCallbacks<List<ProductModel>> {
 
 	@Override
 	public void onLoadFinished(Loader<List<ProductModel>> loader, List<ProductModel> loaderRes) {
-		if (loaderRes != null) {
-		    switch (loader.getId()) {
+		switch (loader.getId()) {
 	        case GroceriesListFragment.LOADER_GET:
-				this.valuesList = loaderRes;
-				this.adapter.notifyDataSetChanged();
+				//this.valuesList = loaderRes;
+	        	if (loaderRes != null) {
+	        		this.valuesList.addAll(loaderRes);
+					this.adapter.notifyDataSetChanged();
+	        	}
 	            break;
+	            
 	        case GroceriesListFragment.LOADER_REMOVE:
-	        	this.valuesList = loaderRes;
+	        	//this.valuesList = loaderRes;
 				this.adapter.notifyDataSetChanged();
 	            break;
+	            
 	        case GroceriesListFragment.LOADER_CLEAR:
-				this.valuesList.clear();
+	        	getView().findViewById(R.id.groseries_clear).setOnClickListener(this);
 				this.adapter.notifyDataSetChanged();
 	            break;
+	            
+	        case GroceriesListFragment.LOADER_MODIFY_ELEMENT:
+				this.adapter.notifyDataSetChanged();
+	            break;
+	            
 	        default:
 	            break;
-	    }
-
 		}
 	}
 

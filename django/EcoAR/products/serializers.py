@@ -9,7 +9,7 @@ class GeneralIdCheker(serializers.Serializer):
 
 class CommentIdChecker(serializers.Serializer):
 
-	server_id 	= serializers.IntegerField(required=True)
+	id 	= serializers.IntegerField(required=True)
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -51,7 +51,6 @@ class PostProductScore(serializers.Serializer):
 				product_model.users_score_model.four +
 				product_model.users_score_model.five) / 5.0
 			product_model.save()
-			del self.data['own_score']
 			self.data['users_score'] = product_model.users_score
 			return True
 		else:
@@ -79,10 +78,14 @@ class CommentSeralizer(serializers.ModelSerializer):
 			for comment in self.data:
 				comment['username'] = comment['user']['username']
 				del comment['user']
+				comment["posting_date"] = {'value':comment["posting_date"]}
+				#comment['server_id'] = comment.pop('id')
 		else:
 			comment = self.data
 			comment['username'] = comment['user']['username']
 			del comment['user']
+			comment["posting_date"] = {'value':comment["posting_date"]}
+			#comment['server_id'] = comment.pop('id')
 
 #class CommentListSerializer(serializers.ModelSerializer):
 #	"""Esta clase ahora no tiene ninguna funcionalidad."""

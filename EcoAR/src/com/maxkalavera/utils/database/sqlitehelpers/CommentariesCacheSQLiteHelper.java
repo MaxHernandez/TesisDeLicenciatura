@@ -27,14 +27,14 @@ public class CommentariesCacheSQLiteHelper extends SQLiteOpenHelper {
 	// la siguiente variable.
 	// El ultimo campo siempre se cierra con ");", si se llega a poner 
 	// una coma despues del campo generara un error al crear la tabla.  
-	private static final String DATABASE_CREATE = 
+	public static final String DATABASE_CREATE = 
 			"create table " + TABLE_COMMENTERIES + "("
-			+ COMMENT_ID + " integer primary key autoincrement, " 
-			+ COMMENT_PRODUCT_REFERENCE + "integer not null, "
-			+ COMMENT_BODY + "text not null, "
-			+ COMMENT_USERNAME + "text not null, "
-			+ COMMENT_POSTING_DATE + "text not null, "
-			+ COMMENT_SERVER_ID + "integer not null "
+			+ COMMENT_ID + " " + " integer primary key autoincrement, " 
+			+ COMMENT_PRODUCT_REFERENCE + " " + "integer not null, "
+			+ COMMENT_BODY + " " + "text not null, "
+			+ COMMENT_USERNAME + " " + "text not null, "
+			+ COMMENT_POSTING_DATE + " " + "text not null, "
+			+ COMMENT_SERVER_ID + " " + "integer not null "
 			+ ");";   
 
 	/********************************************************
@@ -49,6 +49,8 @@ public class CommentariesCacheSQLiteHelper extends SQLiteOpenHelper {
 	 ********************************************************/
 	@Override
 	public void onCreate(SQLiteDatabase database) {
+		database.execSQL(ProductCacheSQLiteHelper.DATABASE_CREATE);
+		database.execSQL(ProductInfoCacheSQLiteHelper.DATABASE_CREATE);
 		database.execSQL(DATABASE_CREATE);
 	}
 

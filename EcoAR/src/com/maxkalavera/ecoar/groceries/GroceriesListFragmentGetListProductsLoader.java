@@ -16,8 +16,11 @@ public class GroceriesListFragmentGetListProductsLoader  extends AsyncTaskLoader
 	}
 
 	public List<ProductModel> loadInBackground() {
-		GroceriesListDAO groceriesListDAO = new GroceriesListDAO(this.getContext()); 
-		return groceriesListDAO.getAllProducts();
+		GroceriesListDAO groceriesListDAO = new GroceriesListDAO(this.getContext());
+		groceriesListDAO.open();
+		List<ProductModel> productList = groceriesListDAO.getAllProducts();
+		groceriesListDAO.close();
+		return productList;
 	}
 	
 }

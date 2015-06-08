@@ -9,6 +9,7 @@ import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
 import com.maxkalavera.utils.InternetStatusChecker;
+import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.httprequest.InternetStatus;
@@ -43,12 +44,14 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 	 * Constructor Method
 	 ************************************************************/
 	public void onCreate(Bundle savedInstanceState) {
+		// Uso esta forma configurar el layout para 
+		// saltarme la creacion del SlideMenu
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main);	
 		
-		this.setOptionsMenuFlagOff();		
 		this.initCoockieSyncManager();
 		
+		// To disable ActionBar
 		ActionBar actionBar = this.getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false); 
 		actionBar.setDisplayShowHomeEnabled(false);
@@ -57,6 +60,11 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 		getSupportLoaderManager().initLoader(1, null, this);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return false;
+	}
+	
 	/************************************************************
 	 * Loading HTTP requests Methods
 	 ************************************************************/
@@ -111,19 +119,20 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 				Intent intent = new Intent();
 				intent.setClass(this, Home.class);
 				startActivity(intent);
+				finish();
 			}else{
 				this.userSession.setSessionStatus(false);
 				Intent intent = new Intent();
 				intent.setClass(this, LoginIntro.class);
 				startActivity(intent);
+				finish();
 			}
 		}else{
 			//Error al recuperar los datos de usuario del servidor
-			this.userSession.setSessionStatus(false);
 			Intent intent = new Intent();
-			intent.setClass(this, LoginIntro.class);
+			intent.setClass(this, Home.class);
 			startActivity(intent);
-			
+			finish();
 		}
 		
 	}

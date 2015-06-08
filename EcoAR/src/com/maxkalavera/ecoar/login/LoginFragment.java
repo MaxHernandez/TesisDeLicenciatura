@@ -1,15 +1,19 @@
 package com.maxkalavera.ecoar.login;
 
+import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.ecoar.signup.SignUp;
 import com.maxkalavera.utils.InternetStatusChecker;
+import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,8 +37,6 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 	ProgressBar progressBar;
 	EditText usernameEditText;
 	EditText passwordEditText;
-	TextView errorText;
-	UserSessionDAO userSession;
 	
 	static final int SEND_REQUEST = 1;
 	
@@ -44,8 +46,6 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        
-        this.userSession = new UserSessionDAO(getActivity());
 		this.usernameEditText = (EditText) getActivity().findViewById(R.id.login_username);
 		this.passwordEditText = (EditText) getActivity().findViewById(R.id.login_password);
 		
@@ -53,7 +53,6 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 		this.sendButton.setOnClickListener(this);
 		
 		this.progressBar = (ProgressBar) getActivity().findViewById(R.id.login_progressbar);
-		this.errorText = (TextView) getActivity().findViewById(R.id.login_errortext);
 		
 		TextView singuptext = (TextView) getActivity().findViewById(R.id.login_singuptext);
 		singuptext.setOnClickListener(this);
@@ -73,27 +72,37 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 	 * Method used to save the data needed to make the login 
 	 ************************************************************/
     
-    private void saveLogin() {
-    	this.userSession.setSessionStatus(true);
+    private void saveLogin(UserDataJsonModel userDataJM) {
+        // Get User Profile data Object 
+        Activity tempAct = this.getActivity();
+        BaseActivity activity = (BaseActivity) tempAct; 
+        UserDataDAO userDM = activity.getUserDataManager();
+        
+        if (userDM.existUserDataProfile())
+        	userDM.saveUserData(userDataJM);
+        else
+        	userDM.createUserDataProfile(userDataJM);
+    	
+    	UserSessionDAO userSession = new UserSessionDAO(getActivity()); 
+    	userSession.setSessionStatus(true);
     }
 
 	/************************************************************
 	 * Method that reacts when the send button is pressed
 	 ************************************************************/	
 	private void send() {
-		Log.i("LOGIN_FRAGMENT", "Send");
 		this.usernameEditText.setEnabled(false);
 		this.passwordEditText.setEnabled(false);
 		this.progressBar.setVisibility(View.VISIBLE);
         this.sendButton.setVisibility(View.GONE);
-        this.errorText.setVisibility(View.GONE);
+        
+        getActivity().findViewById(R.id.login_error_username).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.login_error_password).setVisibility(View.GONE);
+        getActivity().findViewById(R.id.login_non_field_errors).setVisibility(View.GONE);
         
 		this.paramsBundle = new RequestParamsBundle();
-		this.paramsBundle.addJSONParam("username", this.usernameEditText.getText().toString());
-		this.paramsBundle.addJSONParam("password", this.passwordEditText.getText().toString());
-		
-		Log.i("LOGIN_FRAGMENT-Username", this.usernameEditText.getText().toString());
-		Log.i("LOGIN_FRAGMENT-Password", this.passwordEditText.getText().toString());
+		this.paramsBundle.addJsonParam("username", this.usernameEditText.getText().toString());
+		this.paramsBundle.addJsonParam("password", this.passwordEditText.getText().toString());
 		
 		getLoaderManager().restartLoader(SEND_REQUEST, null, this);			
 		
@@ -106,7 +115,6 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 	public void onClick(View v) {
 		switch(v.getId()) {
 			case R.id.login_send:
-				Log.i("LOGIN_FRAGMENT", "Send Called");
 				this.send();
 				break;
 			case R.id.login_singuptext:
@@ -139,7 +147,7 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
 			case 1:
 				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
 					return null;
-				Log.i("LOGIN_FRAGMENT", "Loader On");
+				
 				LoginFragmentHTTPLoader loader = 
 					new LoginFragmentHTTPLoader(getActivity(), this.paramsBundle);
 				loader.forceLoad();
@@ -157,24 +165,47 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
         
         if (responseBundle.getResponse() != null) {
         	if (responseBundle.getResponse().isSuccessful()) {
+        		if (responseBundle.getResponseJsonObject() != null) {
+        			
+        			UserDataJsonModel userDataJM = 
+        					(UserDataJsonModel)responseBundle.getResponseJsonObject();
+            		this.saveLogin(userDataJM);
+            		
+            		Intent intent = new Intent();
+            		intent.setClass(getActivity(), Home.class);
+            		startActivity(intent);
+            		this.getActivity().finish();	
+        		} else {
+        			// Error al deserializar el Json
+        		}
         		
-        		this.saveLogin();
-        		
-        		Intent intent = new Intent();
-        		intent.setClass(getActivity(), Home.class);
-        		startActivity(intent);
         	}else{
         		LoginErrorsJsonModel loginErrorsJsonModel = 
         				(LoginErrorsJsonModel) responseBundle.getResponseJsonObject();
+        		
         		if (loginErrorsJsonModel != null) {
         			if (loginErrorsJsonModel.username != null) {
-        				this.errorText.setVisibility(View.VISIBLE);
-        				this.errorText.setText(loginErrorsJsonModel.username);
-        			} else if (loginErrorsJsonModel.password != null) {
-        				this.errorText.setVisibility(View.VISIBLE);
-        			} else if (loginErrorsJsonModel.non_field_errors != null) {
-        				this.errorText.setVisibility(View.VISIBLE);
-        			}        			
+        				TextView errorUsername = 
+        						(TextView) getActivity().findViewById(R.id.login_error_username);
+        				errorUsername.setVisibility(View.VISIBLE);
+        				errorUsername.setText(this.getResources().getText(R.string.login_error_username)+" "+
+    							loginErrorsJsonModel.username.get(0));
+        			} 
+        			if (loginErrorsJsonModel.password != null) {
+        				TextView errorPassword = 
+        						(TextView) getActivity().findViewById(R.id.login_error_password);
+        				errorPassword.setVisibility(View.VISIBLE);
+        				errorPassword.setText(this.getResources().getText(R.string.login_error_password)+" "+
+        						loginErrorsJsonModel.password.get(0));
+        			}
+        			if (loginErrorsJsonModel.non_field_errors != null) {
+        				TextView errorNonFieldErrors = 
+        						(TextView) getActivity().findViewById(R.id.login_non_field_errors);
+        				errorNonFieldErrors.setVisibility(View.VISIBLE);
+        				errorNonFieldErrors.setText(loginErrorsJsonModel.non_field_errors.get(0));
+        			}
+        		} else {
+        			// Error al deserializar el Json
         		}
         	}
         } else {

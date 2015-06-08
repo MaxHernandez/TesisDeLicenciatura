@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.maxkalavera.utils.database.jsonmodels.BaseResponseJsonModel;
 
 public class UsersScoreModel implements BaseResponseJsonModel  {
-	public float usersScore  = (float) 0.0;
-	public Float ownScore  = null;	
+	public float users_score  = (float) 0.0;
+	public int own_score  = -1;	
 	
 	@Override
 	public UsersScoreModel deserialize(String plainJson) {

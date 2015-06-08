@@ -30,9 +30,10 @@ public class RequestParamsBundle {
 		return this.uriParamsMap;
 	}
 	
-	public void addURIParam(String name, String value) {
+	public void addUriParam(String name, String value) {		
 		if (this.uriParamsMap == null)
 			this.uriParamsMap = new HashMap<String, String>();
+		
 		this.uriParamsMap.put(name, value);
 	}
 
@@ -41,10 +42,10 @@ public class RequestParamsBundle {
 	 ************************************************************/
 
 	public HashMap<String, String> getJSONParamsMap() {
-		return this.uriParamsMap;
+		return this.jsonParamsMap;
 	}
 	
-	public void addJSONParam(String name, String value) {
+	public void addJsonParam(String name, String value) {		
 		if (this.jsonParamsMap == null)
 			this.jsonParamsMap = new HashMap<String, String>();
 		this.jsonParamsMap.put(name, value);
@@ -57,10 +58,13 @@ public class RequestParamsBundle {
 		return this.jsonModelMap;
 	}
 		
+	
 	public void AddJsonModel(String name, BaseRequestJsonModel value) {
+	//public void AddJsonModel(BaseRequestJsonModel value) {		
 		if (this.jsonModelMap == null)
 			this.jsonModelMap = new HashMap<String, BaseRequestJsonModel>();
 		this.jsonModelMap.put(name, value);
+		//this.jsonModelMap.put("", value);
 	}
 	
 	/************************************************************
@@ -70,7 +74,7 @@ public class RequestParamsBundle {
 		return this.rawDataParamsList;
 	}
 	
-	public void addPart(byte[] data, String mediatype, String name, String filename) {
+	public void addPart(byte[] data, String mediatype, String name, String filename) {		
 		if (this.rawDataParamsList == null)
 			this.rawDataParamsList = new ArrayList<RawDataModel>();
 		this.rawDataParamsList.add(new RawDataModel(data, mediatype, name, filename));

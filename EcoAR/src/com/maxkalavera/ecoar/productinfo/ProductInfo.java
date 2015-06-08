@@ -16,6 +16,7 @@ import com.maxkalavera.utils.httprequest.ResponseBundle;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
@@ -33,13 +34,18 @@ import android.util.Log;
 
 public class ProductInfo extends BaseActivity implements 
 	LoaderManager.LoaderCallbacks<ResponseBundle>, 
-	OnRatingBarChangeListener{
+	OnRatingBarChangeListener,
+	Runnable
+	{
 	
 	private ProductModel product;
 	private ProductInfoModel productInfo;
+	private int requestOwnScore = -1;
 	
 	private final static int GET_PRODUCT_INFO = 1;
 	private final static int POST_USER_SCORE = 2;
+	
+	public static final String PRODUCT_KEYWORD = "product";
 	
 	/************************************************************
 	 * Constructor Method
@@ -52,11 +58,12 @@ public class ProductInfo extends BaseActivity implements
 		
 		try{
 			this.product =  
-					(ProductModel) getIntent().getParcelableExtra("product");
+					(ProductModel) getIntent().getParcelableExtra(PRODUCT_KEYWORD);
 		} catch(Exception e){
-			Log.e("EcoAr:", e.toString());
+			e.printStackTrace();
 		}
 		
+		//setUp(); // ELIMINAR
 		if (this.product != null)
 			getSupportLoaderManager().initLoader(GET_PRODUCT_INFO, null, this);
 	}
@@ -81,30 +88,28 @@ public class ProductInfo extends BaseActivity implements
 		.setText(product.shopingService);
 		((TextView) findViewById(R.id.productinfo_referenceurl))
 		.setText(product.url);
-		
+			
 		if (this.productInfo == null)
 			return;
 		
+		RatingBar ratingBar = (RatingBar) findViewById(R.id.productinfo_ratingbar);
+		
 		// productinfo_ecologicalscore.xml
 		((TextView) findViewById(R.id.productinfo_ecologicalscore))
-			.setText(String.valueOf(this.productInfo.ecologicalScore));
+			.setText(String.valueOf(this.productInfo.ecological_score));
+
+		if (this.productInfo.usersScore == null)
+			return;
 		
 		// productinfo_userscore.xml
 		((TextView) findViewById(R.id.productinfo_usersscore))
-			.setText(String.valueOf(this.productInfo.usersScore.usersScore));
+			.setText(String.valueOf(this.productInfo.usersScore.users_score));
 		
-		RatingBar ratingBar = (RatingBar) findViewById(R.id.productinfo_ratingbar);
+		if (this.productInfo.usersScore.own_score != -1)
+			return;
 		
-		if (this.productInfo.usersScore.ownScore == null) {
-			ratingBar.setOnRatingBarChangeListener(this);
-		} else {
-			ratingBar.setRating(this.productInfo.usersScore.ownScore);
-			
-			//TextView ratingBarText = (TextView) findViewById(R.id.productinfo_ratingbartext);
-			//ratingBarText.setText(
-			//		String.valueOf(this.productInfo.usersScore.ownScore.intValue())+"/5");
-		}
-		
+		ratingBar.setRating(this.productInfo.usersScore.own_score);
+		ratingBar.setOnRatingBarChangeListener(null);
 	}
 	
 	/************************************************************
@@ -126,9 +131,28 @@ public class ProductInfo extends BaseActivity implements
 	 ************************************************************/
 	@Override
 	public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-		this.productInfo.usersScore.ownScore = rating;
+		RatingBar ratingBarView = (RatingBar) findViewById(R.id.productinfo_ratingbar);
+		ratingBarView.setOnRatingBarChangeListener(null);
+		
+		this.requestOwnScore = (int) rating;
 		getSupportLoaderManager().initLoader(POST_USER_SCORE, null, this);
 	}	
+	
+	/************************************************************
+	 * Run
+	 ************************************************************/
+    public void run() {
+		//CommentariesDialogFragment commentariesDialogFragment = new CommentariesDialogFragment();
+    	CommentariesDialogFragment commentariesDialogFragment = new CommentariesDialogFragment();
+    	commentariesDialogFragment.setRetainInstance(true);
+
+    	Bundle paramsBundle = new Bundle();
+    	paramsBundle.putParcelable(PRODUCT_KEYWORD, this.product);
+    	
+    	commentariesDialogFragment.setArguments(paramsBundle);
+		commentariesDialogFragment.show(getSupportFragmentManager(), 
+				getResources().getString(R.string.productinfo_commentarieslist_title));
+    }
 	
 	/************************************************************
 	 * Loading HTTP requests Methods
@@ -141,22 +165,23 @@ public class ProductInfo extends BaseActivity implements
 					return null;
 				
 				RequestParamsBundle paramsBundleGetProductInfo = new RequestParamsBundle();
-				paramsBundleGetProductInfo.addURIParam("general_id", this.product.generalId);
-				GetProductInfoHTTPLoader getProductInfoHTTPLoader = 
-						new GetProductInfoHTTPLoader(this, paramsBundleGetProductInfo, this.product);
-				getProductInfoHTTPLoader.forceLoad();
-				return getProductInfoHTTPLoader;
+				paramsBundleGetProductInfo.addUriParam("general_id", this.product.generalId);
+				ProductInfoGetInfoHTTPLoader productInfoGetInfoHTTPLoader = 
+						new ProductInfoGetInfoHTTPLoader(this, paramsBundleGetProductInfo, this.product);
+				
+				productInfoGetInfoHTTPLoader.forceLoad();
+				return productInfoGetInfoHTTPLoader;
 				
 			case POST_USER_SCORE:
 				if(!InternetStatusChecker.checkInternetStauts(this))
 					return null;
 				
 				RequestParamsBundle paramsBundlePostUserScore = new RequestParamsBundle();
-				paramsBundlePostUserScore.addJSONParam("general_id", this.product.generalId);
-				paramsBundlePostUserScore.addJSONParam("own_score", this.productInfo.usersScore.ownScore.toString());
-				PostUserScoreHTTPLoader postUserScoreHTTPLoader = new PostUserScoreHTTPLoader(this, paramsBundlePostUserScore, this.product);
-				postUserScoreHTTPLoader.forceLoad();
-				return postUserScoreHTTPLoader;
+				paramsBundlePostUserScore.addJsonParam("general_id", this.product.generalId);
+				paramsBundlePostUserScore.addJsonParam("own_score", String.valueOf(this.requestOwnScore));
+				ProductInfoPostUserScoreHTTPLoader productInfoPostUserScoreHTTPLoader = new ProductInfoPostUserScoreHTTPLoader(this, paramsBundlePostUserScore, this.product);
+				productInfoPostUserScoreHTTPLoader.forceLoad();
+				return productInfoPostUserScoreHTTPLoader;
 				
 			default:
 				return null;
@@ -167,37 +192,61 @@ public class ProductInfo extends BaseActivity implements
 	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
 		switch (loader.getId()) {
 			case GET_PRODUCT_INFO:
-				if (responseBundle.getResponse().isSuccessful()) {
-					CommentariesListFragment commentariesFragment = (CommentariesListFragment) this.getSupportFragmentManager().
-							findFragmentById(R.id.productinfo_commentaries);
-					commentariesFragment.setUp(this.product);
-					
+				if (responseBundle.getResponse() != null && responseBundle.getResponse().isSuccessful()) {
+						if (responseBundle.getResponseJsonObject() != null) {
+							this.productInfo = 
+									(ProductInfoModel) responseBundle.getResponseJsonObject();
+						} else {
+							// Error al deserializar el json
+						}
+				} else {
 					if (responseBundle.getResponseJsonObject() != null) {
 						this.productInfo = 
-								(ProductInfoModel) responseBundle.getResponseJsonObject();
-						this.setUp();
+							(ProductInfoModel) responseBundle.getResponseJsonObject();
 					} else {
-						RatingBar ratingBar = (RatingBar) findViewById(R.id.productinfo_ratingbar);
-						ratingBar.setOnRatingBarChangeListener(null);
+						// Error al mandar la petición
 					}
 				}
+				
+				this.setUp();
+				
+				//CommentariesListFragment commentariesFragment = (CommentariesListFragment) this.getSupportFragmentManager().
+				//		findFragmentById(R.id.productinfo_commentaries);
+				//commentariesFragment.setUp(this.product); //ERROR, Descomentar esta linea cuando sea necesario
+				
+				CommentariesPrefaceListFragment commentariesPrefaceFragment = (CommentariesPrefaceListFragment) this.getSupportFragmentManager().
+						findFragmentById(R.id.productinfo_commentaries_preface);
+				commentariesPrefaceFragment.setUp(this.product); //ERROR, Descomentar esta linea cuando sea necesario
+				
+			    //new Handler().post(this);
+				
+				
 				break;
 				
 			case POST_USER_SCORE:
-				if (responseBundle.getResponse().isSuccessful() && 
+				if (responseBundle.getResponse() != null && 
+					responseBundle.getResponse().isSuccessful() && 
 					responseBundle.getResponseJsonObject() != null) {
+					
 					this.productInfo.usersScore = 
 							(UsersScoreModel) responseBundle.getResponseJsonObject();
 					
+					TextView ecologicalScore = (TextView) findViewById(R.id.productinfo_ecologicalscore);
+					ecologicalScore.setText(String.valueOf(this.productInfo.ecological_score));
+					
+					TextView usersScore = (TextView) findViewById(R.id.productinfo_usersscore);
+					usersScore.setText(String.valueOf(this.productInfo.usersScore.users_score));
+					
 					RatingBar ratingBar = (RatingBar) findViewById(R.id.productinfo_ratingbar);
-					ratingBar.setRating(this.productInfo.usersScore.ownScore);
+					ratingBar.setRating(this.productInfo.usersScore.own_score);
 					
-					//TextView ratingBarText = (TextView) findViewById(R.id.productinfo_ratingbartext);
-					//ratingBarText.setText(String.valueOf(this.productInfo.usersScore.ownScore.intValue())+"/5");
-					
-					((TextView) findViewById(R.id.productinfo_usersscore))
-						.setText(String.valueOf(this.productInfo.usersScore.usersScore));
 					ratingBar.setOnRatingBarChangeListener(null);
+				} else {
+					RatingBar ratingBar = (RatingBar) findViewById(R.id.productinfo_ratingbar);
+					ratingBar.setRating(0.0f);
+					ratingBar.setOnRatingBarChangeListener(this);
+					
+					// Error al recuperar la informacion del servidor.
 				}
 				break;
 				

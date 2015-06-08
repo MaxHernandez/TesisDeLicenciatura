@@ -4,6 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+	<RelativeLayout
+		android:gravity="center_horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="48dp" 
+		>    
+		<EditText
+			android:id="@+id/searchproduct_searchTextBar"
+			android:inputType="text"
+			android:textSize="18sp"
+			android:hint="@string/searchproduct_searchtextbar_hint"
+			android:layout_toLeftOf="@+id/searchproduct_searchButton"
+			android:layout_alignParentLeft="true"
+			android:layout_width="match_parent"
+			android:layout_height="48dp"
+			/>
+	    <Button
+			android:id="@+id/searchproduct_searchButton"
+			style="@style/ButtonTheme"
+			android:text="@string/searchbar_sendbutton"
+			android:textSize="18sp"
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp"
+			android:layout_marginLeft="10dp"
+			android:layout_alignParentRight="true"
+			android:layout_width="wrap_content"
+			android:layout_height="48dp"
+			/>
+	</RelativeLayout>
+	
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"

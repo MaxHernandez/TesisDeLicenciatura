@@ -1,10 +1,14 @@
 package com.maxkalavera.utils.database.jsonmodels;
+import java.util.List;
+
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 public class LoginErrorsJsonModel implements BaseResponseJsonModel {
-	public String username;
-	public String password;
-	public String non_field_errors;
+	public List<String> username;
+	public List<String> password;
+	public List<String> non_field_errors;
 	
 	@Override
 	public BaseResponseJsonModel deserialize(String plainJson) {

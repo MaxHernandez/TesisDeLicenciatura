@@ -19,7 +19,10 @@ public class ProductModel implements Parcelable {//implements Serializable {
 	
 	private long cache_id        = -1;
 	private long groceries_id    = -1;
+	
+	// For groceries only
 	private boolean groceries_checked = false;
+	public int number_of_products = 0;
 	
 	public long getCacheId() {
 		return this.cache_id;
@@ -47,54 +50,54 @@ public class ProductModel implements Parcelable {//implements Serializable {
 	
 	public ProductModel() {
 	}
+	
+	
 	/************************************************************
 	 * Parte del codigo que sirve para hace parceable
 	 ************************************************************/
-	public ProductModel(Parcel in) {		
-		this.name            = in.readString();
-		this.description     = in.readString(); 
-		this.shopingService  = in.readString();
-		this.url             = in.readString();
-		this.image           = ImageStringConverter.StringToBitMap(in.readString());
-		this.imageURL 	      = in.readString();
-		this.generalId       = in.readString();
-		
-		this.cache_id        = in.readLong();
-		this.groceries_id    = in.readLong();  
-	};
 	
-	@Override
-	public int describeContents() {
-	return 0;
-	}
-	 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {	 
-		dest.writeStringArray(
-				new String[]{this.name,
-						this.description, 
-						this.shopingService,
-						this.url,
-						ImageStringConverter.BitMapToString(this.image),
-						this.imageURL,
-						this.generalId,
-						String.valueOf(this.cache_id),
-						String.valueOf(this.groceries_id)
-						}
-				);
-	}
-	
-	public static final Parcelable.Creator<ProductModel> CREATOR = new Parcelable.Creator<ProductModel>() {
-		 
-		@Override
-		public ProductModel createFromParcel(Parcel source) {
-			return new ProductModel(source);
-		}
-		 
-		@Override
-		public ProductModel[] newArray(int size) {
-			return new ProductModel[size];
-		}
-	};
-	
+    protected ProductModel(Parcel in) {
+    	name = in.readString();
+        description = in.readString();
+        shopingService = in.readString();
+        url = in.readString();
+        image = (Bitmap) in.readValue(Bitmap.class.getClassLoader());
+        imageURL = in.readString();
+        generalId = in.readString();
+        cache_id = in.readLong();
+        groceries_id = in.readLong();
+        groceries_checked = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    	dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(shopingService);
+        dest.writeString(url);
+        dest.writeValue(image);
+        dest.writeString(imageURL);
+        dest.writeString(generalId);
+        dest.writeLong(cache_id);
+        dest.writeLong(groceries_id);
+        dest.writeByte((byte) (groceries_checked ? 0x01 : 0x00));
+    }
+    
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<ProductModel> CREATOR = new Parcelable.Creator<ProductModel>() {
+        @Override
+        public ProductModel createFromParcel(Parcel in) {
+            return new ProductModel(in);
+        }
+
+        @Override
+        public ProductModel[] newArray(int size) {
+            return new ProductModel[size];
+        }
+    };
 };

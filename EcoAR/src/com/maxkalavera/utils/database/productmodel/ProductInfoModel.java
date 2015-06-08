@@ -11,10 +11,11 @@ import com.maxkalavera.utils.database.jsonmodels.BaseRequestJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.BaseResponseJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonprimitives.DateJsonPrimitive;
+import com.maxkalavera.utils.database.jsonprimitives.UsersScoreModelJsonPrimitive;
 
 public class ProductInfoModel implements BaseResponseJsonModel {
 	public UsersScoreModel usersScore = null;
-	public float ecologicalScore = (float) 0.0;
+	public float ecological_score = (float) 0.0;
 	
 	//ProductModel product; referencia a product ID
 	private long product_id = -1;
@@ -54,8 +55,8 @@ public class ProductInfoModel implements BaseResponseJsonModel {
 	 ********************************************************/
 	@Override
 	public BaseResponseJsonModel deserialize(String plainJson) {
-		GsonBuilder gsonBuilder=new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(UsersScoreModel.class, DateJsonPrimitive.getInstance()); 
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(UsersScoreModel.class, UsersScoreModelJsonPrimitive.getInstance());
 		Gson gson = gsonBuilder.create();
 		return (BaseResponseJsonModel) gson.fromJson(plainJson, ProductInfoModel.class);
 	}

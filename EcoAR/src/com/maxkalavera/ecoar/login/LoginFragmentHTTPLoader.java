@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.jsonmodels.CSRFJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
+import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
@@ -36,7 +37,8 @@ public class LoginFragmentHTTPLoader extends HttpRequestLoader  {
 				requestBundle); 
 		this.setCookiesOn();
 		this.setCSRFOn();
-		this.setJsonResponseOn(new LoginErrorsJsonModel());
+		this.setJsonResponseOn(new UserDataJsonModel());
+		this.setJsonResponseServerErrorOn(new LoginErrorsJsonModel());
 	}
 	
 };

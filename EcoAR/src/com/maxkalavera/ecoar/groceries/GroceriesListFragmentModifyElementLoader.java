@@ -31,8 +31,9 @@ public class GroceriesListFragmentModifyElementLoader  extends AsyncTaskLoader<L
 			position = params.getInt("position");
 			
 			GroceriesListDAO groceriesListDAO = new GroceriesListDAO(this.getContext());
-			groceriesListDAO.updateScoreOnProduct(this.valuesList.get(position));
-			
+			groceriesListDAO.open();
+			groceriesListDAO.updateProduct(this.valuesList.get(position));
+			groceriesListDAO.close();
 		}
 		
 		return null;

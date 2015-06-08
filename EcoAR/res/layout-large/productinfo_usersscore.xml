@@ -38,6 +38,7 @@
 	<RatingBar
 		android:id="@+id/productinfo_ratingbar"
 		android:numStars="5"
+		android:stepSize="1"
 		android:isIndicator="false" 
 		android:layout_marginTop="10dp"
 		android:layout_width="wrap_content"

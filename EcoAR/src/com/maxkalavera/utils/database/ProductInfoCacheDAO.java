@@ -24,6 +24,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class ProductInfoCacheDAO {
 	private Context context;
@@ -58,7 +59,12 @@ public class ProductInfoCacheDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/
-	public ProductInfoModel addProductInfo(ProductInfoModel productInfo) {	
+	public ProductInfoModel addProductInfo(ProductInfoModel productInfo, ProductModel product) {	
+		if (productInfo == null || productInfo.usersScore == null || product == null || product.getCacheId() == -1)
+			return productInfo;
+		
+		productInfo.setProductReference(product);
+		
 		ContentValues contentValues = 
 				this.getContentValuesFromProduct(productInfo);
 		//long productID = 
@@ -73,30 +79,44 @@ public class ProductInfoCacheDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/	
-	public void updateScoreOnProduct(long product_reference, UsersScoreModel usersScore) {
+	public boolean updateScoreOnProduct(UsersScoreModel usersScore, long product_reference) {
+		if (usersScore == null || product_reference == -1)
+			return false;
+		
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_USERS_SCORE, usersScore.usersScore);
-		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_OWN_SCORE, usersScore.ownScore);
-
-		this.database.update(ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO,
+		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_USERS_SCORE, usersScore.users_score);
+		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_OWN_SCORE, usersScore.own_score);
+		
+		int afectedRows = this.database.update(ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO,
 				contentValues,
 				ProductInfoCacheSQLiteHelper.PRODUCTINFO_PRODUCT_REFERENCE +
-				"="+String.valueOf(product_reference)
+				" = " + String.valueOf(product_reference)
 				, null);
+		
+		if (afectedRows > 0)
+			return true;
+		else
+			return false;
 	}
 	
-	public void updateScoreOnProduct(ProductModel product, UsersScoreModel usersScore) {
-		updateScoreOnProduct(product.getCacheId(), usersScore);
+	public boolean updateScoreOnProduct(UsersScoreModel usersScore, ProductModel product) {
+		if (product == null)
+			return false;
+		
+		return updateScoreOnProduct(usersScore, product.getCacheId());
 	}
 	
 	/********************************************************
 	 * 
 	 ********************************************************/	
 	public boolean removeProductInfo(long product_reference) {
+		if (product_reference == -1)
+			return false;
+		
 		// Elimina el producto de la base de datos
 		int temp = this.database.delete(ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO,
 				ProductInfoCacheSQLiteHelper.PRODUCTINFO_PRODUCT_REFERENCE +
-				"="+String.valueOf(product_reference)
+				" = " + String.valueOf(product_reference)
 				, null);
 		
 		if (temp > 0) 
@@ -106,6 +126,8 @@ public class ProductInfoCacheDAO {
 	}
 	
 	public boolean removeProductInfo(ProductModel product) {
+		if (product == null)
+			return false;
 		return removeProductInfo(product.getCacheId());
 	}
 	
@@ -114,10 +136,13 @@ public class ProductInfoCacheDAO {
 	 * producto en el cache
 	 ********************************************************/
 	public ProductInfoModel getProductInfoFromCache(long product_reference) {
+		if (product_reference == -1)
+			return null;
+		
 		ProductInfoModel productInfo = null;
 		
 		// Si se almancenan imagenes del producto se eliminan estas primero
-		Cursor cursor = this.dbHelper.getReadableDatabase().
+		Cursor cursor = this.database.
 				rawQuery("select * from "+ ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO +
 				" where "+ ProductInfoCacheSQLiteHelper.PRODUCTINFO_PRODUCT_REFERENCE +" = ?", 
 				new String[] {String.valueOf(product_reference)});
@@ -130,6 +155,9 @@ public class ProductInfoCacheDAO {
 	}
 	
 	public ProductInfoModel getProductInfoFromCache(ProductModel product) {
+		if (product == null)
+			return null;
+		
 		return getProductInfoFromCache(product.getCacheId());
 	}
 	
@@ -154,9 +182,9 @@ public class ProductInfoCacheDAO {
 		
 		//productInfo.setId(cursor.getLong(0));
 		productInfo.setProductReference(cursor.getLong(0));
-		productInfo.ecologicalScore = cursor.getFloat(1);
-		productInfo.usersScore.usersScore = cursor.getFloat(2);
-		productInfo.usersScore.ownScore = cursor.getFloat(3);
+		productInfo.ecological_score = cursor.getFloat(1);
+		productInfo.usersScore.users_score = cursor.getFloat(2);
+		productInfo.usersScore.own_score = cursor.getInt(3);
 
 		
 		return productInfo;
@@ -169,9 +197,9 @@ public class ProductInfoCacheDAO {
 	public ContentValues getContentValuesFromProduct (ProductInfoModel productInfo) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_PRODUCT_REFERENCE, productInfo.getProductReference());
-		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_ECOLOGICAL_SCORE, productInfo.ecologicalScore);
-		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_USERS_SCORE, productInfo.usersScore.usersScore);
-		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_OWN_SCORE, productInfo.usersScore.ownScore);
+		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_ECOLOGICAL_SCORE, productInfo.ecological_score);
+		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_USERS_SCORE, productInfo.usersScore.users_score);
+		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_OWN_SCORE, productInfo.usersScore.own_score);
 		return contentValues;
 	}
 }

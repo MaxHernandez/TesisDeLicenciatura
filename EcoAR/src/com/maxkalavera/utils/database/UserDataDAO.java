@@ -41,39 +41,45 @@ public class UserDataDAO {
 	 *************************************************************/
 	public String getUsername() {
 		return this.getUserDataSharedPreferences().
-				getString(UserDataDAO.USERNAME , "");
+				getString(UserDataDAO.USERNAME , null);
 	}
 
 	public String getFirstName() {
 		return this.getUserDataSharedPreferences().
-				getString(UserDataDAO.FIRST_NAME , "");
+				getString(UserDataDAO.FIRST_NAME , null);
 	}
 
 	public String getLastName() {
 		return this.getUserDataSharedPreferences().
-				getString(UserDataDAO.LAST_NAME , "");
+				getString(UserDataDAO.LAST_NAME , null);
 	}
 
 	public String getEmail() {
 		return this.getUserDataSharedPreferences().
-				getString(UserDataDAO.EMAIL , "");
+				getString(UserDataDAO.EMAIL , null);
 	}
 
 	public String getGender() {
 		return this.getUserDataSharedPreferences().
-				getString(UserDataDAO.GENDER , "");
+				getString(UserDataDAO.GENDER , null);
 	}
 
 	public Calendar getBirthday() {
-		CalendarJsonPrimitive calendarJsonPrimitive = CalendarJsonPrimitive.getInstance();
-		String temp = this.getUserDataSharedPreferences().
-			getString(UserDataDAO.BIRTHDATE , "");
-		return calendarJsonPrimitive.deserialize(new JsonPrimitive(temp), null, null);
-	}
-	
-	public String serializeBirthday(Calendar in) {
-		CalendarJsonPrimitive calendarJsonPrimitive = CalendarJsonPrimitive.getInstance();
-		return calendarJsonPrimitive.serialize(in, null, null).getAsString();
+		String calendarStr = this.getUserDataSharedPreferences().
+			getString(UserDataDAO.BIRTHDATE , null);
+		if (calendarStr != null) {
+	        try {  
+	        	Date date = CalendarJsonPrimitive.DATEFORMAT.parse(calendarStr);
+	    		Calendar calendar = Calendar.getInstance();
+	    		calendar.setTime(date);
+	    		return calendar;
+	        } catch (final java.text.ParseException e) {  
+	            e.printStackTrace();  
+	            return null;  
+	        }  
+		}
+		return null;
+    		
 	}
 	
 	/*************************************************************
@@ -99,7 +105,7 @@ public class UserDataDAO {
 	 * memoria. 
 	 *************************************************************/	
 	public Boolean existUserDataProfile() {
-		if (this.getUserDataSharedPreferences() .contains(UserDataDAO.EXISTENCE)) 
+		if (this.getUserDataSharedPreferences().contains(UserDataDAO.EXISTENCE)) 
 			return true;
 		else
 			return false;
@@ -110,7 +116,7 @@ public class UserDataDAO {
 	 *  been deleted
 	 *************************************************************/	
 	public void createUserDataProfile(UserDataJsonModel userDataJsonModel) {
-		if (this.existUserDataProfile())
+		if (this.existUserDataProfile() && userDataJsonModel == null)
 			return ;
 		
 		SharedPreferences sharedPreferences = getUserDataSharedPreferences();
@@ -125,6 +131,9 @@ public class UserDataDAO {
 	 * 
 	 *************************************************************/	
 	public void saveUserData(UserDataJsonModel userDataJsonModel) {
+		if (this.existUserDataProfile() && userDataJsonModel == null)
+			return ;
+		
 		SharedPreferences sharedPreferences = getUserDataSharedPreferences();
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		
@@ -133,8 +142,12 @@ public class UserDataDAO {
 		editor.putString(UserDataDAO.LAST_NAME, userDataJsonModel.last_name);
 		editor.putString(UserDataDAO.EMAIL, userDataJsonModel.email);
 		editor.putString(UserDataDAO.GENDER, userDataJsonModel.gender);
-		editor.putString(UserDataDAO.BIRTHDATE, 
-				this.serializeBirthday(userDataJsonModel.birthdate));
+		
+		if (userDataJsonModel.birthdate != null)
+			editor.putString(UserDataDAO.BIRTHDATE, 
+				CalendarJsonPrimitive.DATEFORMAT.format(userDataJsonModel.birthdate.getTime()));
+		else
+			editor.putString(UserDataDAO.BIRTHDATE, null);
 
 		editor.commit();
 	}

@@ -24,4 +24,6 @@ public class SendImageHTTPLoader extends HttpRequestLoader {
 		this.setJsonResponseOn(new SearchCameraResponseJsonModel());
 	}
 
+	
+	
 }

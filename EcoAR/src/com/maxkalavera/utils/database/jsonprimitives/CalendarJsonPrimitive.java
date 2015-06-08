@@ -17,7 +17,7 @@ import com.google.gson.JsonSerializer;
 public final class CalendarJsonPrimitive implements JsonSerializer<Calendar>, JsonDeserializer<Calendar> {
 	private static CalendarJsonPrimitive instance = null;
 	// In simpleDateFormat i want MMM witch means month if i write mm it means minutes
-	public static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("DD-MMM-yyyy"); 
+	public static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-DD"); 
 	//public static final DateFormat DATEFORMAT = DateFormat.getDateTimeInstance();
 
 	private CalendarJsonPrimitive(){}
@@ -27,8 +27,8 @@ public final class CalendarJsonPrimitive implements JsonSerializer<Calendar>, Js
 		return instance;
 	}
 	
-	public JsonElement serialize(Calendar date, Type typeOfSrc, JsonSerializationContext context) {
-		return new JsonPrimitive(CalendarJsonPrimitive.DATEFORMAT.format(date));
+	public JsonElement serialize(Calendar calendar, Type typeOfSrc, JsonSerializationContext context) {
+		return new JsonPrimitive(CalendarJsonPrimitive.DATEFORMAT.format(calendar.getTime()));
 	}
 
 	public Calendar deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {

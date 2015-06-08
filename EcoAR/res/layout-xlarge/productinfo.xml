@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<!--  android:layout_above="@+id/productinfo_commentaries" -->
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_gravity="center"
+    android:layout_alignParentTop="true"
 	android:layout_width="match_parent"
     android:layout_height="match_parent"
     > 
    <LinearLayout
     	android:orientation="vertical"
-    	android:padding="15dp"
     	android:gravity="center"
 		android:layout_width="match_parent"
     	android:layout_height="wrap_content"
@@ -28,20 +30,13 @@
 			android:layout_width="match_parent"
     		android:layout_height="wrap_content"
     	    />
-    	<!--    	
-		<include layout="@layout/productinfo_commentarieslist"
-    	    android:layout_marginTop="25dp"
-			android:layout_width="match_parent"
-    		android:layout_height="400dp"
-    	    />
-		-->
-		
-		<fragment android:name="com.maxkalavera.ecoar.productinfo.CommentariesListFragment"
-		    android:id="@+id/productinfo_commentaries"
-    	    android:layout_marginTop="25dp"
-			android:layout_width="match_parent"
-    		android:layout_height="400dp"
-    	    />
-		
+    	
+	<fragment android:name="com.maxkalavera.ecoar.productinfo.CommentariesPrefaceListFragment"
+		android:id="@+id/productinfo_commentaries_preface"
+		android:layout_marginBottom="5dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		/>
+    	
 	</LinearLayout>
 </ScrollView>

@@ -24,7 +24,6 @@
 		>
 		<Button
 			android:id="@+id/groseries_keepsearching"
-			android:onClick="keepSearching"
 			style="@style/groceries_button"
 			android:text="@string/groceries_list_keepsearching"
 			android:textSize="18sp"
@@ -34,7 +33,6 @@
 			/>
 		<Button
 			android:id="@+id/groseries_clear"
-			android:onClick="clearList"
 			style="@style/groceries_button"
 			android:text="@string/groceries_list_clear"
 			android:textSize="18sp"

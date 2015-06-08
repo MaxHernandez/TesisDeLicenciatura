@@ -14,16 +14,17 @@ public class GroceriesListSQLiteHelper extends SQLiteOpenHelper {
 	 * Definicion de los campos de la tabla de productos
 	 ********************************************************/
 	
-	public static final String TABLE_GROSERIESLIST = "groserieslisttable";
+	public static final String TABLE_GROSERIESLIST = "groseries_list_table";
 	public static final String PRODUCT_ID = "_id";
 	public static final String PRODUCT_NAME = "name";
 	public static final String PRODUCT_DESCRIPTION = "description";
-	public static final String PRODUCT_SHOPINGSERVICE = "shopingService";
+	public static final String PRODUCT_SHOPINGSERVICE = "shoping_service";
 	public static final String PRODUCT_URL = "url";
 	public static final String PRODUCT_IMAGE = "image";
-	public static final String PRODUCT_IMAGEURL = "imageURL";
-	public static final String PRODUCT_GENERALID = "generalid";
+	public static final String PRODUCT_IMAGEURL = "image_url";
+	public static final String PRODUCT_GENERALID = "general_id";
 	public static final String PRODUCT_CHECK = "groceries_check";
+	public static final String PRODUCT_NUMBER_OF = "groceries_number_of";
 	
 	
 	// La instrucción de SQL para crear la tabla se define en 
@@ -32,15 +33,16 @@ public class GroceriesListSQLiteHelper extends SQLiteOpenHelper {
 	// una coma despues del campo generara un error al crear la tabla.  
 	private static final String DATABASE_CREATE = 
 			"create table " + TABLE_GROSERIESLIST + "(" 
-			+ PRODUCT_ID + " integer primary key autoincrement, " 
-			+ PRODUCT_NAME + "text not null, "
-			+ PRODUCT_DESCRIPTION + "text not null, "
-			+ PRODUCT_SHOPINGSERVICE + "text not null, "
-			+ PRODUCT_URL + "text not null, "
-			+ PRODUCT_IMAGE + "text, "
-			+ PRODUCT_IMAGEURL + " text,"
-			+ PRODUCT_GENERALID + "text not null, "
-			+ PRODUCT_CHECK  + "integer not null "
+			+ PRODUCT_ID  + " " + "integer primary key autoincrement, " 
+			+ PRODUCT_NAME + " " + "text not null, "
+			+ PRODUCT_DESCRIPTION + " " + "text not null, "
+			+ PRODUCT_SHOPINGSERVICE + " " + "text not null, "
+			+ PRODUCT_URL + " " + "text not null, "
+			+ PRODUCT_IMAGE + " " + "text, "
+			+ PRODUCT_IMAGEURL + " " + " text, "
+			+ PRODUCT_GENERALID + " " + "text not null unique, "
+			+ PRODUCT_CHECK + " " + "integer not null, "
+			+ PRODUCT_NUMBER_OF + " " + "integer not null "
 			+ ");";   
 
 	/********************************************************

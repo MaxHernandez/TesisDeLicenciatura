@@ -37,21 +37,19 @@ class FloatingMenuListener 	implements View.OnClickListener,
 		LoaderManager.LoaderCallbacks<ProductModel> {
 	
 	private Context context;
-	SearchBarResultsListFragmentAdapter searchBarResultsListFragmentAdapter;
+	ArrayList<ProductModel> productList;
 	private int elementListPosition;
-	private View elementView;
 	private ListFragment fragment;
 	
 	public static final int IS_ITEM_ON_LIST = 1;
 	public static final int ADD_ELEMENT = 2;
 	public static final int REMOVE_ELEMENT = 3;
 	
-	public FloatingMenuListener (SearchBarResultsListFragmentAdapter searchBarResultsListFragmentAdapter,
+	public FloatingMenuListener (ArrayList<ProductModel> productList,
 			ListFragment fragment) {
-		this.searchBarResultsListFragmentAdapter = searchBarResultsListFragmentAdapter;
-		this.context = searchBarResultsListFragmentAdapter.getContext();
+		this.productList = productList;
+		this.context = fragment.getActivity();
 		this.elementListPosition = -1;
-		this.elementView = null;
 		this.fragment = fragment;
 	}
 	
@@ -61,37 +59,32 @@ class FloatingMenuListener 	implements View.OnClickListener,
 	
 	public void onClick(View view) {  
 		this.elementListPosition = (Integer)view.getTag();
-		this.elementView = view;
-		this.fragment.
-			getLoaderManager().initLoader(FloatingMenuListener.IS_ITEM_ON_LIST, null, this);
-	}
-	
-	public void showPopUpMenu(ProductModel pModel) {
-		PopupMenu popup = new PopupMenu(getContext(), this.elementView);  		
+		ProductModel pModel = 
+				this.productList.get(this.elementListPosition);
+
+		PopupMenu popup = new PopupMenu(getContext(), view);
 		popup.inflate(R.menu.searchbar_list_floatingmenu);
 		popup.setOnMenuItemClickListener(this);
 		popup.getMenu();
 
 		Menu menu = popup.getMenu();
-	
 		if (pModel.getGroceriesId() == -1)
-			menu.removeItem(R.id.searchbar_list_floatingmenu_addtogroceries);
-		else
 			menu.removeItem(R.id.searchbar_list_floatingmenu_removefromgroceries);
+		else
+			menu.removeItem(R.id.searchbar_list_floatingmenu_addtogroceries);
 		
 		popup.show();
 	}
-	
-	public boolean onMenuItemClick(MenuItem item) {  
+
+	public boolean onMenuItemClick(MenuItem item) {  				
 		switch(item.getItemId()){
 			case R.id.searchbar_list_floatingmenu_addtogroceries:
 				this.fragment.
-					getLoaderManager().initLoader(FloatingMenuListener.ADD_ELEMENT, null, this);
+					getLoaderManager().restartLoader(FloatingMenuListener.ADD_ELEMENT, null, this);
      			break;
 			case R.id.searchbar_list_floatingmenu_removefromgroceries:
-				searchBarResultsListFragmentAdapter.getItem(this.elementListPosition);
 				this.fragment.
-					getLoaderManager().initLoader(FloatingMenuListener.REMOVE_ELEMENT, null, this);
+					getLoaderManager().restartLoader(FloatingMenuListener.REMOVE_ELEMENT, null, this);
      			break;
      	}
 		return true;
@@ -102,22 +95,19 @@ class FloatingMenuListener 	implements View.OnClickListener,
 	 ************************************************************/
 	@Override
 	public Loader<ProductModel> onCreateLoader(int loaderID, Bundle args) {
-		ProductModel product = searchBarResultsListFragmentAdapter.getItem(this.elementListPosition);
-		switch (loaderID) {
-			case FloatingMenuListener.IS_ITEM_ON_LIST:
-				IsItemOnListSearchBarResultsListFragmentLoader loaderIsElementOnlist = 
-					new IsItemOnListSearchBarResultsListFragmentLoader(this.getContext(), product);
-				loaderIsElementOnlist.forceLoad();
-				return loaderIsElementOnlist;
-				
+		ProductModel product = this.productList.get(this.elementListPosition);
+		switch (loaderID) {				
 			case FloatingMenuListener.ADD_ELEMENT: 
-				AddItemSearchBarResultsListFragmentLoader loaderAddItem = 
-				new AddItemSearchBarResultsListFragmentLoader(this.getContext(), product);				
+				Log.i("SearchBarAddedToGroceries", "Add Groceries Loader.");
+				SearchBarAddItemGroceriesListFragmentLoader loaderAddItem = 
+					new SearchBarAddItemGroceriesListFragmentLoader(this.getContext(), product);	
+				loaderAddItem.forceLoad();
 				return loaderAddItem;
 				
 			case FloatingMenuListener.REMOVE_ELEMENT: 
-				RemoveItemSearchBarResultsListFragmentLoader loaderRemoveItem = 
-				new RemoveItemSearchBarResultsListFragmentLoader(this.getContext(), product);				
+				SearchBarRemoveItemListFragmentLoader loaderRemoveItem = 
+					new SearchBarRemoveItemListFragmentLoader(this.getContext(), product);
+				loaderRemoveItem.forceLoad();
 				return loaderRemoveItem;
 				
 			default:
@@ -128,15 +118,14 @@ class FloatingMenuListener 	implements View.OnClickListener,
 	@Override
 	public void onLoadFinished(Loader<ProductModel> loader, ProductModel loaderRes) {
 		switch (loader.getId()) {
-		case FloatingMenuListener.IS_ITEM_ON_LIST:
-			this.showPopUpMenu(loaderRes);
-			break;
-		case FloatingMenuListener.ADD_ELEMENT: 
-			break;
-		case FloatingMenuListener.REMOVE_ELEMENT: 
-			break;
-		default:
-			break;
+			case FloatingMenuListener.ADD_ELEMENT: 
+				this.productList.set(this.productList.indexOf(loaderRes), loaderRes);
+				break;
+			case FloatingMenuListener.REMOVE_ELEMENT: 
+				this.productList.set(this.productList.indexOf(loaderRes), loaderRes);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -185,7 +174,7 @@ public class SearchBarResultsListFragmentAdapter extends ArrayAdapter<ProductMod
 	public SearchBarResultsListFragmentAdapter(ListFragment fragment, Context context, ArrayList<ProductModel> productList) {
 		super(context, R.layout.searchbar_results_item, productList);
 		this.productNameClickListener = new ProductNameClickListener(this);
-		this.floatingMenuListener = new FloatingMenuListener(this, fragment);
+		this.floatingMenuListener = new FloatingMenuListener(productList, fragment);
 	}
 	
 	@Override

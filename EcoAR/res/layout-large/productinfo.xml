@@ -26,19 +26,13 @@
 			android:layout_width="match_parent"
     		android:layout_height="wrap_content"
     	    />
-    	<!--      	
-		<include layout="@layout/productinfo_commentarieslist"
-    	    android:layout_marginTop="20dp"
+
+		<fragment android:name="com.maxkalavera.ecoar.productinfo.CommentariesPrefaceListFragment"
+			android:id="@+id/productinfo_commentaries_preface"
+			android:layout_marginBottom="5dp"
 			android:layout_width="match_parent"
-    		android:layout_height="375dp"
-    	    />
-		-->
-		<fragment android:name="com.maxkalavera.ecoar.productinfo.CommentariesListFragment"
-		    android:id="@+id/productinfo_commentaries"
-			android:layout_marginTop="20dp"
-			android:layout_width="match_parent"
-    		android:layout_height="375dp"
-    	    />
+			android:layout_height="wrap_content"
+			/>
 		
 	</LinearLayout>
 </ScrollView>

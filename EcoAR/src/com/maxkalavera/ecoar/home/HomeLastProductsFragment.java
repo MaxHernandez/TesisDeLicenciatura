@@ -24,15 +24,18 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
 	HomeLastProductsFragmentAdapter adapter;
 	ArrayList<ProductModel> valuesList = new ArrayList<ProductModel>();
 	
+	private static final int GET_LAST_PRODUCTS = 1;
+	
 	/************************************************************
 	 * Constructor Method
 	 ************************************************************/
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);        
+        super.onActivityCreated(savedInstanceState);    
+        
 		this.adapter = new HomeLastProductsFragmentAdapter(getActivity(), this.valuesList);
         this.setListAdapter(this.adapter);
-		getLoaderManager().initLoader(0, null, this);
+		getLoaderManager().initLoader(GET_LAST_PRODUCTS, null, this); 
     }
     
 	/************************************************************
@@ -68,9 +71,7 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
 	@Override
 	public Loader<List<ProductModel>> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
-		case 0:
-			return null;
-		case 1:
+		case GET_LAST_PRODUCTS:
 			HomeLastProductsFragmentLoader loader = new HomeLastProductsFragmentLoader(this.getActivity());
 			loader.forceLoad();
 			return loader;
@@ -80,9 +81,15 @@ public class HomeLastProductsFragment extends ListFragment implements LoaderCall
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<ProductModel>> loader, List<ProductModel> data) {		
-		this.valuesList.addAll(data);
-		this.adapter.notifyDataSetChanged();
+	public void onLoadFinished(Loader<List<ProductModel>> loader, List<ProductModel> lastProductsResult) {	
+		switch (loader.getId()) {
+			case GET_LAST_PRODUCTS:
+				if (lastProductsResult != null && lastProductsResult.size() > 0) {
+					this.valuesList.addAll(lastProductsResult);
+					this.adapter.notifyDataSetChanged();
+				}
+				break;
+		}
 	}
 
 	@Override

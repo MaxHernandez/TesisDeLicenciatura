@@ -22,11 +22,12 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class GroceriesListDAO {
 	private Context context;
 	private SQLiteDatabase database;
-	private ProductCacheSQLiteHelper dbHelper;
+	private GroceriesListSQLiteHelper dbHelper;
 	
 	private static final String TABLE_IMAGE_ABSPATH = 
 			"/."+ GroceriesListSQLiteHelper.TABLE_GROSERIESLIST +
@@ -38,7 +39,7 @@ public class GroceriesListDAO {
 	 ********************************************************/
 	public GroceriesListDAO (Context context) {
 		this.context = context;
-		this.dbHelper = new ProductCacheSQLiteHelper(context);
+		this.dbHelper = new GroceriesListSQLiteHelper(context);
 	}
 	
 	/********************************************************
@@ -63,7 +64,7 @@ public class GroceriesListDAO {
 		Cursor cursor =  this.database.rawQuery("select * from "+ 
 				GroceriesListSQLiteHelper.TABLE_GROSERIESLIST,
 				null);		
-		if (cursor.moveToFirst()) {
+		if (cursor != null && cursor.moveToFirst()) {
 			resList = new ArrayList<ProductModel>();
 			
 			while (cursor.isAfterLast() == false) {
@@ -78,33 +79,40 @@ public class GroceriesListDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/
-	public void updateScoreOnProduct(ProductModel product) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_CHECK, product.isChecked());
+	public boolean updateProduct(ProductModel product) {
+		if (product == null || product.getGroceriesId() == -1)
+			return false;
+		
+		ContentValues contentValues = 
+				this.getContentValuesFromProduct(product);
 
-		this.database.update(ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO,
+		this.database.update(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST,
 				contentValues,
-				GroceriesListSQLiteHelper.PRODUCT_ID + "=" + String.valueOf(product.getGroceriesId()) 
+				GroceriesListSQLiteHelper.PRODUCT_ID + " = " + String.valueOf(product.getGroceriesId()) 
 				, null);
+		return true;
 	}
 	
 	/********************************************************
 	 * 
 	 ********************************************************/
 	public ProductModel addProduct(ProductModel product) {			
-		if (product.getGroceriesId() != -1) {			
-			ContentValues contentValues = 
-					this.getContentValuesFromProduct(product);
-			long productID = this.database.insert(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST, null,
-					contentValues);
-			product.setGroceriesId(productID);
+		if (product == null || product.getGroceriesId() != -1)
+			return product;
+		
+		ContentValues contentValues = 
+			this.getContentValuesFromProduct(product);
+		long productId = this.database.insert(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST, null,
+			contentValues);
+		if (productId != -1) {
+			product.setGroceriesId(productId);
 			
 			// Guarda las imagenes en la memoria SD del dispositivo, 
 			// utiliza el ID que se genera al insertar la fila por primera vez
 			// para generar el nombre de la imagen.
-			this.addImagesToProductDatabaseRow(product, productID);
-		}
-		
+			this.addImagesToProductDatabaseRow(product, productId);
+			}
+			
 		return product;
 	}
 	
@@ -112,26 +120,26 @@ public class GroceriesListDAO {
 	 * 
 	 ********************************************************/
 	public ProductModel removeProduct(ProductModel product) {
-		if (product.getGroceriesId() == -1)
+		if (product == null || product.getGroceriesId() == -1)
 			return product;
 		
-		Cursor cursor = this.dbHelper.getReadableDatabase().
-				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
+		Cursor cursor = this.database.
+				rawQuery("select * from "+ GroceriesListSQLiteHelper.TABLE_GROSERIESLIST +
 				" where "+ GroceriesListSQLiteHelper.PRODUCT_ID + " = ?", 
 				new String[] {String.valueOf(product.getGroceriesId())});
 
-		if (!cursor.moveToFirst()) {
-			return null;
-		}
-		this.removeImagesInDatabaseFromCursor(cursor);
+		if (cursor != null && cursor.moveToFirst()) {		
+			this.removeImagesInDatabaseFromCursor(cursor);
 		
-		// Elimina el producto de la base de datos
-		this.database.delete(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST,
-				GroceriesListSQLiteHelper.PRODUCT_ID+
-				"="+String.valueOf(product.getGroceriesId())
+			// Elimina el producto de la base de datos
+			this.database.delete(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST,
+				GroceriesListSQLiteHelper.PRODUCT_ID + 
+				" = " + String.valueOf(product.getGroceriesId())
 				, null);
 		
-		product.setGroceriesId(-1);
+			product.setGroceriesId(-1);
+		}
+		
 		return product;
 	}
 	
@@ -140,16 +148,16 @@ public class GroceriesListDAO {
 	 * producto en el cache
 	 ********************************************************/
 	public ProductModel isProductInGroceries(ProductModel product) {
-		if (product.generalId == "")
+		if (product == null || product.generalId == null)
 			return product;
 		
 		// Si se almancenan imagenes del producto se eliminan estas primero
-		Cursor cursor = this.dbHelper.getReadableDatabase().
-				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
+		Cursor cursor = this.database.
+				rawQuery("select * from "+ GroceriesListSQLiteHelper.TABLE_GROSERIESLIST +
 				" where "+ GroceriesListSQLiteHelper.PRODUCT_GENERALID +" = ?", 
 				new String[] {product.generalId});
 				
-		if (cursor .moveToFirst()) {
+		if (cursor != null && cursor.moveToFirst()) {
 			this.retrieveProductFromCursor(cursor, product);
 		}
 		
@@ -181,6 +189,7 @@ public class GroceriesListDAO {
 		product.imageURL = cursor.getString(6);
 		product.generalId = cursor.getString(7);
 		product.setChecked( (cursor.getInt(8) == 1) ? true:false );
+		product.number_of_products = cursor.getInt(9);
 		
 		return product;
 	}
@@ -201,8 +210,9 @@ public class GroceriesListDAO {
 		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_URL, product.url);
 		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_IMAGEURL, product.imageURL);
 		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_GENERALID, product.generalId);
-		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_CHECK, 
-				(product.isChecked()) ? 1:0 );
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_CHECK, (product.isChecked()) ? 1:0 );
+		contentValues.put(GroceriesListSQLiteHelper.PRODUCT_NUMBER_OF, product.number_of_products);
+		
 		return contentValues;
 	}
 
@@ -210,6 +220,8 @@ public class GroceriesListDAO {
 	 * 
 	 ********************************************************/
 	public void addImagesToProductDatabaseRow (ProductModel product, long productID) {
+		if (product.image == null) return;
+		
 		ContentValues updateContentValues = new ContentValues();
 		String bitmapSavedPath = "";
 		
@@ -222,11 +234,13 @@ public class GroceriesListDAO {
 		
 		this.database.update(GroceriesListSQLiteHelper.TABLE_GROSERIESLIST, 
 				updateContentValues, 
-				"_id "+"="+productID, 
+				"_id "+" = "+productID, 
 				null);
 	}
 
 	public void removeImagesInDatabaseFromCursor (Cursor cursor) {
+		if (cursor.getString(5) == null) return;
+		
 		this.removeBitmapFile(cursor.getString(5));
 	}
 	
@@ -261,6 +275,8 @@ public class GroceriesListDAO {
 	}
 	
 	public Bitmap loadBitmapFile (String bitmapPath) {
+		if (bitmapPath == null) return null;
+		
 		Bitmap bitmap = null;
 		File file = new File(bitmapPath);
 		FileInputStream fileInputStream;

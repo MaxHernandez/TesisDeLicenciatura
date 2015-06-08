@@ -3,8 +3,8 @@ from django.db import models
 # Create your models here.
 class UserData(models.Model):
     GENDER_CHOICES = (
-        ('M', 'Masculino'),
-        ('F', 'Femenino'),
+        ('M', 'Male'),
+        ('F', 'Female'),
     )
 
     birthdate = models.DateField()

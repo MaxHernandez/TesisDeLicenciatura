@@ -7,7 +7,8 @@ import android.util.Log;
 
 public class ProductInfoCacheSQLiteHelper extends SQLiteOpenHelper {
 	// Variables de configuración de la base de datos 
-	private static final String DATABASE_NAME = "cacheproducts.db";
+	private static final String DATABASE_NAME = 
+			ProductCacheSQLiteHelper.DATABASE_NAME;
 	private static final int DATABASE_VERSION = 
 			ProductCacheSQLiteHelper.DATABASE_VERSION;
 	
@@ -26,13 +27,13 @@ public class ProductInfoCacheSQLiteHelper extends SQLiteOpenHelper {
 	// la siguiente variable.
 	// El ultimo campo siempre se cierra con ");", si se llega a poner 
 	// una coma despues del campo generara un error al crear la tabla.  
-	private static final String DATABASE_CREATE = 
+	public static final String DATABASE_CREATE = 
 			"create table " + TABLE_PRODUCTINFO + "(" 
 			//+ PRODUCTINFO_ID + " integer primary key autoincrement, " 
-			+ PRODUCTINFO_PRODUCT_REFERENCE + "integer not null, "
-			+ PRODUCTINFO_ECOLOGICAL_SCORE + "real not null, "
-			+ PRODUCTINFO_USERS_SCORE + "real not null, "
-			+ PRODUCTINFO_OWN_SCORE + "real"
+			+ PRODUCTINFO_PRODUCT_REFERENCE + " " + "integer not null, "
+			+ PRODUCTINFO_ECOLOGICAL_SCORE + " " + "real not null, "
+			+ PRODUCTINFO_USERS_SCORE + " " + "real not null, "
+			+ PRODUCTINFO_OWN_SCORE + " " + "integer not null"
 			+ ");";   
 
 	/********************************************************
@@ -47,7 +48,9 @@ public class ProductInfoCacheSQLiteHelper extends SQLiteOpenHelper {
 	 ********************************************************/
 	@Override
 	public void onCreate(SQLiteDatabase database) {
+		database.execSQL(ProductCacheSQLiteHelper.DATABASE_CREATE);
 		database.execSQL(DATABASE_CREATE);
+		database.execSQL(CommentariesCacheSQLiteHelper.DATABASE_CREATE);
 	}
 
 	@Override

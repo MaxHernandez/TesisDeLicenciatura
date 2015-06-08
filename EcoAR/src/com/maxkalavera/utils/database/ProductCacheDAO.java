@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 
 public class ProductCacheDAO {
 	private Context context;
@@ -58,47 +59,81 @@ public class ProductCacheDAO {
 	}
 	
 	/********************************************************
-	 * Metodo para agregar un producto al cache
+	 * Metodo para verificar si existe la informacion del 
+	 * producto en el cache
 	 ********************************************************/
-	public ProductModel addProduct(ProductModel product) {
-		if (product.getCacheId() != -1) {
-			if (getNumberOfProductsInDB() > ProductCacheDAO.MAX_PRODUCTS) 
-				removeOldestProduct();
-			
-			ContentValues contentValues = 
-					this.getContentValuesFromProduct(product);
-			long productID = this.database.insert(ProductCacheSQLiteHelper.TABLE_PRODUCTS, null,
-					contentValues);
-			product.setCacheId(productID);
-			
-			// Guarda las imagenes en la memoria SD del dispositivo, 
-			// utiliza el ID que se genera al insertar la fila por primera vez
-			// para generar el nombre de la imagen.
-			this.addImagesToProductDatabaseRow(product, productID);
-		}
+	public ProductModel searchProductInCache(ProductModel product) {
+		if (product == null || product.generalId == "" || product.generalId == null || product.getCacheId() == -1)
+			return product;
+		
+		Cursor cursor = this.database.
+				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
+				" where "+ ProductCacheSQLiteHelper.PRODUCT_GENERALID +" = ?", 
+				new String[] {product.generalId});
+		
+		if (cursor != null && cursor .moveToFirst()) 
+			this.retrieveProductFromCursor(cursor, product);
 		
 		return product;
 	}
 	
 	/********************************************************
-	 * Metodo para verificar si existe la informacion del 
-	 * producto en el cache
+	 * Metodo para agregar un producto al cache
 	 ********************************************************/
-	public ProductModel searchProductInCache(ProductModel product) {
-		if (product.generalId == "")
+	public ProductModel addProduct(ProductModel product) {
+		if (product == null || product.generalId == "" || product.generalId == null || product.getCacheId() != -1)
 			return product;
-		
-		Cursor cursor = this.dbHelper.getReadableDatabase().
-				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
-				" where "+ ProductCacheSQLiteHelper.PRODUCT_GENERALID +" = ?", 
-				new String[] {product.generalId});
-		
-		if (cursor .moveToFirst()) {
-			this.retrieveProductFromCursor(cursor, product);
-			return product;
+			
+		if (getNumberOfProductsInDB() > ProductCacheDAO.MAX_PRODUCTS) 
+			removeOldestProduct();
+			
+		ContentValues contentValues = 
+			this.getContentValuesFromProduct(product);
+		long productId = this.database.insert(ProductCacheSQLiteHelper.TABLE_PRODUCTS, null,
+			contentValues);
+		if (productId != -1) {
+			product.setCacheId(productId);
+			
+			// Guarda las imagenes en la memoria SD del dispositivo, 
+			// utiliza el ID que se genera al insertar la fila por primera vez
+			// para generar el nombre de la imagen.
+			this.addImagesToProductDatabaseRow(product, productId);
 		}
 		
 		return product;
+	}
+	
+	public void removeOldestProduct() {
+		Cursor cursor = this.database.
+				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
+				" order by "+ ProductCacheSQLiteHelper.PRODUCT_TIMESTAMP  +" asc " +
+				" limit 1 ", null);
+		
+		if (cursor != null && cursor .moveToFirst()) {
+			this.removeFromCursor(cursor);
+        }
+	}	
+	
+	/********************************************************
+	 * Metodo para obtener los ultimos "n" productos agregados
+	 ********************************************************/
+	public List<ProductModel> getLastProducts(int n) {
+		Cursor cursor = this.database.
+				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
+				" order by "+ ProductCacheSQLiteHelper.PRODUCT_TIMESTAMP  +" desc " +
+				" limit "+ String.valueOf(n), null);
+
+		if (cursor != null && cursor .moveToFirst()) {
+			List<ProductModel> resList = new ArrayList<ProductModel>();
+			
+            while (cursor.isAfterLast() == false) {
+                resList.add(retrieveProductFromCursor(cursor));
+                cursor.moveToNext();
+            }
+            return resList;
+        }
+
+		return null;
 	}
 	
 	/********************************************************
@@ -113,21 +148,18 @@ public class ProductCacheDAO {
 				"=" + String.valueOf(productId)
 				, null);
 		
-		ProductInfoCacheDAO productInfoCache = new ProductInfoCacheDAO(this.getContext());
-		productInfoCache.removeProductInfo(productId);
-	}
-	
-	public void removeOldestProduct() {
-		Cursor cursor = this.dbHelper.getReadableDatabase().
-				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
-				"order by "+ ProductCacheSQLiteHelper.PRODUCT_TIMESTAMP  +" asc" +
-				"limit 1", null);
+		Log.i("ProductCacheDAO", "Removing: " + cursor.getString(1));
 		
-		if (cursor .moveToFirst()) {
-			this.removeFromCursor(cursor);
-
-    		
-        }
+		ProductInfoCacheDAO productInfoCache = new ProductInfoCacheDAO(this.getContext());
+		productInfoCache.open();
+		productInfoCache.removeProductInfo(productId);
+		productInfoCache.close();
+		
+		CommentariesCacheDAO commentariesCache = new CommentariesCacheDAO(this.getContext());
+		commentariesCache.open();
+		commentariesCache.removeCommentariesOf(productId);
+		commentariesCache.close();
+		
 	}
 	
 	public double getNumberOfProductsInDB() {
@@ -140,39 +172,23 @@ public class ProductCacheDAO {
 	 ********************************************************/
 	public void removeOldProducts() {
 		double now = unix_timestamp();
-		Cursor cursor = this.dbHelper.getReadableDatabase().
+		
+		Cursor cursor = this.database.
 				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS, null);
-		if (cursor .moveToFirst()) {			
+		if (cursor != null && cursor.moveToFirst()) {			
             while (cursor.isAfterLast() == false) {
             	double productInsertionTime = 
             			this.getInsertionTimeFromCursor(cursor);
-            	if (now - productInsertionTime >= ProductCacheDAO.RETAINING_LAPSE)
+            	if ( (now - productInsertionTime) >= ProductCacheDAO.RETAINING_LAPSE)
             		this.removeFromCursor(cursor);
                 cursor.moveToNext();
             }
         }
 	}
 	
-	/********************************************************
-	 * Metodo para obtener los ultimos "n" productos agregados
-	 ********************************************************/
-	public List<ProductModel> getLastProducts(int n) {
-		Cursor cursor = this.dbHelper.getReadableDatabase().
-				rawQuery("select * from "+ ProductCacheSQLiteHelper.TABLE_PRODUCTS +
-				"order by "+ ProductCacheSQLiteHelper.PRODUCT_TIMESTAMP  +" desc" +
-				"limit "+ String.valueOf(n), null);
-
-		if (cursor .moveToFirst()) {
-			List<ProductModel> resList = new ArrayList<ProductModel>();
-			
-            while (cursor.isAfterLast() == false) {
-                resList.add(retrieveProductFromCursor(cursor));
-                cursor.moveToNext();
-            }
-            return resList;
-        }
-
-		return null;
+	private double getInsertionTimeFromCursor(Cursor cursor) {
+		return cursor.getDouble(ProductCacheSQLiteHelper.PRODUCT_TIMESTAMP_INDEX);
+		
 	}
 		
 	/********************************************************
@@ -181,21 +197,25 @@ public class ProductCacheDAO {
 	private ProductModel retrieveProductFromCursor (Cursor cursor, ProductModel product) {
 		if (product == null)
 			product = new ProductModel();
-		product.setCacheId(cursor.getLong(0));
-		product.name = cursor.getString(1);
-		product.description = cursor.getString(2);
-		product.shopingService = cursor.getString(3);
-		product.url = cursor.getString(4);
-		product.image = this.loadBitmapFile(cursor.getString(5));
-		product.imageURL = cursor.getString(6);
-		product.generalId = cursor.getString(7);
+		
+		product.setCacheId(cursor.getLong(
+				ProductCacheSQLiteHelper.PRODUCT_ID_INDEX));
+		product.name = cursor.getString(
+				ProductCacheSQLiteHelper.PRODUCT_NAME_INDEX);
+		product.description = cursor.getString(
+				ProductCacheSQLiteHelper.PRODUCT_DESCRIPTION_INDEX);
+		product.shopingService = cursor.getString(
+				ProductCacheSQLiteHelper.PRODUCT_SHOPINGSERVICE_INDEX);
+		product.url = cursor.getString(
+				ProductCacheSQLiteHelper.PRODUCT_URL_INDEX);
+		product.image = this.loadBitmapFile(cursor.getString(
+				ProductCacheSQLiteHelper.PRODUCT_IMAGE_INDEX));
+		product.imageURL = cursor.getString(
+				ProductCacheSQLiteHelper.PRODUCT_IMAGEURL_INDEX);
+		product.generalId = cursor.getString(
+				ProductCacheSQLiteHelper.PRODUCT_GENERALID_INDEX);
 		
 		return product;
-	}
-	
-	private double getInsertionTimeFromCursor(Cursor cursor) {
-		return cursor.getDouble(7);
-		
 	}
 	
 	private ProductModel retrieveProductFromCursor (Cursor cursor) {
@@ -227,6 +247,8 @@ public class ProductCacheDAO {
 	 * 
 	 ********************************************************/
 	private void addImagesToProductDatabaseRow (ProductModel product, long productID) {
+		if (product.image == null) return;
+		
 		ContentValues updateContentValues = new ContentValues();
 		String bitmapSavedPath = "";
 		
@@ -244,6 +266,8 @@ public class ProductCacheDAO {
 	}
 
 	private void removeImagesInDatabaseFromCursor (Cursor cursor) {
+		if (cursor.getString(5) == null) return;
+		
 		this.removeBitmapFile(cursor.getString(5));
 	}
 	
@@ -286,6 +310,8 @@ public class ProductCacheDAO {
 	}
 	
 	private Bitmap loadBitmapFile (String bitmapPath) {
+		if (bitmapPath == null) return null;
+		
 		Bitmap bitmap = null;
 		File file = new File(bitmapPath);
 		FileInputStream fileInputStream;

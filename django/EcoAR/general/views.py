@@ -19,6 +19,7 @@ class Session(APIView):
         serializer = UserDataSerializer(request.user, many=False)
         data = serializer.data
         data.update(csrf(request))
+        print "Response:", data
         return Response(data, status=status.HTTP_202_ACCEPTED)
 
 class CheckSession(APIView):
@@ -35,10 +36,12 @@ class SignUp(APIView):
 
     @csrf_exempt
     def post(self, request, format=None):
+        print request.DATA
         user_data_admin = UserDataAdmin(data=request.DATA)
         if user_data_admin.save():
             return Response(dict(), status=status.HTTP_201_CREATED)
         else:
+            print "Response:", user_data_admin.get_errors() 
             return Response(user_data_admin.get_errors(), status=status.HTTP_400_BAD_REQUEST)
 
 class LogIn(APIView):
@@ -55,6 +58,7 @@ class LogIn(APIView):
             su serializer que el username y password tengan el formato correcto, no
             es obligacion utilizar una autenticacion con Token.
         """
+        print "Request:", request.DATA
         # Este serializer sirve para verificar el nombre de usuario y contrasena
         user_login = AuthSerializer(data=request.DATA)
         if user_login.is_valid():
@@ -64,8 +68,10 @@ class LogIn(APIView):
             serializer = UserDataSerializer(user, many=False)
             data = serializer.data
             data.update(csrf(request))
+            print "Response:", data
             return Response(data, status=status.HTTP_202_ACCEPTED)
         else:
+            print "Response:", user_login.errors
             return Response(user_login.errors, status=status.HTTP_401_UNAUTHORIZED)
 
 class LogOut(APIView):
@@ -73,5 +79,6 @@ class LogOut(APIView):
 
     @csrf_exempt
     def delete(self, request, format=None):
+        print "Request:", request.DATA
         auth.logout(request)
         return Response(dict(), status=status.HTTP_202_ACCEPTED)

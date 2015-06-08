@@ -4,11 +4,11 @@
     <string name="app_name">EcoAR</string>
     
     <!-- URL preferences -->
-    <string name="webservice">http://192.168.15.2:8080</string><!-- Al final del hipervinculo NO DEBE LLEVAR '/'-->
+    <string name="webservice">http://192.168.15.7:8080</string><!-- Al final del hipervinculo NO DEBE LLEVAR '/'-->
     
     <string name="webservice_session_get">/csession/</string><!-- Main -->
     <string name="webservice_userdata_get">/session/</string><!-- Home -->
-    <string name="webservice_singup_post">/singup/</string><!-- SingUp -->
+    <string name="webservice_singup_post">/signup/</string><!-- SingUp -->
     <string name="webservice_login_post">/login/</string><!-- Login -->
     <string name="webservice_logout_delete">/logout/</string><!-- Logout -->
     
@@ -19,7 +19,7 @@
     <string name="webservice_product_info_post">/products/info/</string>
     <string name="webservice_product_commentaries_get">/products/commentaries/</string>
     <string name="webservice_product_commentaries_post">/products/commentaries/</string>
-    <string name="webservice_product_commentaries_delete">/products/commentaries/</string>
+    <string name="webservice_product_commentaries_delete">/products/commentaries/delete/</string>
     
     <!-- URL Preferences parsers -->
     <string name="amazonurl">http://www.amazon.com/s/</string>
@@ -33,7 +33,7 @@
     
     <!-- SharedPreferences CSRF -->
     <string name="csrf_filename">csrf_prefs</string>
-    <string name="csrf_csrftoken_keyword">csrf_token</string>
+    <string name="csrf_csrftoken_keyword">csrftoken</string>
     
     <!-- ActionBar -->
     <string name="actionbar_home">Inicio</string>
@@ -64,6 +64,8 @@
     
     <!-- Login login errors -->
     <string name="login_errorsdefault">El nombre de usuario o la contraseña no son validos.</string>
+    <string name="login_error_username">Usuario: </string>
+    <string name="login_error_password">Contraseña: </string>
     
     <!-- SearchBar -->
 	<string name="searchbar_sendbutton">Buscar</string>
@@ -85,19 +87,25 @@
     
     <string name="productinfo_basicinfo_name">Nombre del producto</string>
     <string name="productinfo_basicinfo_description"></string>
-	<string name="productinfo_basicinfo_shopingservice">Amazon</string>
+	<string name="productinfo_basicinfo_shopingservice">Servicio</string>
 	<string name="productinfo_basicinfo_dash">-</string>
-	<string name="productinfo_basicinfo_referenceurl">http://amazon.com/?p=10alklkoiuaos</string>
+	<string name="productinfo_basicinfo_referenceurl">hipervínculo</string>
 
 	<string name="productinfo_commentaries_item_username">Usuario</string>
 	<string name="productinfo_commentaries_item_dash">-</string>
 	<string name="productinfo_commentaries_item_postingdate">24/abril/2009, 23:30</string>
-	<string name="productinfo_commentaries_item_delete">X</string>
 	<string name="productinfo_commentaries_item_body"></string>
+	
+	<string name="productinfo_commentaries_item_delete">X</string>
+	<string name="productinfo_commentaries_item_delete_message">¿Seguro que quieres eliminar este comentario?</string>
+	<string name="productinfo_commentaries_item_delete_positive">Eliminar</string>
+	<string name="productinfo_commentaries_item_delete_negative">Cancelar</string>
 
-	<string name="productinfo_commentarielist_title">Comentarios</string>
+	<string name="productinfo_commentarieslist_title">Comentarios</string>
 	<string name="productinfo_commentarieslist_post_hint">Escribe un comentario</string>
-	<string name="productinfo_commentarielist_send">Publicar</string>
+	<string name="productinfo_commentarieslist_send">Publicar</string>
+	
+	<string name="productinfo_commentarieslist_preface_more">Ver más comentarios&#8230;</string>
 	
 	<string name="productinfo_ecologicalscore_title">Calificación ambiental</string>
 	<string name="productinfo_ecologicalscore_subtitle">Escala del 1 al 10</string>
@@ -132,6 +140,15 @@
 	<string name="signup_birthday">Fecha de nacimiento:</string>
 	<string name="signup_send_success">El usuario ha sido registrado con éxito</string>
 	<string name="signup_send_button">Enviar</string>
+	
+	<string name="signup_username_error">Nombre de usuario:</string>
+	<string name="signup_password_error">Contraseña:</string>
+	<string name="signup_password_confirmation_error">Confirmar contraseña:</string>
+	<string name="signup_first_name_error">Nombre:</string>
+	<string name="signup_last_name_error">Apellido(s):</string>
+	<string name="signup_email_error">Correo:</string>
+	<string name="signup_gender_error">Sexo:</string>
+	<string name="signup_birthday_error">Fecha de nacimiento:</string>
 	
     <!-- Others -->
     <string name="null_content"></string>

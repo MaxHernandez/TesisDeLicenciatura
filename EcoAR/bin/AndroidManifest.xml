@@ -8,9 +8,9 @@
         android:targetSdkVersion="18" />
 
     <!-- Accessing camera hardware -->
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-feature android:name="android.hardware.camera" />
+	<uses-feature android:name="android.hardware.camera.autofocus"/>
     
     <!-- Other permissions -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -44,6 +44,7 @@
         
         <activity
             android:name="com.maxkalavera.ecoar.login.LoginIntro"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/app_name" 
             >
         </activity>
@@ -60,6 +61,7 @@
 
         <activity
             android:name="com.maxkalavera.ecoar.productinfo.ProductInfo"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/app_name" >
             >
         </activity>

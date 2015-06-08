@@ -21,7 +21,7 @@
     	android:layout_height="match_parent"
 		/>
 	-->
-	<fragment class="com.maxkalavera.ecoar.searchbar.GroceriesListFragment"
+	<fragment class="com.maxkalavera.ecoar.groceries.GroceriesListFragment"
 		android:id="@+id/groceriesListFragment"
 		android:layout_margin="10dp"
 		android:layout_width="match_parent"

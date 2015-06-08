@@ -28,6 +28,7 @@
 	    android:id="@+id/loginintro_skiplogin"
 	    style="@style/ButtonTheme"
 	    android:text="@string/loginintro_skiplogin"
+	    android:textSize="14sp"
     	android:layout_marginRight="10dp"
     	android:layout_marginLeft="10dp"    	
     	android:layout_marginBottom="5dp"	    

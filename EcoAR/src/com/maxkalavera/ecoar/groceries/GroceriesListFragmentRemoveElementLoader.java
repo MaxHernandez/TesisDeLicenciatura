@@ -30,12 +30,11 @@ public class GroceriesListFragmentRemoveElementLoader  extends AsyncTaskLoader<L
 		if (params.containsKey("position")) {
 			position = params.getInt("position");
 			
-			GroceriesListDAO groceriesListDAO = new GroceriesListDAO(this.getContext()); 
-			if ( groceriesListDAO.removeProduct(this.valuesList.get(position)) != null) {
-				this.valuesList.remove(position);
-			}else {
-				// Error no se pudo modificar el valor de la base de datos
-			}
+			GroceriesListDAO groceriesListDAO = new GroceriesListDAO(this.getContext());
+			groceriesListDAO.open();
+			groceriesListDAO.removeProduct(this.valuesList.get(position));
+			this.valuesList.remove(position);
+			groceriesListDAO.close();
 		}
 		
 		return this.valuesList;

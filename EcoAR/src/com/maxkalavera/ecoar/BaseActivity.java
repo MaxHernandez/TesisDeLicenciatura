@@ -19,7 +19,6 @@ import android.webkit.CookieSyncManager;
 
 public class BaseActivity extends FragmentActivity  {
 	private SlideMenuBarHandler slideMenu;
-	private boolean optionsMenuFlag = true;
 	
 	public void onCreate(Bundle savedInstanceState, int contentViewLayout) {
 		super.onCreate(savedInstanceState);
@@ -33,33 +32,9 @@ public class BaseActivity extends FragmentActivity  {
 		if (sessionFlag) {
 			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
 					new SlideMenuBarHandlerButton(
-							getResources().getString(R.string.actionbar_login),
-							"com.maxkalavera.ecoar.login.Login",
-							R.drawable.home),
-					new SlideMenuBarHandlerButton(
-							getResources().getString(R.string.actionbar_search),
-							"com.maxkalavera.ecoar.searchbar.SearchBar",
-							R.drawable.search),
-					new SlideMenuBarHandlerButton(
-							getResources().getString(R.string.actionbar_searchcamera),
-							"com.maxkalavera.ecoar.searchcamera.SearchCamera",
-							R.drawable.searchcamera),
-					new SlideMenuBarHandlerButton(
-							getResources().getString(R.string.actionbar_groceries),
-							"com.maxkalavera.ecoar.groceries.Groceries",
-							R.drawable.groceries),
-					new SlideMenuBarHandlerButton(
-						getResources().getString(R.string.actionbar_logout),
-						"",
-						null),
-					};
-			this.slideMenu.setButtons(slideMenuButtonsDefault);
-		}else {
-			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
-					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_home),
-							"com.maxkalavera.ecoar.login.Login",
-							R.drawable.home),
+							"com.maxkalavera.ecoar.home.Home",
+							R.drawable.home),							
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_search),
 							"com.maxkalavera.ecoar.searchbar.SearchBar",
@@ -74,7 +49,6 @@ public class BaseActivity extends FragmentActivity  {
 							R.drawable.groceries),
 					};
 			this.slideMenu.setButtons(slideMenuButtonsDefault);
-			
 			this.slideMenu.addButton(
 					new SlideMenuBarHandlerButton(
 							getResources().getString(R.string.actionbar_logout),
@@ -82,6 +56,30 @@ public class BaseActivity extends FragmentActivity  {
 							R.drawable.logout),
 					new LogOutListener(this)); 
 			
+		} else {
+			SlideMenuBarHandlerButton[] slideMenuButtonsDefault = {
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_home),
+							"com.maxkalavera.ecoar.home.Home",
+							R.drawable.home),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_search),
+							"com.maxkalavera.ecoar.searchbar.SearchBar",
+							R.drawable.search),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_searchcamera),
+							"com.maxkalavera.ecoar.searchcamera.SearchCamera",
+							R.drawable.searchcamera),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_groceries),
+							"com.maxkalavera.ecoar.groceries.Groceries",
+							R.drawable.groceries),
+					new SlideMenuBarHandlerButton(
+							getResources().getString(R.string.actionbar_login),
+							"com.maxkalavera.ecoar.login.Login",
+							null),
+					};
+			this.slideMenu.setButtons(slideMenuButtonsDefault);			
 		}
 		
 		ActionBar actionBar = this.getActionBar();
@@ -102,7 +100,8 @@ public class BaseActivity extends FragmentActivity  {
 	@Override
 	public void onPause() {
 		super.onPause();
-		 CookieSyncManager.getInstance().stopSync();	
+		CookieSyncManager.getInstance().sync();
+		CookieSyncManager.getInstance().stopSync();	
 	}
 
 	
@@ -113,15 +112,6 @@ public class BaseActivity extends FragmentActivity  {
 	/*************************************************************
 	 * Configuracion del SlideMenu
 	 *************************************************************/
-	
-	final public void setOptionsMenuFlagOn() {
-		this.optionsMenuFlag = true;
-	}
-	
-	final public void setOptionsMenuFlagOff() {
-		this.optionsMenuFlag = false;
-	}
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -140,13 +130,9 @@ public class BaseActivity extends FragmentActivity  {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		if (optionsMenuFlag) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.mainmenu, menu);
-			return true;
-		} else {
-			return false;
-		}
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.mainmenu, menu);
+		return true;
 	}
 	
 	/*************************************************************
@@ -161,4 +147,7 @@ public class BaseActivity extends FragmentActivity  {
 		return this.userDataManager;
 	}
 	
+	public SlideMenuBarHandler getSlideMenuHandler() {
+		return this.slideMenu;
+	}
 };

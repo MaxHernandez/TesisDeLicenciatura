@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +18,7 @@ import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -51,16 +52,19 @@ class TakePictureCallback implements Camera.PictureCallback {
 	
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
+    	if (camera == null || data == null ||data.length == 0) return;
+    	Log.i("TakePictureCallback", "PictureTaken");
     	this.callback.takePictureCallback(data);
     }
 
 };
 
+
 /*****************************************************************************
  * 
  * ***************************************************************************/
 class Preview implements SurfaceHolder.Callback, View.OnClickListener, 
-	LoaderCallbacks<ResponseBundle> {
+	LoaderManager.LoaderCallbacks<ResponseBundle> {
     
 	private Context context;
 	private SurfaceHolder surfaceHolder;
@@ -69,7 +73,7 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 	private Button shutterButton;
 	private RequestParamsBundle requestParamsBundle; 
 	
-	private static final int SEND_IMAGE = 0; 
+	private static final int SEND_IMAGE = 1; 
 	
     Preview(Context context, SurfaceView surfaceView) {
     	this.context = context;
@@ -79,7 +83,7 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
     	this.takePictureCallback = new TakePictureCallback(context, this);
     	
     	shutterButton =  
-    			(Button) ((Activity) context).findViewById(R.id.searchcamera_takepicture);
+    			(Button) ((FragmentActivity) context).findViewById(R.id.searchcamera_takepicture);
     	shutterButton.setOnClickListener(this);
     }
     
@@ -88,22 +92,26 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
     }
         
     public void onClick(View view) {
-    	this.camera.takePicture( null, this.takePictureCallback, null);
+    	if (camera == null) return;
+    	
+    	this.camera.takePicture( null, this.takePictureCallback, this.takePictureCallback);
     	this.shutterButton.setOnClickListener(null);
+    	
     }
 
     public void takePictureCallback(byte[] picture) {
     	Bitmap bitmapPicture
 		   = BitmapFactory.decodeByteArray(picture, 0, picture.length);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		bitmapPicture.compress(Bitmap.CompressFormat.PNG, 100, baos);
+		bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 		
 		this.requestParamsBundle = new RequestParamsBundle();
 		requestParamsBundle.addPart(baos.toByteArray(),
-				"image/png",
+				"image/jpg",
 				"product_image",
 				"product_image.png");
-		((BaseActivity) this.getContext()).getSupportLoaderManager().initLoader(SEND_IMAGE, null, this);
+		
+		((BaseActivity) this.getContext()).getSupportLoaderManager().restartLoader(SEND_IMAGE, null, this);
 		//this.callback.takePictureCallback(bitmapPicture);
 		//ImageStringConverter.ArrayToString(picture);
     	
@@ -142,7 +150,9 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 			int format, 
 			int width,
 			int height) {
-		camera.startPreview();
+		if (camera != null) {
+			camera.startPreview();
+		}
 	}
 
 	@Override
@@ -172,9 +182,11 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle response) {
 		switch(loader.getId()) {
 			case SEND_IMAGE:
-				this.requestParamsBundle = null;
+				
+				/*
 				SearchCameraResponseJsonModel searchCamerResponse = 
 							(SearchCameraResponseJsonModel) response.getResponseJsonObject();
+				
 				if (searchCamerResponse != null) {
 					if (searchCamerResponse.success) {
 				        Intent intent = new Intent();
@@ -187,6 +199,8 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 				} else {
 					// error al enviar el paquete
 				}
+				*/
+				((SearchCamera) this.getContext()).startCamera();
 				break;
 		}
 	}
@@ -217,17 +231,19 @@ public class SearchCamera extends BaseActivity implements
 	public void setUp() {
 		this.preview = new Preview(this,
         		(SurfaceView) findViewById(R.id.searchcamera_surface));
+		//this.startCamera();
 	}
 	
 	public void startCamera() {
 		this.preview.setCamera(null);
-		this.getSupportLoaderManager().initLoader(
+		Log.i("StartCamera", "----->B");
+		this.getSupportLoaderManager().restartLoader(
 				CameraOptionsSearchCameraLoader.GET_CAMERA, null, this);
 	}
 	
 	public void releaseCamera() {
 	    this.preview.setCamera(null);
-		this.getSupportLoaderManager().initLoader(
+		this.getSupportLoaderManager().restartLoader(
 				CameraOptionsSearchCameraLoader.RELEASE_CAMERA, null, this);
 	}
 
@@ -260,7 +276,10 @@ public class SearchCamera extends BaseActivity implements
 	public void onLoadFinished(Loader<Camera> loader, Camera camera) {
 		switch(loader.getId()) {
 			case CameraOptionsSearchCameraLoader.GET_CAMERA:
-				this.camera = camera;
+				if (camera != null) {
+					this.camera = camera;
+					this.preview.setCamera(this.camera);
+				}
 				break;
 			
 			case CameraOptionsSearchCameraLoader.RELEASE_CAMERA:
@@ -274,33 +293,16 @@ public class SearchCamera extends BaseActivity implements
 		
 	}
 		
-	
-	
-	/*
-	public static void setCameraDisplayOrientation(Activity activity,
-	         int cameraId, android.hardware.Camera camera) {
-	     android.hardware.Camera.CameraInfo info =
-	             new android.hardware.Camera.CameraInfo();
-	     android.hardware.Camera.getCameraInfo(cameraId, info);
-	     int rotation = activity.getWindowManager().getDefaultDisplay()
-	             .getRotation();
-	     int degrees = 0;
-	     switch (rotation) {
-	         case Surface.ROTATION_0: degrees = 0; break;
-	         case Surface.ROTATION_90: degrees = 90; break;
-	         case Surface.ROTATION_180: degrees = 180; break;
-	         case Surface.ROTATION_270: degrees = 270; break;
-	     }
-
-	     int result;
-	     if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-	         result = (info.orientation + degrees) % 360;
-	         result = (360 - result) % 360;  // compensate the mirror
-	     } else {  // back-facing
-	         result = (info.orientation - degrees + 360) % 360;
-	     }
-	     camera.setDisplayOrientation(result);
+	@Override
+	public void onResume() {
+		super.onResume();
+		this.startCamera();
 	}
-	*/
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		this.releaseCamera();
+	}	
 	
 };

@@ -19,19 +19,17 @@ class UserSignUpSerializer(serializers.ModelSerializer):
         fields   = ('id', 'username', 'password', 'email', 'first_name', 'last_name')
 
     def validate_username(self, attrs, source):
-        value = attrs[source]
+        username = attrs[source]
+        username = username.lower()
         try:
-            user = User.objects.get(username=value)
+            user = User.objects.get(username=username)
         except User.DoesNotExist:
             return attrs
         raise serializers.ValidationError("Ya existe el nombre de usuario")
 
     def validate_password(self, attrs, source):
-        if not self.init_data.has_key("password_confirmation"):
+        if attrs["password"] != self.init_data["password_confirmation"]:
             raise serializers.ValidationError("Las contrasenas no coinciden")
-        else:
-            if attrs["password"] != self.init_data["password_confirmation"]:
-                raise serializers.ValidationError("Las contrasenas no coinciden")
             
         return attrs 
     
@@ -42,12 +40,22 @@ class UserSignUpSerializer(serializers.ModelSerializer):
         user.save()
         self.data['id'] = user.id 
 
-class UserDataSignUpCheckerSerializer(serializers.ModelSerializer):
+class UserDataSignUpCheckerSerializer(serializers.Serializer):
     """Esta clase solo sirve para verificar que los campos sean correctos"""
 
-    class Meta:
-        model    = UserData
-        fields   = ('birthdate', 'gender')
+    birthdate               = serializers.DateField(required = True)
+    password_confirmation   = serializers.CharField(required = True)
+    gender                  = serializers.ChoiceField(required = True, choices=UserData.GENDER_CHOICES)
+
+    #class Meta:
+    #    model    = UserData
+    #    fields   = ('birthdate', 'gender')
+
+    def validate_password_confirmation(self, attrs, source):
+        if attrs["password_confirmation"] != self.init_data["password"]:
+            raise serializers.ValidationError("Las contrasenas no coinciden")
+            
+        return attrs 
 
 
 class UserDataSignUpSerializer(serializers.ModelSerializer):

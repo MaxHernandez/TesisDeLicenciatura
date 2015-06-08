@@ -27,9 +27,9 @@ public class HomeLastProductsFragmentLoader extends AsyncTaskLoader<List<Product
 		ProductCacheDAO productCacheDAO = new ProductCacheDAO(this.getContext());
 		// ERROR: Esta variable debe ser movida a la lista de valores en los archivos de recursos
 		productCacheDAO.open();
-		List<ProductModel> temp = productCacheDAO.getLastProducts(this.numberOfProducts);
+		List<ProductModel> lastProducts = productCacheDAO.getLastProducts(this.numberOfProducts);
 		productCacheDAO.close();
-		return temp;
+		return lastProducts;
 	}
 	
 

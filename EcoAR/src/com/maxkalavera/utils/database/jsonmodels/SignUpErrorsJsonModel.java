@@ -1,24 +1,25 @@
 package com.maxkalavera.utils.database.jsonmodels;
 
 import java.util.Calendar;
+import java.util.List;
 
 import com.google.gson.Gson;
 
 public class SignUpErrorsJsonModel implements BaseResponseJsonModel {
-	public String username;
-	public String first_name;
-	public String last_name;
-	public String email;
-	public String gender;
-	public String birthdate;
-	public String password;
-	public String password_confirmation;
-	public String non_field_errors;
+	public List<String> username;
+	public List<String> first_name;
+	public List<String> last_name;
+	public List<String> email;
+	public List<String> gender;
+	public List<String> birthdate;
+	public List<String> password;
+	public List<String> password_confirmation;
+	public List<String> non_field_errors;
 	
 	@Override
 	public BaseResponseJsonModel deserialize(String plainJson) {
         Gson gson = new Gson();
-        return (BaseResponseJsonModel) gson.fromJson(plainJson, LoginErrorsJsonModel.class);
+        return (BaseResponseJsonModel) gson.fromJson(plainJson, SignUpErrorsJsonModel.class);
 	}
 
 }

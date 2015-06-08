@@ -62,13 +62,20 @@ public class CommentariesCacheDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/
-	public CommentModel addComment(CommentModel comment) {	
+	public CommentModel addComment(CommentModel comment, ProductModel product) {	
+		if (comment == null || product == null || product.getCacheId() == -1)
+			return comment;
+		
+		comment.setProductReference(product);
+		
 		ContentValues contentValues = 
 				this.getContentValuesFromProduct(comment);
+		contentValues.remove(CommentariesCacheSQLiteHelper.COMMENT_ID);
+		
 		//long productID = 
 		this.database.insert(
-				CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES, null,
-				contentValues);
+			CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES, null,
+			contentValues);
 		//productInfo.setId(productID);			
 		
 		return comment;
@@ -78,10 +85,13 @@ public class CommentariesCacheDAO {
 	 * 
 	 ********************************************************/	
 	public boolean removeComment(long _id) {
+		if (_id == -1)
+			return false;
+		
 		// Elimina el producto de la base de datos
 		int temp = this.database.delete(CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES,
 				CommentariesCacheSQLiteHelper.COMMENT_ID +
-				"="+String.valueOf(_id)
+				" = "+String.valueOf(_id)
 				, null);
 		
 		if (temp > 0) 
@@ -91,17 +101,23 @@ public class CommentariesCacheDAO {
 	}
 	
 	public boolean removeComment(CommentModel comment) {
+		if (comment == null)
+			return false;
+		
 		return removeComment(comment.getId());
 	}
 	
 	/********************************************************
 	 * 
 	 ********************************************************/	
-	public boolean removeCoommentariesOf(long product_reference) {
+	public boolean removeCommentariesOf(long product_reference) {
+		if (product_reference == -1)
+			return false;
+		
 		// Elimina el producto de la base de datos
 		int temp = this.database.delete(CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES,
 				CommentariesCacheSQLiteHelper.COMMENT_PRODUCT_REFERENCE +
-				"="+String.valueOf(product_reference)
+				" = "+String.valueOf(product_reference)
 				, null);
 		
 		if (temp > 0) 
@@ -110,8 +126,11 @@ public class CommentariesCacheDAO {
 		
 	}
 	
-	public boolean removeCoommentariesOf(ProductModel product) {
-		return removeCoommentariesOf(product.getCacheId());
+	public boolean removeCommentariesOf(ProductModel product) {
+		if( product == null)
+			return false;
+		
+		return removeCommentariesOf(product.getCacheId());
 	}
 	
 	/********************************************************
@@ -119,16 +138,17 @@ public class CommentariesCacheDAO {
 	 * producto en el cache
 	 ********************************************************/
 	public List<CommentModel> getCommentariesFromCache(long product_reference, int offset) {
-		ProductInfoModel productInfo = null;
+		if (product_reference == -1 || offset < 1)
+			return null;
 		
 		// Si se almancenan imagenes del producto se eliminan estas primero
-		Cursor cursor = this.dbHelper.getReadableDatabase().
-				rawQuery("select * from "+ ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO +
-				" where "+ ProductInfoCacheSQLiteHelper.PRODUCTINFO_PRODUCT_REFERENCE +" = ? " +
-				"limit " + String.valueOf(this.PAGE_SIZE) + " offset " + String.valueOf(this.PAGE_SIZE), 
+		Cursor cursor = this.database.
+				rawQuery("select * from "+ CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES +
+				" where "+ CommentariesCacheSQLiteHelper.COMMENT_PRODUCT_REFERENCE +" = ? " +
+				" limit " + String.valueOf(CommentariesCacheDAO.PAGE_SIZE) + " offset " + String.valueOf(offset), 
 				new String[] {String.valueOf(product_reference)});		
 
-		if (cursor .moveToFirst()) {
+		if (cursor != null && cursor .moveToFirst()) {
 			List<CommentModel> cmmentaries = new ArrayList<CommentModel>();
 			
             while (cursor.isAfterLast() == false) {
@@ -142,6 +162,9 @@ public class CommentariesCacheDAO {
 	}
 	
 	public List<CommentModel> getCommentariesFromCache(ProductModel product, int offset) {
+		if( product == null)
+			return null;
+		
 		return getCommentariesFromCache(product.getCacheId(), offset);
 	}
 	
@@ -149,7 +172,7 @@ public class CommentariesCacheDAO {
 	 * 
 	 ********************************************************/
 	public void removeAllProducts() {
-		this.database.delete(ProductInfoCacheSQLiteHelper.TABLE_PRODUCTINFO,
+		this.database.delete(CommentariesCacheSQLiteHelper.TABLE_COMMENTERIES,
 				// Enviar null en este argumento hace que se eliminen todas los elemntos de la base de datos
 				null,  
 				null);
@@ -176,6 +199,7 @@ public class CommentariesCacheDAO {
 	
 	public ContentValues getContentValuesFromProduct (CommentModel comment) {
 		ContentValues contentValues = new ContentValues();
+		
 		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_ID, comment.getId());
 		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_PRODUCT_REFERENCE, comment.getProductReference());
 		contentValues.put(CommentariesCacheSQLiteHelper.COMMENT_BODY, comment.body);

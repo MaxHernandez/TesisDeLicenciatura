@@ -9,6 +9,7 @@ import org.jsoup.select.Elements;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
@@ -21,8 +22,10 @@ import com.squareup.okhttp.Response;
 public class AmazonSearchObtainer {
 	String url;
 	
-	private static final String SHOPING_SERVICE = "AMAZON";
+	public static final String SHOPING_SERVICE = "AMAZON";
 	private static final String SHOPING_SERVICE_INDEX = "AMZN";
+	
+	private static final String AMAZON_URL_ID_FIELD = "dp";
 	private static final int GENERAL_ID_NUMBER_CHARS = 16;
 	
 	public AmazonSearchObtainer(Context context) {
@@ -44,7 +47,10 @@ public class AmazonSearchObtainer {
 	}
 	
 	public ArrayList<ProductModel> getData(String query, int page){
+		if (query == null) return null; 
 		String html = makeRequest(query, page);
+		
+		if (html == null) return null;
 		ArrayList<ProductModel> data = parseHTML(html);
 		return data;
 	}
@@ -71,33 +77,40 @@ public class AmazonSearchObtainer {
 	
 	private ArrayList<ProductModel> parseHTML(String html){
 		ArrayList<ProductModel> data = new ArrayList<ProductModel>();
-		Document doc = Jsoup.parse(html);
 		
-		Elements products = doc.select("div[class=s-item-container]");
-		for (Element product : products) {
+		for (Element product : Jsoup.parse(html).select("div[class=s-item-container]")) {
+			
 			ProductModel pdata = new ProductModel();
 			pdata.shopingService = AmazonSearchObtainer.SHOPING_SERVICE;
 			
-			Element productNameElementContainer = product.select("a[class=a-link-normal s-access-detail-page a-text-normal]").first();
-			if (productNameElementContainer != null) {
-				Element aElement = productNameElementContainer.select("a[title]").first();
-				pdata.name = aElement.text();
-				pdata.url = aElement.attr("href");
+			Element aElement = product.select("a[title]").first();
 				
-				String[] urlParts = pdata.url.split("/");
-				String shopingServiceId = urlParts[urlParts.length-1];
+			pdata.name = aElement.text();
+			pdata.url = aElement.attr("href");
+			aElement = null;
+			
+			String[] urlParts = pdata.url.split("/");
+			int productIdPosition = -1;
+			for (int i = 0; i < urlParts.length-1; i++)
+				if (urlParts[i].equals(AMAZON_URL_ID_FIELD))
+					productIdPosition = i + 1;
+			if (productIdPosition != -1) {
+				String shopingServiceId = urlParts[productIdPosition];
 				pdata.generalId = this.buildGeneralId(shopingServiceId);
-				
-				Element spanBrother = productNameElementContainer.select("span:contains(Product Features)").first();
-				Element spanParent = spanBrother.parent();
-				pdata.description = spanParent.children().last().text();
-				
-				Element productImageURL = product.select("img").first();
-				pdata.imageURL = productImageURL.attr("src");
-				pdata.image = ImageDownloader.downloadImage(pdata.imageURL);
-				
-				data.add(pdata);
 			}
+			urlParts = null;
+			for (Element span : product.select("span")) {
+				if ( span.text().equals("Product Features") || span.text().equals("Product Description") ) {
+					Element spanParent = span.parent();
+					pdata.description = spanParent.children().last().text();
+				}
+			}
+			
+			Element productImageURL = product.select("img").first();
+			pdata.imageURL = productImageURL.attr("src");
+			//pdata.image = ImageDownloader.downloadImage(pdata.imageURL);
+			
+			data.add(pdata);
 		}
 		return data;
 	}

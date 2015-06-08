@@ -14,13 +14,14 @@ import com.maxkalavera.utils.database.jsonprimitives.DateJsonPrimitive;
 import android.text.format.Time;
 
 public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonModel {
-	public String body;
-	public String username;
-	public Date postingDate;	
+	public String body = null;
+	public String username = null;
+	public Date posting_date = null;
 	
 	private long product_id = -1;
 	private long _id = -1;
-	private long server_id = -1;
+	public long server_id = -1;
+	public long id = -1;
 
 	/*************************************************************
 	 * Inner ID
@@ -66,7 +67,7 @@ public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonMode
 	}
 	
 	public CommentModel (String body, String username) {
-		this.postingDate = Calendar.getInstance().getTime();
+		this.posting_date = Calendar.getInstance().getTime();
 		this.body = body;
 		this.username = username;
 	}
@@ -75,23 +76,22 @@ public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonMode
 	 * 
 	 *************************************************************/	
 	public void setCurrentDate() {
-		this.postingDate = Calendar.getInstance().getTime();
+		this.posting_date = Calendar.getInstance().getTime();
 	}
 	
 	public String getDateAsString() {
-		return DateJsonPrimitive.getDateFormat().format(this.postingDate);
+		return DateJsonPrimitive.getDateFormat().format(this.posting_date);
 	}	
 	
 	public String getDateAsToShow() {
-		return DateJsonPrimitive.DATEFORMAT_SHOW.format(this.postingDate);
+		return DateJsonPrimitive.DATEFORMAT_SHOW.format(this.posting_date);
 	}	
 	
 	
 	public void setDateFromString(String dateStr) {
 		try {
-			this.postingDate = DateJsonPrimitive.getDateFormat().parse(dateStr);
+			this.posting_date = DateJsonPrimitive.getDateFormat().parse(dateStr);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -113,7 +113,7 @@ public class CommentModel implements BaseRequestJsonModel,  BaseResponseJsonMode
 		GsonBuilder gsonBuilder=new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(Date.class, DateJsonPrimitive.getInstance()); 
 		Gson gson = gsonBuilder.create();
-		return (BaseResponseJsonModel) gson.fromJson(plainJson, UserDataJsonModel.class);
+		return (BaseResponseJsonModel) gson.fromJson(plainJson, CommentModel.class);
 	}
 	
 };

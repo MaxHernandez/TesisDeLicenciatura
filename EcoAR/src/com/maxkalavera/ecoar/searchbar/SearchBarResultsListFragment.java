@@ -9,6 +9,7 @@ import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
+import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
 
@@ -44,15 +45,18 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	OnScrollListener,
 	OnClickListener {
 			
-	ArrayList<ProductModel> valuesList = new ArrayList<ProductModel>();
-	SearchBarResultsListFragmentAdapter adapter;
-	ProgressBar progressBar;
-	View progressBarView;
-	String query;
-	Button startSearchButton;
+	public ArrayList<ProductModel> valuesList;
+	private SearchBarResultsListFragmentAdapter adapter;
+	private ProgressBar progressBar;
 	
-	int page = 1;
-	boolean scrollListenFlag = true;
+	private String query;
+	private Button startSearchButton;
+	
+	private int page = 1;
+	private boolean scrollListenFlag = true;
+	
+	public static final int SEND_REQUEST = 1;
+	public static final int DOWNLOAD_IMAGES = 2;
 	
 	/************************************************************
 	 * Constructor Method
@@ -60,14 +64,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-                
-		this.adapter = new SearchBarResultsListFragmentAdapter(
-				this,
-				this.getActivity().getApplicationContext(), 
-				this.valuesList);
-        setListAdapter(adapter);
-        
-		getLoaderManager().initLoader(0, null, this);
+        this.setUp();		
     }
 	
     @Override
@@ -78,30 +75,37 @@ public class SearchBarResultsListFragment extends ListFragment implements
     	return view;
     }
     
-    public void setUp() {
-		this.startSearchButton = (Button) getView().findViewById(R.id.searchproduct_searchButton);
-		startSearchButton.setOnClickListener(this);
-    }
-    
-    
 	/************************************************************
 	 * 
 	 ************************************************************/
-    public void setUpLoadingView() {
+    public void setUp() {
+        this.valuesList = new ArrayList<ProductModel>();
+		this.startSearchButton = (Button) getView().findViewById(R.id.searchproduct_searchButton);
+		this.startSearchButton.setOnClickListener(this);
+		
+		// El orden es muy importante, el Footer View debe ser agregado antes 
+		// que se establezca un adapter en el listFragment.
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		this.progressBarView = inflater.inflate(R.layout.loading, null);
+		View progressBarView = inflater.inflate(R.layout.loading, null);
+		this.getListView().addFooterView(progressBarView);
+		
+		this.adapter = new SearchBarResultsListFragmentAdapter(
+				this,
+				this.getActivity(), 
+				this.valuesList);
+        this.setListAdapter(adapter);
+
 		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.loading_progressbar);
-		this.getListView().addFooterView(this.progressBarView);
+		this.progressBar.setVisibility(View.GONE);
     }
     
 	/************************************************************
-	 * Listeners
+	 * On Scroll listener, para cargar automaticamente mas 
+	 * elementos a la lista.
 	 ************************************************************/	
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		if ( (this.scrollListenFlag) &&
-		( (firstVisibleItem+visibleItemCount) >= totalItemCount ) 
-		) {
+		if ( this.scrollListenFlag && (firstVisibleItem+visibleItemCount) >= totalItemCount ) {
 			this.scrollListenFlag = false;
 			this.getListView().setOnScrollListener(null);
 			this.loadData();
@@ -117,29 +121,39 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	 ************************************************************/
 	
 	@Override
-	public void onClick(View arg0) {
-		startSearchButton.setOnClickListener(null);
-		newSearch(null);
+	public void onClick(View view) {
+		this.startSearchButton.setOnClickListener(null);
+		newSearch();
 	}
 	
-	void newSearch(String query){
+	public void newSearch(String query){
 		if (query == null) {
 			EditText queryInputEditText = 
 					(EditText) getView().findViewById(R.id.searchproduct_searchTextBar);
 			this.query = queryInputEditText.getText().toString();
-		} else {
+			if (this.query == null) this.query = "";
+		} else
 			this.query = query;
-		}
-		this.getLoaderManager().destroyLoader(0);
+		
+		// Es importante desactivar el ScrollListener antes de limpiar la lista del Fragment, 
+		// puesto que se activa automanticamente al limpiar la lista del fragmento y provoca
+		// que se carguen multiples loaders y esto provoca errores.
+		this.getListView().setOnScrollListener(null);
 		this.valuesList.clear();
 		this.adapter.notifyDataSetChanged();
 		this.page = 1;
+		
 		this.loadData();
+	}
+	
+	public void newSearch() {
+		this.newSearch(null);
 	}
 	
 	private void loadData(){
 		this.progressBar.setVisibility(View.VISIBLE);
-		getLoaderManager().restartLoader(1, null, this);
+		//this.getLoaderManager().destroyLoader(SEND_REQUEST);
+		getLoaderManager().restartLoader(SEND_REQUEST, null, this);
 	}
     
 	/************************************************************
@@ -148,31 +162,58 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	@Override
 	public Loader<ArrayList<ProductModel>> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
-			case 0:
-				return null;
-			case 1:				
-				SearchBarResultsListFragmentHTTPLoader loader = 
+			case SEND_REQUEST:
+				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
+					return null;
+				
+				SearchBarResultsListFragmentHTTPLoader searchBarResultsListFragmentHTTPLoader = 
 						new SearchBarResultsListFragmentHTTPLoader(this.getActivity(), this.query, this.page);
-				loader.forceLoad();
-				return loader;
+				searchBarResultsListFragmentHTTPLoader.forceLoad();
+				
+				//Log.i("SearchBarResultsList", "Loader Created.");
+				return searchBarResultsListFragmentHTTPLoader;
+				
+			case DOWNLOAD_IMAGES:
+				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
+					return null;
+				
+				SearchBarDownloadImagesListFragmentLoader searchBarDownloadImagesListFragmentLoader = 
+					new SearchBarDownloadImagesListFragmentLoader(this.getActivity(), this.valuesList);
+				searchBarDownloadImagesListFragmentLoader.forceLoad();
+				return searchBarDownloadImagesListFragmentLoader;
+				
 			default:
 				return null;
 		}
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ArrayList<ProductModel>> arg0, ArrayList<ProductModel> loaderRes) {
-		if (loaderRes != null) {
-			if (!loaderRes.isEmpty()) {
-				this.page += 1;
-				this.getListView().setOnScrollListener(this);
-				this.scrollListenFlag = true;
-			}				
-			this.valuesList.addAll(loaderRes);
-			this.adapter.notifyDataSetChanged();
+	public void onLoadFinished(Loader<ArrayList<ProductModel>> loader, ArrayList<ProductModel> loaderRes) {
+		switch (loader.getId()) {
+			case SEND_REQUEST:
+				if (loaderRes != null && !loaderRes.isEmpty()) {
+					this.page += 1;
+					
+					this.valuesList.addAll(loaderRes);
+					this.adapter.notifyDataSetChanged();
+					
+					this.getListView().setOnScrollListener(this);
+					this.scrollListenFlag = true;
+					
+					getLoaderManager().restartLoader(DOWNLOAD_IMAGES, null, this);
+				}
+				this.progressBar.setVisibility(View.GONE);
+				this.startSearchButton.setOnClickListener(this);
+				
+				break;
+				
+			case DOWNLOAD_IMAGES:
+				this.adapter.notifyDataSetChanged();
+				break;
+				
+			default:
+				break;
 		}
-		this.progressBar.setVisibility(View.GONE);
-		startSearchButton.setOnClickListener(this);
 	}
 
 	@Override

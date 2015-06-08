@@ -33,11 +33,14 @@ public class UserSessionDAO {
 				this.sharedPreferencesKeyword, 
 				Context.MODE_PRIVATE);
 		
-		if (sessionSharedPreferences .contains(this.sessionStatusKeyword)) {
+		if (sessionSharedPreferences.contains(this.sessionStatusKeyword)) {
 			Boolean status;
 			status = sessionSharedPreferences.getBoolean(this.sessionStatusKeyword , 
 					false);
 			return status;
+		} else {
+			this.setSessionStatus(false);
+			return false;
 		}
 		
 		// 
@@ -49,8 +52,6 @@ public class UserSessionDAO {
 			editor.commit();
 			return userData.sessionStatus;
 		}*/
-		
-		return null;
 	}
 	
 	/*************************************************************
@@ -65,10 +66,5 @@ public class UserSessionDAO {
 		editor.putBoolean(this.sessionStatusKeyword, status);
 		editor.commit();
 		
-		// Save in internal memory 
-		/*UserDataDAO userDataDAO = new UserDataDAO(this.getContext());
-		UserDataJsonModel userData = userDataDAO.getUserData();
-		userData.sessionStatus = status;
-		userDataDAO.saveUserData(userData);*/
 	}
 }

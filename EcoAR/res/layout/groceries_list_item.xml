@@ -35,7 +35,7 @@
     		android:layout_height="wrap_content"
 	        />
     </LinearLayout>
-    
+
 	<Button 
 	    android:id="@+id/groceries_item_menu"
 	    android:background="@drawable/displaymenu"

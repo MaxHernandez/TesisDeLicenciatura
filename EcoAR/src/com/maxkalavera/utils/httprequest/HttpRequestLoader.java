@@ -20,6 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -56,16 +57,21 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	private MultipartBuilder multipartBuilder;
 	private Boolean cookiesFlag;
 	private Boolean csrfFlag;
-	private Boolean JsonResponseFlag;
 	private Boolean multipartFlag;
 	private String csrfSharedPreferencesFilename;
 	private String csrfSharedPreferencesKeyword;
 	private String url;
 	private String host;
 	private String method; 
+	
 	private BaseResponseJsonModel responseJSONModel;
+	private BaseResponseJsonModel serverErrorResponseJSONModel;
 	
 	public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+	public static final String CSRF_TOKEN_HEADER_KEYWORD  = "X-CSRFToken";
+	public static final String COOKIE  = "Cookie";
+	public static final String COOKIES_HEADER  = "Set-Cookie";
+	
 	public static final String GET = "GET";
 	public static final String POST = "POST";
 	public static final String DELETE = "DELETE";
@@ -73,29 +79,32 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	/************************************************************
 	 * Constructor Method
 	 ************************************************************/
-	public HttpRequestLoader(Context context, String url, String method, RequestParamsBundle uriParamsBundle) {
+	public HttpRequestLoader(Context context, String url, String method, RequestParamsBundle paramsBundle) {
 		super(context);
 		this.context = context;
-		this.client = new OkHttpClient();
+		this.url = url;
+		this.method = method; 
+		
 		this.builder = null;
 		this.uriBuilder = null;
 		this.parametersJson = null;
 		this.cookiesFlag = false;
 		this.csrfFlag = false;
-		this.JsonResponseFlag = false;
 		this.multipartFlag = false;
+		this.host = null;
+		this.responseJSONModel = null;
+		this.serverErrorResponseJSONModel = null;
+		
+		this.client = new OkHttpClient();
 		this.csrfSharedPreferencesFilename = context.getResources().getString(R.string.csrf_filename);
 		this.csrfSharedPreferencesKeyword = context.getResources().getString(R.string.csrf_csrftoken_keyword);
-		this.url = url;
-		this.method = method; 
-		this.host = null;
 		
 		this.uriBuilder = Uri.parse(url).buildUpon();
 		if (this.method != GET )
 			this.parametersJson = new JsonParser().parse("{}").getAsJsonObject();
 
-		if (uriParamsBundle != null)
-			this.addRequestParamsBundle(uriParamsBundle);
+		if (paramsBundle != null)
+			this.addRequestParamsBundle(paramsBundle);
 	}
 	
 	public HttpRequestLoader(Context context, String url, String method) {
@@ -110,12 +119,20 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	public void setCookiesOff(){this.cookiesFlag = false;}
 	public void setCSRFOn(){this.csrfFlag = true;}
 	public void setCSRFOff(){this.csrfFlag = false;}
-	public void setJsonResponseOn(BaseResponseJsonModel responseJSONModel){this.JsonResponseFlag = true; 
+	
+	//
+	public void setJsonResponseOn(BaseResponseJsonModel responseJSONModel){
 		this.responseJSONModel = responseJSONModel;}
-	public void setJsonResponseOff(){this.JsonResponseFlag = false;}
+	public void setJsonResponseOff(){this.responseJSONModel = null;}
+	
+	public void setJsonResponseServerErrorOn(BaseResponseJsonModel responseJSONModel){
+		this.serverErrorResponseJSONModel = responseJSONModel;}
+	public void setJsonResponseServerErrorOff(){this.serverErrorResponseJSONModel = null;}
+	//
 	public void setMultipartOn(){
 		this.multipartFlag = true;
 		this.multipartBuilder = new MultipartBuilder();
+		this.multipartBuilder.type(MultipartBuilder.FORM);
 	}
 	public void setMultipartOff() {
 		this.multipartFlag = false;
@@ -128,26 +145,38 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	/************************************************************
 	 * Request Parameters Addition Methods
 	 ************************************************************/
-	public void addURIParam(String name, String value){
+	public void addUriParam(String name, String value){
+		if (name == null) name = new String();
+		if (value == null) value = new String();
+		
 		this.uriBuilder.appendQueryParameter(name, value);
 	}
 	
-	public void addJSONParam(String name, String value){
+	public void addJsonParam(String name, String value){
+		if (name == null) name = new String();
+		if (value == null) value = new String();
+		
 		if (this.method != HttpRequestLoader.GET )
 			this.parametersJson.addProperty(name, value);
 	}
 	
-	public void addJSONObject(String name, BaseRequestJsonModel value){
+	public void addJsonObject(BaseRequestJsonModel value){
 		if (this.method != HttpRequestLoader.GET ) {
+			//if (name == null) name = new String();
+			if (value == null) return;
+			
 			//this.addJSONParam(name, value.serialize());
 			Gson gson = value.serialize();
 			for (Field field : value.getClass().getFields()) {
 				String fieldName = field.getName();
 				
 				try { 
-					Class c = field.getClass();
 					String fieldValue = gson.toJson(field.get(value), field.getType());
-					this.parametersJson.addProperty(fieldName, fieldValue);
+					JsonParser parser = new JsonParser();
+					JsonElement jsonElement = parser.parse(fieldValue);
+					
+					this.parametersJson.add(fieldName, jsonElement);
+					//this.parametersJson.addProperty(fieldName, fieldValue);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -158,19 +187,38 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	}
 	
 	public void addPart(byte[] data, String mediatype, String name, String filename) {
-		if (this.multipartFlag)
+		if (data == null) return;
+		if (mediatype == null) new String();
+		if (name == null) name = new String();
+		if (filename == null) new String();
+
+		if (this.multipartFlag){
+			/*
 			this.multipartBuilder.addPart(
 					Headers.of("Content-Disposition", 
 							"form-data; name=\""+ name +"\"; filename=\""+filename+"\";"),
 							RequestBody.create(MediaType.parse(mediatype), data));
+			*/
+			
+			this.multipartBuilder.addFormDataPart(name, filename, 
+					RequestBody.create(MediaType.parse(mediatype), data));
+			try {
+				Log.i("HttpRequestLoader-AddPart", String.valueOf(this.multipartBuilder.build().contentLength()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	public void addRequestParamsBundle(RequestParamsBundle bundle) {		
+	public void addRequestParamsBundle(RequestParamsBundle bundle) {
+		if (bundle == null) return;
+		
 		HashMap<String, String> uriParamsMap = bundle.getURIParamsMap();
 		if (uriParamsMap != null) {
 			Set<Entry<String, String>> uriParamsSet = uriParamsMap.entrySet();
 			for (Entry<String, String> entry : uriParamsSet) {
-				this.addURIParam(entry.getKey(), entry.getValue());
+				this.addUriParam(entry.getKey(), entry.getValue());
 			}
 		}
 		
@@ -178,23 +226,27 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		if (jsonParamsMap != null) {
 			Set<Entry<String, String>> jsonParamsSet = jsonParamsMap.entrySet();
 			for (Entry<String, String> entry : jsonParamsSet) {
-				this.addJSONParam(entry.getKey(), entry.getValue());
+				this.addJsonParam(entry.getKey(), entry.getValue());
 			}
 		}
 		
 		HashMap<String, BaseRequestJsonModel> jsonModelMap = bundle.getJsonModelMap();
 		if (jsonModelMap != null) {
+			
 			Set<Entry<String, BaseRequestJsonModel>> jsonModelSet = jsonModelMap.entrySet();
 			for (Entry<String, BaseRequestJsonModel> entry : jsonModelSet) {
-				this.addJSONObject(entry.getKey(), entry.getValue());
+				this.addJsonObject(entry.getValue());
 			}
 		}
 		
 		List<RawDataModel> rawDataList = bundle.getRawDataList();
-		Iterator<RawDataModel> rawDataIterator = rawDataList.iterator();
-		while(rawDataIterator.hasNext()) {
-			RawDataModel rawData = rawDataIterator.next();
-			this.addPart(rawData.data, rawData.mediatype, rawData.name, rawData.filename);
+		if (rawDataList != null){
+			this.setMultipartOn();
+			Iterator<RawDataModel> rawDataIterator = rawDataList.iterator();
+			while(rawDataIterator.hasNext()) {
+				RawDataModel rawData = rawDataIterator.next();
+				this.addPart(rawData.data, rawData.mediatype, rawData.name, rawData.filename);
+			}
 		}
 		
 	}
@@ -204,17 +256,19 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	 ************************************************************/
 	private void loadCookies() throws MalformedURLException {
 		URL uri = new URL(this.url);
-		String host = uri.getHost();
+		this.host = uri.getHost();
 		CookieManager cookieManager = CookieManager.getInstance();
 		String cookie = cookieManager.getCookie(host);
 		if (cookie != null) {
-			this.getBuilder().addHeader("Cookie", cookie);
+			this.getBuilder().addHeader(COOKIE, cookie);
 		}
 	}
 	
 	private void saveCookies(Response response) {
+		if (response == null) return;
 		CookieManager cookieManager = CookieManager.getInstance();
-		List<String> cookies = response.headers("Set-Cookie");
+		List<String> cookies = response.headers(COOKIES_HEADER);
+		
 		for (int i = 0; i < cookies.size(); i++){
 			cookieManager.setCookie(this.host, cookies.get(i));
 		}
@@ -229,33 +283,43 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		SharedPreferences sessionSharedPreferences = this.context.getSharedPreferences(csrfSharedPreferencesFilename, Context.MODE_PRIVATE);
 		String csrf_token = sessionSharedPreferences.getString(this.csrfSharedPreferencesKeyword, null);
 		if (csrf_token != null) {
-			this.addURIParam(this.csrfSharedPreferencesKeyword, csrf_token);
+			this.getBuilder().addHeader(CSRF_TOKEN_HEADER_KEYWORD, csrf_token);
 		}
 	}
 	
-	private void csrfSave(Response response) {
+	private void csrfSave(String responseBody) {
+		if (responseBody == null) return;
+		
 		CSRFJsonModel csrfJsonModel;
-		try {
-			csrfJsonModel = CSRFJsonModel.deserialize(response.body().string());
-			if (csrfJsonModel != null) {
-				SharedPreferences sessionSharedPreferences = this.context.getSharedPreferences(csrfSharedPreferencesFilename, Context.MODE_PRIVATE);
-				SharedPreferences.Editor editor = sessionSharedPreferences.edit();
-				editor.putString(this.csrfSharedPreferencesKeyword, csrfJsonModel.csrf_token);
-				editor.commit();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		csrfJsonModel = CSRFJsonModel.deserialize(responseBody);
+		if (csrfJsonModel != null) {
+			SharedPreferences sessionSharedPreferences = this.context.getSharedPreferences(csrfSharedPreferencesFilename, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = sessionSharedPreferences.edit();
+			editor.putString(this.csrfSharedPreferencesKeyword, csrfJsonModel.csrf_token);
+			editor.commit();
 		}
 	}
 	
 	/************************************************************
 	 * 
 	 ************************************************************/
-	public BaseResponseJsonModel deserializeJson(Response response, BaseResponseJsonModel jsonModel) {
-		return jsonModel.deserialize(response.body().toString());
+	public BaseResponseJsonModel deserializeJson(String body, Response response) {	
+		if (body == null)
+			return null;
+		
+		if (response.isSuccessful()){
+			if (this.responseJSONModel != null)
+				return this.responseJSONModel.deserialize(body);
+			else
+				return null;
+		} else {
+			if (this.serverErrorResponseJSONModel != null)
+				return this.serverErrorResponseJSONModel.deserialize(body);
+			else
+				return null;
+		}
 	}
 
-	
 	/************************************************************
 	 * Metodo para hacer Override
 	 ************************************************************/
@@ -270,6 +334,8 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	public ResponseBundle sendHTTPRequest(){
 		Response response = null;
 		BaseResponseJsonModel jsonModel = null;
+		String responseBody = null;
+		
 		this.builder = new Request.Builder();
 		
 		// Module to load up Cookies
@@ -300,7 +366,7 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 				String json = gson.toJson(this.parametersJson);
 				this.builder.url(this.url);
 
-				if (this.multipartFlag) {					
+				if (this.multipartFlag) {
 					this.builder.method(this.method, this.multipartBuilder.build());
 					
 				} else {
@@ -310,40 +376,36 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 			}			
 			Request request = this.builder.build();
 			response = client.newCall(request).execute();
+			responseBody = response.body().string();
 		}catch (IOException e) {
 			e.printStackTrace();
-			return new ResponseBundle(null); 
 		}
 		
-		// Parse the Json to an object if is necesary
-		if (JsonResponseFlag) {
-			try{
-				jsonModel = this.deserializeJson(response, this.responseJSONModel);
-			}catch (JsonSyntaxException e) {
-				e.printStackTrace();
-				return new ResponseBundle(null);
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			}
+		// Parse the Json to an object if is necessary
+		try{
+			jsonModel = this.deserializeJson(responseBody, response);
+		}catch (JsonSyntaxException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 		}
+		
 		
 		// Save the response's cookies
 		try{
-			if (this.cookiesFlag) this.saveCookies(response);
+			if (this.cookiesFlag && response != null && response.isSuccessful()) this.saveCookies(response);
 		}catch(Exception e){
-			e.printStackTrace();
-			return new ResponseBundle(null, jsonModel); 
+			e.printStackTrace(); 
 		}
 		
 		// Save de CSRF Token
-		if (this.csrfFlag)
-			this.csrfSave(response);
+		if (this.csrfFlag && response != null && response.isSuccessful()) this.csrfSave(responseBody);
 		
 		// Check if the request has been successful
 		//if (!response.isSuccessful())
 		//	return new ResponseBundle(null, jsonModel); 
 		
-		return new ResponseBundle(response, jsonModel); 	
+		return new ResponseBundle(response, jsonModel, responseBody);
 	}
 	
 	

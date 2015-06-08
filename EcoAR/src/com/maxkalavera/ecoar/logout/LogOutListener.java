@@ -13,14 +13,18 @@ import com.maxkalavera.utils.httprequest.ResponseBundle;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
 public class LogOutListener implements OnTouchListener, LoaderCallbacks<ResponseBundle> {
 	Context context;
+	
+	private static final int SEND_REQUEST = 1;
 	
 	public LogOutListener(Context context) {
 		this.context = context;
@@ -37,6 +41,8 @@ public class LogOutListener implements OnTouchListener, LoaderCallbacks<Response
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
         	item.setBackgroundResource(R.drawable.someproducts_item);
         	
+        	((FragmentActivity) this.getContext()).
+        		getSupportLoaderManager().restartLoader(SEND_REQUEST, null, this);
         }	
 		return false;
 	}
@@ -47,11 +53,10 @@ public class LogOutListener implements OnTouchListener, LoaderCallbacks<Response
 	@Override
 	public Loader<ResponseBundle> onCreateLoader(int loaderID, Bundle args) {
 		switch (loaderID) {
-			case 0:
-				return null;
-			case 1:
+			case SEND_REQUEST:
 				if(!InternetStatusChecker.checkInternetStauts(this.getContext()))
 					return null;
+				
 				LogOutHTTPLoader loader = 
 					new LogOutHTTPLoader(this.getContext(), null);
 				loader.forceLoad();
@@ -63,15 +68,17 @@ public class LogOutListener implements OnTouchListener, LoaderCallbacks<Response
 
 	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {        
 		if (responseBundle.getResponse() != null && responseBundle.getResponse().isSuccessful()) {
-        		
+        	
         	UserSessionDAO userSessionDAO = new UserSessionDAO(this.getContext());
         	userSessionDAO.setSessionStatus(false);
-        		
+        	
         	UserDataDAO userDataDAO = new UserDataDAO(this.getContext());
         	userDataDAO.removeUserDataProfile();
-        		
-        	Intent intent = new Intent(getContext(), Main.class);
+        	
+        	
+        	Intent intent = new Intent(getContext(), Home.class);
         	this.getContext().startActivity(intent);
+        	((FragmentActivity) this.getContext()).finish();
         	
         } else {
         	// Error sending HTTP request

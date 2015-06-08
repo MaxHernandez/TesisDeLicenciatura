@@ -2,6 +2,7 @@ package com.maxkalavera.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,13 +21,12 @@ public class SlideMenuBarHandler implements OnTouchListener{
 	Context context; 
 	private SlidingMenu menu;
 	View slideMenuView;
-//	Activity activity;
 	String localClassName;
 	Hashtable<View, String> dict = new Hashtable<View, String>();
 	
-	public SlideMenuBarHandler(Activity activity) {
-		this.context = activity.getApplicationContext();
-		this.localClassName = activity.getComponentName().getClassName();
+	public SlideMenuBarHandler(Context context) {
+		this.context = context;
+		this.localClassName = ((Activity)context).getComponentName().getClassName();
 
 		// Se llevan a cabo configuraciones en SlidingMenu obtenido del repositorio 
         menu = new SlidingMenu(this.getContext());
@@ -39,7 +39,7 @@ public class SlideMenuBarHandler implements OnTouchListener{
         TypedValue fadeDegreeOutValue = new TypedValue();
         this.getContext().getResources().getValue(R.dimen.slidemenu_fadedegree, fadeDegreeOutValue, true);
         menu.setFadeDegree(fadeDegreeOutValue.getFloat()); 
-        menu.attachToActivity(activity, SlidingMenu.SLIDING_CONTENT);
+        menu.attachToActivity((Activity) context, SlidingMenu.SLIDING_CONTENT);
         
 	    LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View slideMenuView = inflater.inflate(R.layout.slidemenu, null);
@@ -51,6 +51,10 @@ public class SlideMenuBarHandler implements OnTouchListener{
 	
 	public Context getContext() {
 		return this.context;
+	}
+	
+	public void setEnabled(boolean opt) {
+		this.menu.setSlidingEnabled(opt);
 	}
 	
 	public void showMenu() {
@@ -106,7 +110,7 @@ public class SlideMenuBarHandler implements OnTouchListener{
         	String className = dict.get(item);
         	if (!this.localClassName.equals(className)) {
         		Intent intent = new Intent();
-        		intent.setClassName("com.maxkalavera.ecoar", className);
+        		intent.setClassName(getContext(), className);
         		this.getContext().startActivity(intent);
         	}
         	
