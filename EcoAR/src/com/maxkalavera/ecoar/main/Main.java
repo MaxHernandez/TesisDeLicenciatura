@@ -8,6 +8,7 @@ import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.Login;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.login.LoginIntro;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.database.ProductCacheDAO;
@@ -128,7 +129,8 @@ public class Main extends BaseActivity implements LoaderCallbacks<ResponseBundle
 				finish();
 			}
 		}else{
-			//Error al recuperar los datos de usuario del servidor
+			ErrorMesages.errorRetrievingData(this);
+			
 			Intent intent = new Intent();
 			intent.setClass(this, Home.class);
 			startActivity(intent);

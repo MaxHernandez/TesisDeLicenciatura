@@ -1,25 +1,64 @@
 from rest_framework import serializers
 from models import Product, Comment
+
 from django.contrib.auth.models import User
+from django.conf import settings
+
 
 class GeneralIdCheker(serializers.Serializer):
+	""" Esta clase sirve para verificar que en los datos del request se encuentre el field 
+		de "general_id". 
+	"""
 
 	general_id  = serializers.CharField(required=True, max_length=20, min_length=1)
 
 
 class CommentIdChecker(serializers.Serializer):
+	""" Esta clase sirve para verificar al eliminar un commentario, que el id del
+		comentario se encuentre en los datos del request.
+	"""
 
 	id 	= serializers.IntegerField(required=True)
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class ProductByQueryChecker(serializers.Serializer):
 
-    class Meta:
-        model    = Product
-        fields   = ('ecological_score', 'users_score')
+	query  = serializers.CharField(required=True)
+
+
+class ProductByBarcodeChecker(serializers.ModelSerializer):
+
+	class Meta:
+		model = Product
+		fields = ('barcode',)
+
+
+class ProductSerializer(serializers.HyperlinkedModelSerializer):
+
+	image_url = serializers.SerializerMethodField('get_image_url')
+
+	def get_image_url(self, obj):
+		return '%s%s' % (settings.MEDIA_URL, obj.image.url)
+
+	class Meta:
+		model    = Product
+		fields   = ('name', 'description', 'image_url', 'barcode', 'general_id')
+
+
+class ProductInfoSerializer(serializers.ModelSerializer):
+	""" Este serializer sirve para recuperar los valores de la informacion extra
+		de un producto.
+	"""
+
+	class Meta:
+		model    = Product
+		fields   = ('ecological_score', 'users_score')
 
 
 class PostProductScore(serializers.Serializer):
+	""" Esta clase sirve para calcular y guardar los valores al votar por la 
+		calidad de un producto por parte de los usuarios.
+	"""
 
 	own_score   = serializers.IntegerField(required=True)
 
@@ -58,12 +97,19 @@ class PostProductScore(serializers.Serializer):
 
 
 class UsernameSerializer(serializers.ModelSerializer):
+	""" Sirve en conjunto con CommentSerializer para recuperar el nombre 
+		de usuario de un CommentModel.
+	"""
 
-    class Meta:
-        model    = User
-        fields   = ('username',)
+	class Meta:
+		model    = User
+		fields   = ('username',)
+
 
 class CommentSeralizer(serializers.ModelSerializer):
+	""" Este serializer se encarga de seralizar los Comentarios para 
+		mandarlos al cliente. 
+	"""
 
 	user = UsernameSerializer(many=False)
 
@@ -87,18 +133,10 @@ class CommentSeralizer(serializers.ModelSerializer):
 			comment["posting_date"] = {'value':comment["posting_date"]}
 			#comment['server_id'] = comment.pop('id')
 
-#class CommentListSerializer(serializers.ModelSerializer):
-#	"""Esta clase ahora no tiene ninguna funcionalidad."""
-	#commentaries = serializers.PrimaryKeyRelatedField(many=True)
-#	commentaries = CommentSeralizer(many=True)
-
-#	class Meta:
-#		model    = Product
-#		fields   = ('commentaries',)
-
 
 class CommentSaveSerializer(serializers.ModelSerializer):
-	"""Esta clase ahora no tiene ninguna funcionalidad."""
+	""" Esta clase solo sirve para guardar un comentario en la base de datos.
+	"""
 	#commentaries = serializers.PrimaryKeyRelatedField(many=True)
 	posting_date = serializers.DateTimeField()#By Default django uses 'iso-8601' 
 											 #(format='%Y-%m-%d %H:%M:%S')  # '14:30 25/10/06'
@@ -106,3 +144,5 @@ class CommentSaveSerializer(serializers.ModelSerializer):
 	class Meta:
 		model    = Comment
 		fields   = ('body', 'posting_date', 'user', 'product')
+
+

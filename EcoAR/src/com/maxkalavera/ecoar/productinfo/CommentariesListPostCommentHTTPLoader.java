@@ -8,7 +8,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.CommentariesCacheDAO;
 import com.maxkalavera.utils.database.productmodel.CommentModel;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.database.productmodel.UsersScoreModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
@@ -21,7 +21,7 @@ public class CommentariesListPostCommentHTTPLoader extends HttpRequestLoader {
 	public CommentariesListPostCommentHTTPLoader(Context context, RequestParamsBundle requestBundle, ProductModel product) {
 		super(context, 
 				context.getResources().getString(R.string.webservice) +
-				context.getResources().getString(R.string.webservice_product_commentaries_post),// ERROR MODIFICAR
+				context.getResources().getString(R.string.webservice_product_commentaries_post),
 				POST,
 				requestBundle); 
 		this.setCookiesOn();

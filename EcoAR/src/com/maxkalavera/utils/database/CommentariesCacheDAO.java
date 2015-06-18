@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.utils.database.productmodel.CommentModel;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.database.productmodel.UsersScoreModel;
 import com.maxkalavera.utils.database.sqlitehelpers.CommentariesCacheSQLiteHelper;

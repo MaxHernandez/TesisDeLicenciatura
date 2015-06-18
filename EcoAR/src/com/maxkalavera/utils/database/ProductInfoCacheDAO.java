@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.database.productmodel.UsersScoreModel;
 import com.maxkalavera.utils.database.sqlitehelpers.ProductCacheSQLiteHelper;
@@ -59,7 +59,7 @@ public class ProductInfoCacheDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/
-	public ProductInfoModel addProductInfo(ProductInfoModel productInfo, ProductModel product) {	
+	public ExtraInfoModel addProductInfo(ExtraInfoModel productInfo, ProductModel product) {	
 		if (productInfo == null || productInfo.usersScore == null || product == null || product.getCacheId() == -1)
 			return productInfo;
 		
@@ -135,11 +135,11 @@ public class ProductInfoCacheDAO {
 	 * Metodo para verificar si existe la informacion del 
 	 * producto en el cache
 	 ********************************************************/
-	public ProductInfoModel getProductInfoFromCache(long product_reference) {
+	public ExtraInfoModel getProductInfoFromCache(long product_reference) {
 		if (product_reference == -1)
 			return null;
 		
-		ProductInfoModel productInfo = null;
+		ExtraInfoModel productInfo = null;
 		
 		// Si se almancenan imagenes del producto se eliminan estas primero
 		Cursor cursor = this.database.
@@ -154,7 +154,7 @@ public class ProductInfoCacheDAO {
 		return productInfo;		
 	}
 	
-	public ProductInfoModel getProductInfoFromCache(ProductModel product) {
+	public ExtraInfoModel getProductInfoFromCache(ProductModel product) {
 		if (product == null)
 			return null;
 		
@@ -174,9 +174,9 @@ public class ProductInfoCacheDAO {
 	/********************************************************
 	 * 
 	 ********************************************************/
-	public ProductInfoModel retrieveProductFromCursor (Cursor cursor, ProductInfoModel productInfo) {
+	public ExtraInfoModel retrieveProductFromCursor (Cursor cursor, ExtraInfoModel productInfo) {
 		if (productInfo == null)
-			productInfo = new ProductInfoModel();
+			productInfo = new ExtraInfoModel();
 		if (productInfo.usersScore == null)
 			productInfo.usersScore = new UsersScoreModel();
 		
@@ -190,11 +190,11 @@ public class ProductInfoCacheDAO {
 		return productInfo;
 	}
 	
-	public ProductInfoModel retrieveProductFromCursor (Cursor cursor) {
+	public ExtraInfoModel retrieveProductFromCursor (Cursor cursor) {
 		return retrieveProductFromCursor(cursor, null);
 	}
 	
-	public ContentValues getContentValuesFromProduct (ProductInfoModel productInfo) {
+	public ContentValues getContentValuesFromProduct (ExtraInfoModel productInfo) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_PRODUCT_REFERENCE, productInfo.getProductReference());
 		contentValues.put(ProductInfoCacheSQLiteHelper.PRODUCTINFO_ECOLOGICAL_SCORE, productInfo.ecological_score);

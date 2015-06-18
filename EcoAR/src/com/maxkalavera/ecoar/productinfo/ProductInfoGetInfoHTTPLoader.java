@@ -7,7 +7,7 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.ProductCacheDAO;
 import com.maxkalavera.utils.database.ProductInfoCacheDAO;
 import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.ImageDownloader;
@@ -27,7 +27,7 @@ public class ProductInfoGetInfoHTTPLoader extends HttpRequestLoader  {
 				requestBundle); 
 		this.setCookiesOn();
 		this.setCSRFOn();
-		this.setJsonResponseOn(new ProductInfoModel());
+		this.setJsonResponseOn(new ExtraInfoModel());
 		
 		this.product = product;
 	}
@@ -51,7 +51,7 @@ public class ProductInfoGetInfoHTTPLoader extends HttpRequestLoader  {
 		
 		ProductInfoCacheDAO productInfoCache = new ProductInfoCacheDAO(this.getContext());
 		productInfoCache.open();
-		ProductInfoModel productInfo = productInfoCache.getProductInfoFromCache(this.product);
+		ExtraInfoModel productInfo = productInfoCache.getProductInfoFromCache(this.product);
 		productInfoCache.close();
 		
 		if (productInfo != null) {
@@ -65,7 +65,7 @@ public class ProductInfoGetInfoHTTPLoader extends HttpRequestLoader  {
 		ResponseBundle response = sendHTTPRequest();
 		
 		if ( response.getResponse() != null && response.getResponse().isSuccessful()  && response.getResponseJsonObject() != null) {
-			ProductInfoModel productInfo = (ProductInfoModel) response.getResponseJsonObject();
+			ExtraInfoModel productInfo = (ExtraInfoModel) response.getResponseJsonObject();
 			
 			ProductInfoCacheDAO productInfoCache = new ProductInfoCacheDAO(this.getContext());
 			productInfoCache.open();

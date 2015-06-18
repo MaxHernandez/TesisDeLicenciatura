@@ -9,7 +9,7 @@ import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.jsonmodels.CommentariesListJsonModel;
 import com.maxkalavera.utils.database.productmodel.CommentModel;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.database.productmodel.UsersScoreModel;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;

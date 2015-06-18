@@ -1,0 +1,74 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework import permissions 
+from rest_framework.parsers import JSONParser
+
+from django.core.context_processors import csrf
+
+from parsers import ImageJPGParser
+#from models import 
+#from serializers import 
+
+# IMAGENES
+from PIL import Image
+import zbar, numpy
+
+from ecoglasses.LogoDetection import isLogoInImage
+from ocr.image_processor import image_to_string
+
+def search_barcode(numpy_img):
+
+    zbar_img = zbar.Image(numpy_img.shape[1], numpy_img.shape[0], 'Y800', numpy_img.tostring())
+    if zbar.ImageScanner().scan(zbar_img) != 0:
+        sData = [s for s in zbar_img][-1]
+        del zbar_img
+        return sData.data.decode(u'utf-8')
+    else:
+		return None
+
+def search_ocr(pil_image):
+	return image_to_string(pil_image)
+
+class SearchLogo():
+
+	logo_list = list() # Query
+
+	def search(self, image):
+		brand = ""
+
+		#logo = {
+        #	'keypoints': keypoints,
+        #	'descriptors': descriptors,
+        #	'array': array
+      	#}
+
+		#isLogoInImage(logo, image)
+
+		return brand
+
+def search_on_image(pil_image):
+	numpy_image = numpy.asarray(pil_image)
+
+	search_logo = SearchLogo()
+
+	print "Logo:", search_logo.search(pil_image)
+	print "Barcode:", search_barcode(numpy_image)
+	print "Text-OCR:", search_ocr(pil_image)
+
+class SearchCamera(APIView):
+
+	permission_classes = (permissions.AllowAny,)
+	#parser_classes = (ImageJPGParser,)
+
+	def post(self, request, format=None):
+		print "Request:", request.GET, request.FILES
+
+		image_rawdata = request.FILES['product_image']
+		image = Image.open(image_rawdata)
+		#image.show();
+		search_on_image(image)
+
+		data = dict()
+		data.update(csrf(request))
+		return Response(data, status=status.HTTP_202_ACCEPTED)

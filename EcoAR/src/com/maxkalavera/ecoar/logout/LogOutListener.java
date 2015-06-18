@@ -4,6 +4,7 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.main.Main;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.UserSessionDAO;
@@ -75,13 +76,12 @@ public class LogOutListener implements OnTouchListener, LoaderCallbacks<Response
         	UserDataDAO userDataDAO = new UserDataDAO(this.getContext());
         	userDataDAO.removeUserDataProfile();
         	
-        	
         	Intent intent = new Intent(getContext(), Home.class);
         	this.getContext().startActivity(intent);
         	((FragmentActivity) this.getContext()).finish();
         	
         } else {
-        	// Error sending HTTP request
+        	ErrorMesages.errorSendingHttpRequest(this.getContext());
         }
 	}
 

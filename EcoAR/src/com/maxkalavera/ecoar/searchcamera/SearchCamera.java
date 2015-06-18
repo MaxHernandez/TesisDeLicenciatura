@@ -7,11 +7,14 @@ import java.util.List;
 
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.Size;
@@ -32,16 +35,28 @@ import android.widget.Toast;
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.layout;
+import com.maxkalavera.ecoar.brandinfo.BrandInfo;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.ecoar.searchbar.SearchBar;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.ImageStringConverter;
+import com.maxkalavera.utils.LogoutChecker;
 import com.maxkalavera.utils.SlideMenuBarHandler;
 import com.maxkalavera.utils.database.jsonmodels.SearchCameraResponseJsonModel;
+import com.maxkalavera.utils.database.productmodel.BrandModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
 import com.maxkalavera.utils.httprequest.ResponseBundle;
 
+import net.sourceforge.zbar.Image;
+import net.sourceforge.zbar.ImageScanner;
+import net.sourceforge.zbar.Symbol;
+import net.sourceforge.zbar.SymbolSet;
+import net.sourceforge.zbar.Config;
+
+
 class TakePictureCallback implements Camera.PictureCallback {
+	
 	Context context;
 	Preview callback;
 	
@@ -53,7 +68,6 @@ class TakePictureCallback implements Camera.PictureCallback {
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
     	if (camera == null || data == null ||data.length == 0) return;
-    	Log.i("TakePictureCallback", "PictureTaken");
     	this.callback.takePictureCallback(data);
     }
 
@@ -61,10 +75,15 @@ class TakePictureCallback implements Camera.PictureCallback {
 
 
 /*****************************************************************************
- * 
- * ***************************************************************************/
+ *****************************************************************************
+ *
+ *
+ *
+ *****************************************************************************
+ ****************************************************************************/
 class Preview implements SurfaceHolder.Callback, View.OnClickListener, 
-	LoaderManager.LoaderCallbacks<ResponseBundle> {
+	LoaderManager.LoaderCallbacks<ResponseBundle>,
+	Camera.PreviewCallback {
     
 	private Context context;
 	private SurfaceHolder surfaceHolder;
@@ -72,9 +91,18 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
     private TakePictureCallback takePictureCallback;
 	private Button shutterButton;
 	private RequestParamsBundle requestParamsBundle; 
+	 
+	private List<String> barcodeIgnoredList;
+	
+	// Zbar
+	private ImageScanner barCodeScanner;
+	
 	
 	private static final int SEND_IMAGE = 1; 
 	
+	/************************************************************
+	 * Constructor Method
+	 ************************************************************/
     Preview(Context context, SurfaceView surfaceView) {
     	this.context = context;
     	this.surfaceHolder = surfaceView.getHolder();
@@ -82,15 +110,24 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
     	this.surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     	this.takePictureCallback = new TakePictureCallback(context, this);
     	
+    	barCodeScanner = new ImageScanner();
+    	barCodeScanner.setConfig(0, Config.X_DENSITY, 3);
+    	barCodeScanner.setConfig(0, Config.Y_DENSITY, 3);
+    	barCodeScanner.setConfig(Symbol.QRCODE, Config.ENABLE, 0); 
+    	
+    	this.barcodeIgnoredList = new ArrayList<String>();
+    	
     	shutterButton =  
     			(Button) ((FragmentActivity) context).findViewById(R.id.searchcamera_takepicture);
-    	shutterButton.setOnClickListener(this);
     }
     
     private Context getContext(){
     	return this.context;
-    }
-        
+    }    
+    
+	/************************************************************
+	 * Send Pictures to the server callback
+	 ************************************************************/
     public void onClick(View view) {
     	if (camera == null) return;
     	
@@ -102,6 +139,9 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
     public void takePictureCallback(byte[] picture) {
     	Bitmap bitmapPicture
 		   = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+    	
+    	bitmapPicture = this.fixOrientation(bitmapPicture);
+    	
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		bitmapPicture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 		
@@ -109,13 +149,93 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 		requestParamsBundle.addPart(baos.toByteArray(),
 				"image/jpg",
 				"product_image",
-				"product_image.png");
+				"product_image.jpg");
 		
 		((BaseActivity) this.getContext()).getSupportLoaderManager().restartLoader(SEND_IMAGE, null, this);
 		//this.callback.takePictureCallback(bitmapPicture);
 		//ImageStringConverter.ArrayToString(picture);
     	
     }
+    
+    // reference "http://stackoverflow.com/questions/6069122/camera-orientation-issue-in-android"
+    public Bitmap fixOrientation(Bitmap bitmap) {
+        if (bitmap.getWidth() > bitmap.getHeight()) {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap , 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            return rotatedBitmap;
+        }
+        
+        return bitmap;
+    }
+    
+	/************************************************************
+	 * Get frames from the camera callback
+	 ************************************************************/
+    
+	public void onPreviewFrame(byte[] data, Camera camera) {
+    	Camera.Parameters parameters = camera.getParameters();
+        Camera.Size size = parameters.getPreviewSize();
+        
+        Image zbarImage = new Image(size.width, size.height, "Y800");
+        zbarImage.setData(data);
+        int result = barCodeScanner.scanImage(zbarImage);
+
+        if (result > 0) {
+            SymbolSet symbolSet = barCodeScanner.getResults();
+            for (Symbol symbol : symbolSet) {
+                String barcode = symbol.getData();
+                if (barcode != null && !barcode.equals("")) {
+                	
+                	new AlertDialog.Builder(this.getContext())
+                    	.setTitle("Codigo de barras encontrado")
+                    	.setMessage(barcode)
+                    	.setPositiveButton("Ver",            
+                    		new DialogInterface.OnClickListener() {
+                    			Context context;
+                    			String barcode;
+                    		
+                    			public DialogInterface.OnClickListener setParams(Context context, String barcode) {
+                    				this.context = context;
+                    				this.barcode = barcode;
+                    				return this;
+                    			}
+                    		
+                    			public void onClick(DialogInterface dialog, int id) {
+        					        Intent intent = new Intent();
+        					       	intent.setClass(this.context, SearchBar.class);
+        					        intent.putExtra("barcode", this.barcode);
+        					        this.context.startActivity(intent);
+                    			}
+                        	}.setParams(this.context, barcode))
+                    	.setNeutralButton("Ignorar",
+                        		new DialogInterface.OnClickListener() {
+                    		
+                    		List<String> barcodeIgnoredList;
+                    		String barcode;
+                    		
+                			public DialogInterface.OnClickListener setParams(List<String> barcodeIgnoredList, String barcode) {
+                				this.barcodeIgnoredList = barcodeIgnoredList;
+                				this.barcode = barcode;
+                				return this;
+                			}
+                		
+                			public void onClick(DialogInterface dialog, int id) {
+                				this.barcodeIgnoredList.add(barcode);
+                			}
+                    	}.setParams(barcodeIgnoredList, barcode))
+                    	.setNegativeButton("Cancelar", null)
+                    	.show();
+                	
+                	break;
+                }
+            }
+        }
+    }
+    
+	/************************************************************
+	 * Camera lifecycle methods
+	 ************************************************************/
     
     public void setCamera(Camera camera) {
         if (this.camera == camera) { return; }
@@ -128,13 +248,16 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            camera.startPreview();   
+            camera.setPreviewCallback(this);
+            camera.startPreview();
+            shutterButton.setOnClickListener(this);
         }
     }
     
     private void stopPreviewAndFreeCamera() {
         if (this.camera != null) {
-        	this.camera.stopPreview();        
+        	this.camera.setPreviewCallback(null);
+        	this.camera.stopPreview();
         	this.camera.release();
         	this.camera = null;
         }
@@ -159,6 +282,7 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 	public void surfaceDestroyed(SurfaceHolder holder) {
 	    if (camera != null) {
 	        camera.stopPreview();
+	        camera.setPreviewCallback(null);
 	    }
 	}
 
@@ -179,27 +303,47 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle response) {
+	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
 		switch(loader.getId()) {
 			case SEND_IMAGE:
 				
-				/*
-				SearchCameraResponseJsonModel searchCamerResponse = 
-							(SearchCameraResponseJsonModel) response.getResponseJsonObject();
+				if (responseBundle.getResponse() != null && responseBundle.getResponse().isSuccessful()) {
+					SearchCameraResponseJsonModel searchCamerResponse = 
+							(SearchCameraResponseJsonModel) responseBundle.getResponseJsonObject();
 				
-				if (searchCamerResponse != null) {
-					if (searchCamerResponse.success) {
-				        Intent intent = new Intent();
-				        intent.setClass(this.getContext(), SearchBar.class);
-				        intent.putExtra("query", searchCamerResponse.query);
-				        this.getContext().startActivity(intent);
+					if (searchCamerResponse != null) {
+						
+						if (searchCamerResponse.brand != null) {
+					        Intent intent = new Intent();
+					       	intent.setClass(this.getContext(), BrandInfo.class);
+					        intent.putExtra("brand", searchCamerResponse.brand);
+					        this.getContext().startActivity(intent);
+							
+						} else if (searchCamerResponse.query != null) {							
+					        Intent intent = new Intent();
+					       	intent.setClass(this.getContext(), SearchBar.class);
+					        intent.putExtra("query", searchCamerResponse.query);
+					        this.getContext().startActivity(intent);
+					        
+						} else {
+							AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+						    dialog.setTitle(
+						    		context.getResources().getString(R.string.searchcamera_product_not_found_title));
+						    dialog.setMessage(
+						    		context.getResources().getString(R.string.searchcamera_product_not_found_message));
+						    dialog.setPositiveButton(
+						    		context.getResources().getString(R.string.error_afirmative_button),null);
+						    dialog.show();
+						}
+						
 					} else {
-						// mostrar que no se encontro nada en la imagen
+						ErrorMesages.errorRetrievingJsonData(this.getContext());
 					}
 				} else {
-					// error al enviar el paquete
+					ErrorMesages.errorSendingHttpRequest(this.getContext());
+					LogoutChecker.checkSessionOnResponse(this.getContext(), responseBundle.getResponse());
 				}
-				*/
+
 				((SearchCamera) this.getContext()).startCamera();
 				break;
 		}
@@ -217,6 +361,10 @@ class Preview implements SurfaceHolder.Callback, View.OnClickListener,
 public class SearchCamera extends BaseActivity implements
 	LoaderManager.LoaderCallbacks<Camera> {
 	
+	static {
+	    System.loadLibrary("iconv");
+	}
+	
     private Camera camera;
     private Preview preview; 
     
@@ -231,12 +379,10 @@ public class SearchCamera extends BaseActivity implements
 	public void setUp() {
 		this.preview = new Preview(this,
         		(SurfaceView) findViewById(R.id.searchcamera_surface));
-		//this.startCamera();
 	}
 	
 	public void startCamera() {
 		this.preview.setCamera(null);
-		Log.i("StartCamera", "----->B");
 		this.getSupportLoaderManager().restartLoader(
 				CameraOptionsSearchCameraLoader.GET_CAMERA, null, this);
 	}

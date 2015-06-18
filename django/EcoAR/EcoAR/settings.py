@@ -66,6 +66,7 @@ USE_TZ = True
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
 MEDIA_ROOT = '/home/max/django/EcoAR_MEDIA/'
+SEARCH_LOGO_ROOT = '/home/max/django/EcoAR_SEARCH_LOGO/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -137,6 +138,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # My apps
+    'search_camera',
     'products',
     'general',
     # Third party apps
@@ -181,8 +183,11 @@ LOGGING = {
 REST_FRAMEWORK = {
    'DEFAULT_AUTHENTICATION_CLASSES': (
        #'rest_framework.authentication.TokenAuthentication',
-       'rest_framework.authentication.SessionAuthentication',       
+       'rest_framework.authentication.SessionAuthentication',
    ),
+   'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+   )
 }
 
 """

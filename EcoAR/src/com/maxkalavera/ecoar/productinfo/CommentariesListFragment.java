@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.HomeLastProductsFragmentAdapter;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
+import com.maxkalavera.utils.LogoutChecker;
 import com.maxkalavera.utils.database.UserDataDAO;
+import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.database.jsonmodels.CommentariesListJsonModel;
 import com.maxkalavera.utils.database.productmodel.CommentModel;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.database.productmodel.UsersScoreModel;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
@@ -111,10 +114,19 @@ public class CommentariesListFragment extends ListFragment implements
     	if (product != null) {
     		this.product = product;
     		
-    		Button sendCommentButton = 
+    		UserSessionDAO userSessionDAO = new UserSessionDAO(this.getActivity());
+    		if (userSessionDAO.checkSessionStatus()) {
+    			Button sendCommentButton = 
     				(Button) getView().findViewById(
     						R.id.productinfo_commentarieslist_sendcomment);
-    		sendCommentButton.setOnClickListener(this);
+    			sendCommentButton.setOnClickListener(this);
+    		} else {
+    			EditText commmentEditText = 
+        				(EditText) getView().findViewById(
+        						R.id.productinfo_commentarieslist_comment);
+    			commmentEditText.setText(R.string.productinfo_commentarieslist_not_session_edittext);
+    			commmentEditText.setEnabled(false);
+    		}
     		
     		getLoaderManager().initLoader(GET_COMMENTLIST, null, this);
     	}
@@ -244,12 +256,12 @@ public class CommentariesListFragment extends ListFragment implements
 	}
 
 	@Override
-	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle loaderRes) {
+	public void onLoadFinished(Loader<ResponseBundle> loader, ResponseBundle responseBundle) {
 		switch (loader.getId()) {
 			case GET_COMMENTLIST:				
-				if (loaderRes.getResponse() != null && loaderRes.getResponse().isSuccessful() && loaderRes.getResponseJsonObject() != null) {
+				if (responseBundle.getResponse() != null && responseBundle.getResponse().isSuccessful() && responseBundle.getResponseJsonObject() != null) {
 					CommentariesListJsonModel commentariesListJsonModel = 
-							(CommentariesListJsonModel) loaderRes.getResponseJsonObject();
+							(CommentariesListJsonModel) responseBundle.getResponseJsonObject();
 					
 					if (!commentariesListJsonModel.commentaries.isEmpty()) {
 						this.valuesList.addAll(commentariesListJsonModel.commentaries);
@@ -261,7 +273,8 @@ public class CommentariesListFragment extends ListFragment implements
 					this.page += 1;
 					
 				} else {
-					// Error al recuperar los datos del servidor
+					ErrorMesages.errorRetrievingData(this.getActivity());
+					LogoutChecker.checkSessionOnResponse(this.getActivity(), responseBundle.getResponse());
 					
 					// Vuelve a a activar el listener del scroll 
 					// despues de 10s. 
@@ -287,26 +300,28 @@ public class CommentariesListFragment extends ListFragment implements
 				break;
 				
 			case POST_COMMENT:
-				if ( loaderRes.getResponse() != null && loaderRes.getResponse().isSuccessful() && loaderRes.getResponseJsonObject() != null ) {
+				if ( responseBundle.getResponse() != null && responseBundle.getResponse().isSuccessful() && responseBundle.getResponseJsonObject() != null ) {
 					CommentModel newComennt = 
-							(CommentModel) loaderRes.getResponseJsonObject();
+							(CommentModel) responseBundle.getResponseJsonObject();
 					this.valuesList.add(0, newComennt);
 					this.adapter.notifyDataSetChanged();
 					this.enableCommentCapability(true);
 					this.getListView().smoothScrollToPosition(0);
 				} else {
 					this.enableCommentCapability(true);
-					// Error al mandar la peticion
+					ErrorMesages.errorSendingHttpRequest(this.getActivity());
+					LogoutChecker.checkSessionOnResponse(this.getActivity(), responseBundle.getResponse());
 				}
 				break;
 			
 			case DELETE_COMMENT:
-				if ( loaderRes.getResponse() != null && loaderRes.getResponse().isSuccessful() && loaderRes.getResponseJsonObject() != null ) { 
-					CommentModel comment = (CommentModel) loaderRes.getResponseJsonObject();
+				if ( responseBundle.getResponse() != null && responseBundle.getResponse().isSuccessful() && responseBundle.getResponseJsonObject() != null ) { 
+					CommentModel comment = (CommentModel) responseBundle.getResponseJsonObject();
 					this.valuesList.remove(comment);
 					this.adapter.notifyDataSetChanged();
 				} else {
-					// Error al enviar el http request 
+					ErrorMesages.errorSendingHttpRequest(this.getActivity());
+					LogoutChecker.checkSessionOnResponse(this.getActivity(), responseBundle.getResponse());
 				}
 				break;
 				

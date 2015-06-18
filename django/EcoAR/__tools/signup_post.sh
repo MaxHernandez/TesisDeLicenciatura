@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #INPUTFILE=$1
-WEBSERVER=192.168.15.2:8080
+WEBSERVER=192.168.15.7:8080
 INPUTFILE="$WEBSERVER"/signup/
 echo $INPUTFILE
 curl -X POST $INPUTFILE -H "Content-Type: application/json" \

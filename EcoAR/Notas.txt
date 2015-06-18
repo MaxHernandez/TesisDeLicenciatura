@@ -20,3 +20,11 @@ Preocupaciones:
        	 - Loader para cargar los comentarios a la lista se cargan cada numero de comentarios (Memoria cache o servidor), y se van cargando más si es que es necesario, los comentarios se van cargando por paginacion.
 	 - Loader para publicar un comentario en el servidor.
        * Se agregara a la memoria cache una tabla para los comentarios
+
+       
+# Pendientes 10 de junio
+	- Agregar SearchObtainers para Soriana y HEB
+	- Agregar mensajes de error -X
+	- Al encontrar un error 403 en un paquete salir de sesion localmente
+	- En ProductInfo limitar la votación y realizar comentarios si no se esta logeado 
+	- Mejorar el aspecto estetico de la aplicacion

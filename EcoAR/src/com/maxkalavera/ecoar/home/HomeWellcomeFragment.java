@@ -3,7 +3,9 @@ package com.maxkalavera.ecoar.home;
 import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.main.MainSetUpAndCheckSessionHTTPLoader;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
+import com.maxkalavera.utils.LogoutChecker;
 import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.database.jsonmodels.UserDataJsonModel;
@@ -117,10 +119,11 @@ LoaderCallbacks<ResponseBundle> {
 				// Carga los datos necesarios en pantalla
 				this.loadInfo(this.userDM);
 			}else {
-				// Error al parsear la respuesta del servidor
+				ErrorMesages.errorRetrievingJsonData(this.getActivity());
 			}
 		} else {
-			// Error al mandar la peticion 
+			ErrorMesages.errorSendingHttpRequest(this.getActivity());
+			LogoutChecker.checkSessionOnResponse(this.getActivity(), responseBundle.getResponse());
 		}
 	}
 

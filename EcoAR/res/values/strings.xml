@@ -2,6 +2,7 @@
 <resources>
 	<!-- General data -->
     <string name="app_name">EcoAR</string>
+    <string name="webservice_name">EcoAr</string>
     
     <!-- URL preferences -->
     <string name="webservice">http://192.168.15.7:8080</string><!-- Al final del hipervinculo NO DEBE LLEVAR '/'-->
@@ -20,9 +21,19 @@
     <string name="webservice_product_commentaries_get">/products/commentaries/</string>
     <string name="webservice_product_commentaries_post">/products/commentaries/</string>
     <string name="webservice_product_commentaries_delete">/products/commentaries/delete/</string>
+
+     <!-- URL preferences - BrandInfo -->
+    <string name="webservice_brand_info_get">/brands/info/</string> 
+    <string name="webservice_brand_info_post">/brands/info/</string>
+    <string name="webservice_brand_commentaries_get">/brands/commentaries/</string>
+    <string name="webservice_brand_commentaries_post">/brands/commentaries/</string>
+    <string name="webservice_brand_commentaries_delete">/brands/commentaries/delete/</string>
+
     
     <!-- URL Preferences parsers -->
     <string name="amazonurl">http://www.amazon.com/s/</string>
+    <string name="webservice_search_barcode">/logout/</string>
+    <string name="webservice_search_query">/logout/</string>
     
     <!-- SharedPreferences userdata -->
     <string name="userdata_filename">userdata</string>
@@ -80,10 +91,13 @@
 	<string name="groceries_list_item_defaultname"> Ejemplo de nombre de producto</string>
     
     <!-- ProductInfo -->
+    <string name="productinfo_title">Producto</string>
+    
     <string name="productinfo_userrating_title">Calificación de usuarios</string>
     <string name="productinfo_userrating_rating">0.0</string>
     <string name="productinfo_userrating_titleuser">Tu calificación</string>
     <string name="productinfo_userrating_ratinguser">0/5</string>
+    <string name="productinfo_userrating_not_session">Inicia sesión para calificar</string>
     
     <string name="productinfo_basicinfo_name">Nombre del producto</string>
     <string name="productinfo_basicinfo_description"></string>
@@ -104,6 +118,7 @@
 	<string name="productinfo_commentarieslist_title">Comentarios</string>
 	<string name="productinfo_commentarieslist_post_hint">Escribe un comentario</string>
 	<string name="productinfo_commentarieslist_send">Publicar</string>
+	<string name="productinfo_commentarieslist_not_session_edittext">Inicia sesión para comentar&#8230;</string>
 	
 	<string name="productinfo_commentarieslist_preface_more">Ver más comentarios&#8230;</string>
 	
@@ -117,11 +132,18 @@
 	<string name="productinfo_ecologicalscore_society">Ayuda en la sociedad</string>
 	<string name="productinfo_ecologicalscore_recyclable">Es un producto recicable</string>
 	
+	<!-- BrandInfo -->
+	<string name="brandinfo_title">Marca</string>
+
+	
 	<!-- LastProducts -->
 	<string name="lastproducts_itemname"></string>
 	
 	<!-- SearchCamera -->
 	<string name="searchcamera_send">Capturar</string>
+	
+	<string name="searchcamera_product_not_found_title">Producto No encontrado</string>
+    <string name="searchcamera_product_not_found_message">Ningun producto fue encontrado en la imagen.</string>
 	
 	<!-- SlideMenu -->
 	<string name="slidemenu_item_name">Item name</string>	
@@ -150,6 +172,25 @@
 	<string name="signup_gender_error">Sexo:</string>
 	<string name="signup_birthday_error">Fecha de nacimiento:</string>
 	
+	<!-- Error Messages -->
+	<string name="error_afirmative_button">OK</string>
+	
+	<string name="error_no_internet_service_title">Error del servicio de internet</string>
+	<string name="error_no_internet_service_message">Se necesita una conexión a internet para utilizar este servicio.</string>
+	
+	<string name="error_sending_http_request_title">Error de conexión</string>
+	<string name="error_sending_http_request_message">Se ha producido un error al conectar con el servidor.</string>
+		
+	<string name="error_retrieving_json_data_title">Error del servidor</string>
+	<string name="error_retrieving_json_data_message">Se ha producido un error recuperando los datos del servidor.</string>
+
+	<string name="error_retrieving_data_title">Error del servidor</string>
+	<string name="error_retrieving_data_message">Se ha producido un error recuperando los datos del servidor.</string>
+
+	<!-- LogoutChecker -->
+	<string name="logout_checker_title">Error en la sesión de usuario</string>
+	<string name="logout_checker_message">la sesión con el servidor ha sido terminada, por favor vuelve a iniciar sesión.</string>
+		
     <!-- Others -->
     <string name="null_content"></string>
     

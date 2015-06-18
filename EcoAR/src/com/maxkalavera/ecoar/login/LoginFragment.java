@@ -5,6 +5,7 @@ import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
 import com.maxkalavera.ecoar.signup.SignUp;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.UserDataDAO;
 import com.maxkalavera.utils.database.UserSessionDAO;
@@ -176,7 +177,7 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
             		startActivity(intent);
             		this.getActivity().finish();	
         		} else {
-        			// Error al deserializar el Json
+        			ErrorMesages.errorRetrievingJsonData(this.getActivity());
         		}
         		
         	}else{
@@ -205,11 +206,11 @@ public class LoginFragment extends Fragment implements LoaderCallbacks<ResponseB
         				errorNonFieldErrors.setText(loginErrorsJsonModel.non_field_errors.get(0));
         			}
         		} else {
-        			// Error al deserializar el Json
+        			ErrorMesages.errorRetrievingJsonData(this.getActivity());
         		}
         	}
         } else {
-        	// Error sending HTTP request
+        	ErrorMesages.errorSendingHttpRequest(this.getActivity());
         }
 	}
 

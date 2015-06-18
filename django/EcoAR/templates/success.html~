@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+EcoAr - &Eacute;xito
+{% endblock %}
+
+
+{% block content %}
+
+<p><h1>La forma fue guardada con &eacute;xito.</h1></p>
+
+{% endblock %}

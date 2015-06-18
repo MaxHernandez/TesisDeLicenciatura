@@ -12,7 +12,7 @@ import com.maxkalavera.utils.database.ProductInfoCacheDAO;
 import com.maxkalavera.utils.database.jsonmodels.CommentariesListJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.productmodel.CommentModel;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;

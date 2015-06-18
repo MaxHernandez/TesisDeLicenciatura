@@ -9,9 +9,12 @@ import com.maxkalavera.ecoar.R.id;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
 import com.maxkalavera.ecoar.productinfo.ProductInfo;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.searchobtainers.AmazonSearchObtainer;
+import com.maxkalavera.utils.searchobtainers.ServerBarcodeObtainer;
+import com.maxkalavera.utils.searchobtainers.ServerQueryObtainer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -55,6 +58,10 @@ public class SearchBarResultsListFragment extends ListFragment implements
 	private int page = 1;
 	private boolean scrollListenFlag = true;
 	
+	public static final String[] OBTAINERS_LIST = new String[]{AmazonSearchObtainer.NAME};
+	private String selectedObtainer = null;
+	private String selectedOneUseObtainer = null;
+	
 	public static final int SEND_REQUEST = 1;
 	public static final int DOWNLOAD_IMAGES = 2;
 	
@@ -64,6 +71,7 @@ public class SearchBarResultsListFragment extends ListFragment implements
     @Override 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        
         this.setUp();		
     }
 	
@@ -97,6 +105,43 @@ public class SearchBarResultsListFragment extends ListFragment implements
 
 		this.progressBar = (ProgressBar) progressBarView.findViewById(R.id.loading_progressbar);
 		this.progressBar.setVisibility(View.GONE);
+		
+		
+		// funcionalidad para cambiar de servicio al que se hace la busqueda
+        this.selectedObtainer = OBTAINERS_LIST[0];
+        
+        Intent intent = this.getActivity().getIntent(); 
+        String barcode = intent.getStringExtra("barcode");
+        String query = intent.getStringExtra("query"); 
+        
+        if (barcode != null) {
+        	this.selectedOneUseObtainer = ServerBarcodeObtainer.NAME; 
+        	this.query = barcode;
+        	
+    		// Es importante desactivar el ScrollListener antes de limpiar la lista del Fragment, 
+    		// puesto que se activa automanticamente al limpiar la lista del fragmento y provoca
+    		// que se carguen multiples loaders y esto provoca errores.
+    		this.getListView().setOnScrollListener(null);
+    		this.valuesList.clear();
+    		this.adapter.notifyDataSetChanged();
+    		this.page = 1;
+    		
+    		this.loadData();
+    		
+        } else if (query != null) {
+        	this.selectedOneUseObtainer = ServerQueryObtainer.NAME; 
+        	this.query = query;
+        	
+    		// Es importante desactivar el ScrollListener antes de limpiar la lista del Fragment, 
+    		// puesto que se activa automanticamente al limpiar la lista del fragmento y provoca
+    		// que se carguen multiples loaders y esto provoca errores.
+    		this.getListView().setOnScrollListener(null);
+    		this.valuesList.clear();
+    		this.adapter.notifyDataSetChanged();
+    		this.page = 1;
+    		
+    		this.loadData();
+        }
     }
     
 	/************************************************************
@@ -135,6 +180,9 @@ public class SearchBarResultsListFragment extends ListFragment implements
 		} else
 			this.query = query;
 		
+		if (query == "") return;
+		
+		this.selectedOneUseObtainer = null;
 		// Es importante desactivar el ScrollListener antes de limpiar la lista del Fragment, 
 		// puesto que se activa automanticamente al limpiar la lista del fragmento y provoca
 		// que se carguen multiples loaders y esto provoca errores.
@@ -166,11 +214,14 @@ public class SearchBarResultsListFragment extends ListFragment implements
 				if(!InternetStatusChecker.checkInternetStauts(this.getActivity()))
 					return null;
 				
-				SearchBarResultsListFragmentHTTPLoader searchBarResultsListFragmentHTTPLoader = 
-						new SearchBarResultsListFragmentHTTPLoader(this.getActivity(), this.query, this.page);
-				searchBarResultsListFragmentHTTPLoader.forceLoad();
+				String obtainer = null;
+				if (this.selectedOneUseObtainer != null ) obtainer = this.selectedOneUseObtainer;
+				else obtainer = this.selectedObtainer;
 				
-				//Log.i("SearchBarResultsList", "Loader Created.");
+				SearchBarResultsListFragmentHTTPLoader searchBarResultsListFragmentHTTPLoader = 
+						new SearchBarResultsListFragmentHTTPLoader(this.getActivity(), this.query, this.page, obtainer);
+				
+				searchBarResultsListFragmentHTTPLoader.forceLoad();				
 				return searchBarResultsListFragmentHTTPLoader;
 				
 			case DOWNLOAD_IMAGES:
@@ -202,6 +253,10 @@ public class SearchBarResultsListFragment extends ListFragment implements
 					
 					getLoaderManager().restartLoader(DOWNLOAD_IMAGES, null, this);
 				}
+				
+				if (loaderRes == null) 
+					ErrorMesages.errorRetrievingData(this.getActivity());
+				
 				this.progressBar.setVisibility(View.GONE);
 				this.startSearchButton.setOnClickListener(this);
 				

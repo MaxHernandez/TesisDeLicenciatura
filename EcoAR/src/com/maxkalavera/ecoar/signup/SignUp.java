@@ -21,7 +21,9 @@ import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.home.Home;
 import com.maxkalavera.ecoar.login.LoginFragmentHTTPLoader;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
+import com.maxkalavera.utils.LogoutChecker;
 import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.database.jsonmodels.LoginErrorsJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.SignUpErrorsJsonModel;
@@ -250,9 +252,14 @@ public class SignUp extends BaseActivity implements LoaderCallbacks<ResponseBund
 					SignUpErrorsJsonModel signUpErrors = (SignUpErrorsJsonModel) responseBundle.getResponseJsonObject();
 					if (signUpErrors != null) {
 						this.setCorretions(signUpErrors);
+					} else {
+						ErrorMesages.errorRetrievingJsonData(this);
 					}
 				}
 			} else {
+				ErrorMesages.errorSendingHttpRequest(this);
+				LogoutChecker.checkSessionOnResponse(this, responseBundle.getResponse());
+				
 				Button sendButton = (Button) findViewById(R.id.signup_send_button);
 				sendButton.setOnClickListener(this);
 				sendButton.setVisibility(View.VISIBLE);

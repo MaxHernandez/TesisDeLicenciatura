@@ -3,7 +3,8 @@
 
 <!-- General -->   
 <color name="link_textcolor">#0645AD</color>
-    
+<color name="errortext">#CC0000</color>
+
 <!-- Login -->   
 <color name="login_errortext">#CC0000</color>
 

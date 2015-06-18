@@ -20,8 +20,10 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class AmazonSearchObtainer {
+	
 	String url;
 	
+	public static final String NAME = "AMAZON_SEARCH_OBTAINER";
 	public static final String SHOPING_SERVICE = "AMAZON";
 	private static final String SHOPING_SERVICE_INDEX = "AMZN";
 	
@@ -47,12 +49,18 @@ public class AmazonSearchObtainer {
 	}
 	
 	public ArrayList<ProductModel> getData(String query, int page){
-		if (query == null) return null; 
-		String html = makeRequest(query, page);
+		try{
+			if (query == null) return null; 
+			String html = makeRequest(query, page);
 		
-		if (html == null) return null;
-		ArrayList<ProductModel> data = parseHTML(html);
-		return data;
+			if (html == null) return null;
+			ArrayList<ProductModel> data = parseHTML(html);
+			
+			return data;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private String makeRequest(String query, int page){

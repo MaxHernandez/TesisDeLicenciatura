@@ -18,7 +18,8 @@ public class CameraOptionsSearchCameraLoader extends AsyncTaskLoader<Camera> {
 	
 	public static final int GET_CAMERA = 0;
 	public static final int RELEASE_CAMERA = 1;
-	private static final int CAMERA_ID = Camera.CameraInfo.CAMERA_FACING_BACK;
+	//private static final int CAMERA_ID = Camera.CameraInfo.CAMERA_FACING_BACK;
+	private static final int CAMERA_ID = Camera.CameraInfo.CAMERA_FACING_FRONT;
 	
 	public CameraOptionsSearchCameraLoader(Context context, Camera camera, int option) {
 		super(context);
@@ -53,7 +54,9 @@ public class CameraOptionsSearchCameraLoader extends AsyncTaskLoader<Camera> {
 	     
 	     Parameters params=camera.getParameters();
 	     params.setZoom(0);
-	     if (params.getSupportedFocusModes().contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
+	     if (params.getSupportedFocusModes().contains(Parameters.FOCUS_MODE_MACRO)) {
+	    	 params.setFocusMode(Parameters.FOCUS_MODE_MACRO);
+	     } else if (params.getSupportedFocusModes().contains(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE))
 	    	 params.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
 	     camera.setParameters(params);		
 	}

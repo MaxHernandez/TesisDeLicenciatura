@@ -6,9 +6,12 @@ import com.maxkalavera.ecoar.BaseActivity;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.ecoar.R.layout;
 import com.maxkalavera.ecoar.searchbar.SearchBarResultsListFragmentHTTPLoader;
+import com.maxkalavera.utils.ErrorMesages;
 import com.maxkalavera.utils.InternetStatusChecker;
+import com.maxkalavera.utils.LogoutChecker;
 import com.maxkalavera.utils.SlideMenuBarHandler;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.UserSessionDAO;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.database.productmodel.UsersScoreModel;
 import com.maxkalavera.utils.httprequest.RequestParamsBundle;
@@ -39,7 +42,7 @@ public class ProductInfo extends BaseActivity implements
 	{
 	
 	private ProductModel product;
-	private ProductInfoModel productInfo;
+	private ExtraInfoModel productInfo;
 	private int requestOwnScore = -1;
 	
 	private final static int GET_PRODUCT_INFO = 1;
@@ -105,11 +108,12 @@ public class ProductInfo extends BaseActivity implements
 		((TextView) findViewById(R.id.productinfo_usersscore))
 			.setText(String.valueOf(this.productInfo.usersScore.users_score));
 		
-		if (this.productInfo.usersScore.own_score != -1)
-			return;
-		
-		ratingBar.setRating(this.productInfo.usersScore.own_score);
-		ratingBar.setOnRatingBarChangeListener(null);
+		if (this.productInfo.usersScore.own_score != -1) {		
+			ratingBar.setRating(this.productInfo.usersScore.own_score);
+			ratingBar.setOnRatingBarChangeListener(null);
+		} else {
+			ratingBar.setOnRatingBarChangeListener(this);
+		}
 	}
 	
 	/************************************************************
@@ -131,11 +135,16 @@ public class ProductInfo extends BaseActivity implements
 	 ************************************************************/
 	@Override
 	public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-		RatingBar ratingBarView = (RatingBar) findViewById(R.id.productinfo_ratingbar);
-		ratingBarView.setOnRatingBarChangeListener(null);
+		UserSessionDAO userSessionDAO = new UserSessionDAO(this);
+		if (userSessionDAO.checkSessionStatus()) {
+			RatingBar ratingBarView = (RatingBar) findViewById(R.id.productinfo_ratingbar);
+			ratingBarView.setOnRatingBarChangeListener(null);
 		
-		this.requestOwnScore = (int) rating;
-		getSupportLoaderManager().initLoader(POST_USER_SCORE, null, this);
+			this.requestOwnScore = (int) rating;
+			getSupportLoaderManager().initLoader(POST_USER_SCORE, null, this);
+		} else {
+			findViewById(R.id.productinfo_ratingbar_not_session).setVisibility(View.VISIBLE);
+		}
 	}	
 	
 	/************************************************************
@@ -195,16 +204,17 @@ public class ProductInfo extends BaseActivity implements
 				if (responseBundle.getResponse() != null && responseBundle.getResponse().isSuccessful()) {
 						if (responseBundle.getResponseJsonObject() != null) {
 							this.productInfo = 
-									(ProductInfoModel) responseBundle.getResponseJsonObject();
+									(ExtraInfoModel) responseBundle.getResponseJsonObject();
 						} else {
-							// Error al deserializar el json
+							ErrorMesages.errorRetrievingJsonData(this);
 						}
 				} else {
 					if (responseBundle.getResponseJsonObject() != null) {
 						this.productInfo = 
-							(ProductInfoModel) responseBundle.getResponseJsonObject();
+							(ExtraInfoModel) responseBundle.getResponseJsonObject();
 					} else {
-						// Error al mandar la petición
+						ErrorMesages.errorSendingHttpRequest(this);
+						LogoutChecker.checkSessionOnResponse(this, responseBundle.getResponse());
 					}
 				}
 				
@@ -246,7 +256,8 @@ public class ProductInfo extends BaseActivity implements
 					ratingBar.setRating(0.0f);
 					ratingBar.setOnRatingBarChangeListener(this);
 					
-					// Error al recuperar la informacion del servidor.
+					ErrorMesages.errorRetrievingData(this);
+					LogoutChecker.checkSessionOnResponse(this, responseBundle.getResponse());
 				}
 				break;
 				

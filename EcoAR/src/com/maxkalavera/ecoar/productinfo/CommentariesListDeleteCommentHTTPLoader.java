@@ -8,7 +8,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import com.maxkalavera.ecoar.R;
 import com.maxkalavera.utils.database.CommentariesCacheDAO;
 import com.maxkalavera.utils.database.productmodel.CommentModel;
-import com.maxkalavera.utils.database.productmodel.ProductInfoModel;
+import com.maxkalavera.utils.database.productmodel.ExtraInfoModel;
 import com.maxkalavera.utils.database.productmodel.ProductModel;
 import com.maxkalavera.utils.database.productmodel.UsersScoreModel;
 import com.maxkalavera.utils.httprequest.HttpRequestLoader;

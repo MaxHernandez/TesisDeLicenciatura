@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}
+EcoAr - Brands
+{% endblock %}
+
+
+{% block content %}
+
+<style type="text/css">
+table.myTable { border-collapse:collapse; }
+table.myTable td, table.myTable th { border:3px solid black;padding:15px; }
+</style>
+
+{{ brand_form.non_field_errors }}
+{{ brand_logo_form.non_field_errors }}
+<form action="/products/" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+    <table class="myTable"><tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ form.name.id_for_label }}"><b>Nombre:</b></label><br/>
+    		{{ form.name }}<br/>
+    		{{ form.name.errors}}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ form.description.id_for_label }}"><b>Descripci&oacute;n:</b></label><br/>
+    		{{ form.description }}<br/>
+    		{{ form.description.errors}}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ form.barcode.id_for_label }}"><b>Numero de c&oacute;digo de barras:</b></label><br/>
+    		{{ form.barcode }}<br/>
+    		{{ form.barcode.errors}}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ form.image.id_for_label }}"><b>Imagen del producto:</b></label><br/>
+    		{{ form.image }}<br/>
+    		{{ form.image.errors}}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ form.brand.id_for_label }}"><b>Marca del producto:</b></label><br/>
+    		{{ form.brand }}<br/>
+    		{{ form.brand.errors}}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+			<p>Escribe las palabras clave para buscar en el producto, separadas por espacios o comas.</p>
+    		<label for="{{ form.tags.id_for_label }}"><b>Palabras de b&uacute;squeda:</b></label><br/>
+    		{{ form.tags }}<br/>
+    		{{ form.tags.errors}}
+		</div>
+		</tr></td>
+
+		<tr><td>
+    	<div class="fieldWrapper">
+    		<input type="submit" value="Enviar"/></td></tr>
+    		
+    	</div>
+		</tr></td>
+
+	</table>
+
+ </form>
+{% endblock %}

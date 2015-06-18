@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}
+EcoAr - Brands
+{% endblock %}
+
+
+{% block content %}
+
+<style type="text/css">
+table.myTable { border-collapse:collapse; }
+table.myTable td, table.myTable th { border:3px solid black;padding:15px; }
+</style>
+
+{{ brand_form.non_field_errors }}
+{{ brand_logo_form.non_field_errors }}
+
+<form action="/brands/" method="post" enctype="multipart/form-data">	
+    {% csrf_token %}
+    <table class="myTable">
+		<tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ brand_form.name.id_for_label }}"><b>Nombre:</b></label><br/>
+    		{{ brand_form.name }}<br/>
+    		{{ brand_form.name.errors}}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+	    	<label for="{{ brand_form.description.id_for_label }}"><b>Descripci&oacute;n:</b></label><br/>
+	    	{{ brand_form.description }}<br/>
+	    	{{ brand_form.description.errors }}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ brand_form.webpage.id_for_label }}"><b>P&aacute;gina web:</b></label><br/>
+    		{{ brand_form.webpage }}<br/>
+    		{{ brand_form.webpage.errors }}
+		</div>
+		</tr></td>
+
+		<tr><td>
+		<div class="fieldWrapper">
+    		<label for="{{ brand_logo_form.webpage.id_for_label }}"><b>Imagen:</b></label><br/>
+    		{{ brand_logo_form.image }}<br/>
+    		{{ brand_logo_form.image.errors }}
+		</div>
+		</tr></td>
+
+		<tr><td>
+    	<div class="fieldWrapper">
+    		<input type="submit" value="Enviar"/></td></tr>
+    		
+    	</div>
+		</tr></td>
+
+	</table>
+
+ </form>
+{% endblock %}

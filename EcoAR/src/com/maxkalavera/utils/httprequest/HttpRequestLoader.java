@@ -26,6 +26,9 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.maxkalavera.ecoar.R;
+import com.maxkalavera.ecoar.home.Home;
+import com.maxkalavera.utils.database.UserDataDAO;
+import com.maxkalavera.utils.database.UserSessionDAO;
 import com.maxkalavera.utils.database.jsonmodels.BaseRequestJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.BaseResponseJsonModel;
 import com.maxkalavera.utils.database.jsonmodels.CSRFJsonModel;
@@ -39,9 +42,11 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -88,9 +93,11 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		this.builder = null;
 		this.uriBuilder = null;
 		this.parametersJson = null;
+		
 		this.cookiesFlag = false;
 		this.csrfFlag = false;
 		this.multipartFlag = false;
+		
 		this.host = null;
 		this.responseJSONModel = null;
 		this.serverErrorResponseJSONModel = null;
@@ -120,7 +127,6 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 	public void setCSRFOn(){this.csrfFlag = true;}
 	public void setCSRFOff(){this.csrfFlag = false;}
 	
-	//
 	public void setJsonResponseOn(BaseResponseJsonModel responseJSONModel){
 		this.responseJSONModel = responseJSONModel;}
 	public void setJsonResponseOff(){this.responseJSONModel = null;}
@@ -190,25 +196,12 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 		if (data == null) return;
 		if (mediatype == null) new String();
 		if (name == null) name = new String();
-		if (filename == null) new String();
 
-		if (this.multipartFlag){
-			/*
-			this.multipartBuilder.addPart(
-					Headers.of("Content-Disposition", 
-							"form-data; name=\""+ name +"\"; filename=\""+filename+"\";"),
-							RequestBody.create(MediaType.parse(mediatype), data));
-			*/
-			
-			this.multipartBuilder.addFormDataPart(name, filename, 
-					RequestBody.create(MediaType.parse(mediatype), data));
-			try {
-				Log.i("HttpRequestLoader-AddPart", String.valueOf(this.multipartBuilder.build().contentLength()));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		if (!this.multipartFlag)
+			this.setMultipartOn();
+		
+		this.multipartBuilder.addFormDataPart(name, filename, 
+			RequestBody.create(MediaType.parse(mediatype), data));
 	}
 	
 	public void addRequestParamsBundle(RequestParamsBundle bundle) {
@@ -367,8 +360,9 @@ public class HttpRequestLoader extends AsyncTaskLoader<ResponseBundle> {
 				this.builder.url(this.url);
 
 				if (this.multipartFlag) {
-					this.builder.method(this.method, this.multipartBuilder.build());
-					
+					this.multipartBuilder.addFormDataPart("default", null, 
+							RequestBody.create(JSON, json));
+					this.builder.method(this.method, this.multipartBuilder.build());					
 				} else {
 					this.builder.method(this.method, RequestBody.create(JSON, json));
 				}		  
